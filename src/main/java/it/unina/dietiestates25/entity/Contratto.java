@@ -6,7 +6,7 @@ import lombok.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public abstract class Contratto extends CreationUpdate {
 
