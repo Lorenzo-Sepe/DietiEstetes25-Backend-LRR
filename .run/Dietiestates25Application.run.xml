@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Dietiestates25Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <envs>
+      <env name="DB_HOSTNAME" value="127.0.0.1" />
+      <env name="DB_NAME" value="dietiestates25" />
+      <env name="DB_PASSWORD" value="dietiestates25" />
+      <env name="DB_PORT" value="5432" />
+      <env name="DB_USERNAME" value="postgres" />
+      <env name="DB_VENDOR" value="postgresql" />
+      <env name="JWT_SECRET_KEY" value="5210ed054e4ce22b938a7a4680c8235534b73811a62af90891001a03baafa103" />
+      <env name="MAIL_PASSWORD" value="mjmc pskq wlln hhup" />
+      <env name="MAIL_PORT" value="587" />
+      <env name="MAIL_SMTP" value="smtp.gmail.com" />
+      <env name="MAIL_USERNAME" value="lorenzo.sepe.1998" />
+    </envs>
+    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+    <module name="dietiestates25" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="it.unina.dietiestates25.Dietiestates25Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
