@@ -11,6 +11,10 @@
 	<groupId>it.unina</groupId>
 	<artifactId>dietiestates25</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>demo</module>
+	</modules>
 	<name>dietiestates25</name>
 	<description>Server Springboot backend per applicazione di agenzie Immobiliari</description>
 	<url/>

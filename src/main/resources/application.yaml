@@ -73,13 +73,13 @@ logging:
         boot: info
         security: info
     org.hibernate.orm.jdbc.bind: trace
-  file.name: /Users/Public/myblog/log/myblog_log.txt
+  file.name: /Users/Public/dietiestates25/log/dietiestates25_log.txt
   # Rolling policies
   logback:
     rolling-policy:
       max-history: 7
-      max-file-size: 10Mb
-      file-name-pattern: /Users/Public/myblog/log/%d{yyyy-MM}/myblog.%d{yyyy-MM-dd}.%i.txt
+      max-file-size: 10MB
+      file-name-pattern: /Users/Public/dietiestates25/log/%d{yyyy-MM}/dietiestates25.%d{yyyy-MM-dd}.%i.txt
       total-size-cap: 1GB
 
 
@@ -90,8 +90,8 @@ application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
-      # 4 ORE in millisecondi
-      expiration: 14400000
+      # 12 ORE in millisecondi
+      expiration: 43200000
 
   image:
     avatar:
@@ -106,15 +106,4 @@ application:
       width: 600
       height: 200
       extensions: image/jpg,image/jpeg,image/webp
-      imagePath: /Users/Public/myblog/post/images/
-    madeByYou:
-      # 20Kb
-      size: 20480
-      width: 200
-      height: 200
-      extensions: image/jpg,image/jpeg,image/webp
-      imagePath: /Users/Public/myblog/post/made_by_you/
-
-
-
-
+      imagePath: /Users/Public/dietiestates25/annuncio/images/
