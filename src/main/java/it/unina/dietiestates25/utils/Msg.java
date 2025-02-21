@@ -20,16 +20,16 @@ public class Msg {
     // l'endpoint presente nell'email va copiato e messo su postman con metodo PATCH.
     // Se lanciato direttamente dall'email, ovvero da browser,
     // la chiamata fallisce in quando il browser permette solo chiamate GET
-    public final static String MAIL_SIGNUP_BODY = "Please click here to confirm your email : http://localhost:8081/api/v0/auth/confirm/";
+    public static final String MAIL_SIGNUP_BODY = "Please click here to confirm your email : http://localhost:8081/api/v0/auth/confirm/";
 
-    public final static String ACCESS_DENIED = "YOU ARE NOT AUTHORIZED TO PERMORM THIS ACTION";
+    public static final String ACCESS_DENIED = "YOU ARE NOT AUTHORIZED TO PERMORM THIS ACTION";
 
-    public final static String PASSWORD_MISMATCH = "The repeated password not match";
-    public final static String PWD_CHANGED = "Password successfully updated";
-    public final static String PWD_INCORRECT = "Wrong Password";
+    public static final String PASSWORD_MISMATCH = "The repeated password not match";
+    public static final String PWD_CHANGED = "Password successfully updated";
+    public static final String PWD_INCORRECT = "Wrong Password";
 
     // -------------------- UPLOAD FILE
-    public final static String FILE_TOO_LARGE = "File size not allowed";
+    public static final String FILE_TOO_LARGE = "File size not allowed";
     public final static String FILE_NOT_VALID_IMAGE = "Image not valid";
     public final static String FILE_INVALID_DIMENSIONS = "Invalid image width or height";
     public final static String FILE_EXTENSION_NOT_ALLOWED = "Image type not allowed";

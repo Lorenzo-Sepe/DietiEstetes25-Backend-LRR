@@ -1,12 +1,21 @@
 package it.unina.dietiestates25.entity;
 
-import it.unina.dietiestates25.entity.common.CreationUpdate;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.*;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class ContrattoVendita extends Contratto {
-    private String infomutuo;
+
+    private String infoMutuo;
+
+    // Constructor matching superclass
+    @Builder
+    public ContrattoVendita(Double prezzo, String infoMutuo) {
+        super(prezzo);
+        this.infoMutuo = infoMutuo;
+    }
 }

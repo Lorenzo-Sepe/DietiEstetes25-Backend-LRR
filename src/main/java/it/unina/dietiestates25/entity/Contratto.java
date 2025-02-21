@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Getter @Setter @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED) // Keeps the hierarchy correct
+@Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // Allows subclass instantiation
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public abstract class Contratto extends CreationUpdate {
 
@@ -18,4 +20,8 @@ public abstract class Contratto extends CreationUpdate {
     @Column(nullable = false)
     private Double prezzo;
 
+    // Constructor for subclasses to use
+    protected Contratto(Double prezzo) {
+        this.prezzo = prezzo;
+    }
 }

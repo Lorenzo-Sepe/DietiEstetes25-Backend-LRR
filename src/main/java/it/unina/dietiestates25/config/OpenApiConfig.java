@@ -3,6 +3,7 @@ package it.unina.dietiestates25.config;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,9 +12,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
-
+                contact = @Contact(
+                        name = "UNINA"
+                ),
                 description = "OpenApi documentation for DietiEstates25.",
-                title = "OpenApi specification - Dieti Estates 25",
+                title = "OpenApi specification - UNINA",
                 version = "1.0",
                 license = @License(
                         name = "Licence name",
@@ -29,22 +32,22 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 @Server(
                         description = "PROD ENV",
                         url = "http://93.51.15.74:${server.port}${server.servlet.context-path}"
-                        //url = "https://myblog.cgmconsulting.it"
+
                 )
-        },
+        }/*,
         security = {
                 @SecurityRequirement(
                         name = "bearerAuth"
                 )
-        }
+        }*/
 )
-@SecurityScheme(
+/*@SecurityScheme(
         name = "bearerAuth",
-        description = "JWT for Dieti Unina Estates 25 Application",
+        description = "JWT for DietiEstates25 Application",
         scheme = "bearer",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER
-)
+)*/
 public class OpenApiConfig {
 }
