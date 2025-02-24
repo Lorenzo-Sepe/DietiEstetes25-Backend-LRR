@@ -88,6 +88,8 @@ logging:
 # CUSTOM PROPERTIES
 application:
   security:
+    sonar:
+      secret-token: ${SONAR_TOKEN}
     jwt:
       secret-key: ${JWT_SECRET_KEY}
       # 12 ORE in millisecondi
