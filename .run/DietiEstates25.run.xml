@@ -9,8 +9,7 @@
       <env name="DB_PORT" value="5432" />
       <env name="DB_USERNAME" value="postgres" />
       <env name="DB_VENDOR" value="postgresql" />
-      <env name="JWT_SECRET_KEY" value="7q3Ze4284w2B4fy250g55c68o6pk970n37j3d76397924b2v6452m48404d63u1" />
-      <env name="SONAR_TOKEN" value="sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2" />
+      <env name="JWT_SECRET_KEY" value="081aa00e9f48cceaf9ede9869dee763f00be6213226d9caabec5c73031e5965e" />
     </envs>
     <module name="dietiestates25" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="it.unina.dietiestates25.DietiEstates25BackendApplication" />

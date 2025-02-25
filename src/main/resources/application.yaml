@@ -88,12 +88,10 @@ logging:
 # CUSTOM PROPERTIES
 application:
   security:
-    sonar:
-      secret-token: ${SONAR_TOKEN}
     jwt:
       secret-key: ${JWT_SECRET_KEY}
       # 12 ORE in millisecondi
-      expiration: 43200000
+      expiration: 86400000
 
   image:
     avatar:

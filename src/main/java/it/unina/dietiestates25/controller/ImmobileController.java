@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,11 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImmobileController {
     private final ImmobileService immobileService;
 
-    @PostMapping("/immobile/")
+    @PostMapping("/pb/immobile/")
     public ResponseEntity<Immobile> createImmobile(
             @RequestBody @Valid ImmobileRequest request
             ) {
         return new ResponseEntity<>(immobileService.createImmobile(request), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/pb/immobile/{immobileId}")
+    public ResponseEntity<Immobile> getImmobile(
+            @PathVariable int immobileId
+            ) {
+        return new ResponseEntity<>(immobileService.getImmobile(immobileId), HttpStatus.OK);
     }
 
 
