@@ -16,9 +16,12 @@ spring:
     name: dietiestates25
 
   datasource:
-    url: jdbc:${DB_VENDOR}://${DB_HOSTNAME}:${DB_PORT}/${DB_NAME}?ssl-mode=REQUIRED
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    #url: jdbc:${DB_VENDOR}://${DB_HOSTNAME}:${DB_PORT}/${DB_NAME}?ssl-mode=REQUIRED
+    #username: ${DB_USERNAME}
+    #password: ${DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
