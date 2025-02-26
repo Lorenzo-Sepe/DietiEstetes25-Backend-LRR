@@ -3,10 +3,8 @@ package it.unina.dietiestates25.service;
 import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.exception.BadCredentialsException;
-import it.unina.dietiestates25.exception.DisabledException;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.utils.Msg;
-import it.unina.dietiestates25.utils.GenericMail;
 import it.unina.dietiestates25.entity.Authority;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.dto.request.SignUpRequest;
@@ -17,8 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import java.util.UUID;
 
 @Service
@@ -26,7 +23,6 @@ import java.util.UUID;
 public class AuthService {
    private final UserRepository userRepository;
    private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
    private final AuthorityRepository authorityRepository;
    private final JwtService jwtService;
 
@@ -67,13 +63,11 @@ public class AuthService {
                 .build();
     }
 
+
     public String modifyUserAuthority(int id, String auth) {
         // trovare l'utente
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
-        // verificare che il ruolo dell'utente non sia quello di default
-        if(user.getAuthority().isDefaultAuthority())
-            throw new ConflictException(Msg.USER_HAS_DEFAULT_AUTHORITY);
         try{
             Authority authority = authorityRepository.findByAuthorityName(AuthorityName.valueOf(auth.toUpperCase()))
                     .orElseThrow(()-> new ResourceNotFoundException("Authority", "name", auth));
