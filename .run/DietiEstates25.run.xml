@@ -3,13 +3,10 @@
     <option name="ALTERNATIVE_JRE_PATH" value="21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="DB_HOSTNAME" value="127.0.0.1" />
-      <env name="DB_NAME" value="dietiestates25" />
-      <env name="DB_PASSWORD" value="dietiestates25" />
-      <env name="DB_PORT" value="5432" />
-      <env name="DB_USERNAME" value="postgres" />
-      <env name="DB_VENDOR" value="postgresql" />
+      <env name="DB_PASSWORD" value="Dieti2024LoRoRa" />
+      <env name="DB_USERNAME" value="lrr" />
       <env name="JWT_SECRET_KEY" value="081aa00e9f48cceaf9ede9869dee763f00be6213226d9caabec5c73031e5965e" />
+      <env name="DB_URL" value="jdbc:postgresql://ingsw.postgres.database.azure.com:5432/postgres" />
     </envs>
     <module name="dietiestates25" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="it.unina.dietiestates25.DietiEstates25BackendApplication" />

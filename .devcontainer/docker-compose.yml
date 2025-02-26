@@ -17,7 +17,7 @@ services:
   postgres:
     image: postgres:14
     environment:
-      POSTGRES_DB: mydb
+      POSTGRES_DB: dietiestates25
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:

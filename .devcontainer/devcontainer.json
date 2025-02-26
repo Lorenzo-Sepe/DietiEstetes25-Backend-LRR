@@ -1,33 +1,12 @@
 {
-	"name": "Java 22",
-	"build": {
-	  "dockerfile": "./Dockerfile",
-	  "context": "."
+	"name": "Spring Boot Dev Container",
+	"dockerFile": "Dockerfile",
+	"settings": {
+	  "java.home": "/usr/lib/jvm/java-21-openjdk"
 	},
-	"features": {
-	  "ghcr.io/devcontainers/features/git:1": {
-		"version": "latest",
-		"ppa": "false"
-	  }
-	},
-	"mounts": [
-	  "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-	  "source=${localWorkspaceFolder}/.devcontainer/data/maven/.m2,target=/home/spring/.m2,type=bind"
+	"extensions": [
+	  "vscjava.vscode-java-pack"
 	],
-	"postStartCommand": [
-	  "bash",
-	  "-c",
-	  "sudo chown -R spring:spring /var/run/docker.sock"
-	],
-	"customizations": {
-	  "vscode": {
-		"settings": {
-		  "terminal.integrated.shell.linux": "/bin/bash"
-		},
-		"extensions": [
-		  "vscjava.vscode-java-pack"
-		]
-	  }
-	},
-	"remoteUser": "spring"
+	"postCreateCommand": "./mvnw spring-boot:run",
+	"remoteUser ": "vscode"
   }

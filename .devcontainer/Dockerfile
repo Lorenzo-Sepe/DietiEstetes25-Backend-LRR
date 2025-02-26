@@ -1,12 +1,19 @@
-# Use a Maven image that includes OpenJDK 21
-FROM maven:3.9.2-eclipse-temurin-21
+# Usa un'immagine base di Ubuntu con OpenJDK 21
+FROM ubuntu:22.04
 
-# Set the working directory inside the container
+# Installa OpenJDK 21, Maven e PostgreSQL
+RUN apt-get update && apt-get install -y openjdk-21-jdk maven postgresql-client
+
+# Imposta la directory di lavoro
 WORKDIR /workspace
 
-# Copy your project files (if not using volume mounting)
-# COPY . .
+# Copia tutto il contenuto del progetto nella directory di lavoro
+COPY . .
 
-# By default, run the Spring Boot application
-# Assuming you have a Maven wrapper; if not, use "mvn spring-boot:run"
-CMD ["./mvnw", "spring-boot:run"]
+
+# Comando per avviare l'applicazione
+CMD ["mvn", "spring-boot:run"]
+
+#COMANDI CHE STO USANDO PER FAR FUNZIONARE IL TUTTO
+# mvn clean install -DskipTests
+#
