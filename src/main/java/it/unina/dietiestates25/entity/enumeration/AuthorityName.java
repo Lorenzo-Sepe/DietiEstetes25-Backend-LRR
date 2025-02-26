@@ -5,8 +5,7 @@ import lombok.ToString;
 @ToString
 public enum AuthorityName {
 
-    ADMIN,
-    MEMBER, // scrive i commenti, vota i post, segnala i commenti altrui
-    AGENT, // scrive i post
-    GUEST // di default all'iscrizione finché non conferma email
+    ADMIN, //modifica annunci, crea agenti, crea admin
+    MEMBER, // utente senza ruoli speciali
+    AGENT // crea annunci, modifica annunci
 }

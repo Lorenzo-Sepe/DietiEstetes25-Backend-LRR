@@ -12,7 +12,7 @@
 	<artifactId>dietiestates25</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Dieti Estates 25 Backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Progetto finale di ingegneria del software Federico II</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -101,6 +101,10 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>${jjwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
 	</dependencies>

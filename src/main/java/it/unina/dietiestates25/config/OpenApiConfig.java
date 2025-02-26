@@ -34,20 +34,20 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         url = "http://93.51.15.74:${server.port}${server.servlet.context-path}"
 
                 )
-        }/*,
+        },
         security = {
-                @SecurityRequirement(
-                        name = "bearerAuth"
-                )
-        }*/
+        @SecurityRequirement(
+                name = "bearerAuth"
+        )
+}
 )
-/*@SecurityScheme(
+@SecurityScheme(
         name = "bearerAuth",
-        description = "JWT for DietiEstates25 Application",
+        description = "JWT for Dieti Estates 25",
         scheme = "bearer",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER
-)*/
+)
 public class OpenApiConfig {
 }

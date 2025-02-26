@@ -36,9 +36,6 @@ public class User extends CreationUpdate implements UserDetails {
     @JoinColumn(nullable = false)
     private Authority authority;
 
-    //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    //private Avatar avatar;
-
     private String confirmCode;
 
     private boolean enabled; // di default a false
