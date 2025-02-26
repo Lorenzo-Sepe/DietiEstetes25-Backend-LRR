@@ -3,6 +3,7 @@ package it.unina.dietiestates25.entity;
 import it.unina.dietiestates25.entity.common.CreationUpdate;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Getter

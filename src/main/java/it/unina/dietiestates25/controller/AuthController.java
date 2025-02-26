@@ -1,14 +1,15 @@
 package it.unina.dietiestates25.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.request.SignUpRequest;
+import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,4 +24,24 @@ public class AuthController {
     public ResponseEntity<String> signup(@RequestBody @Valid SignUpRequest request){
         return ResponseEntity.ok(authService.signup(request));
     }
+
+    @Operation(
+            summary = "LOGIN",
+            description = "Method to sign in the user that exists the database to the application",
+            tags = {"Auth"})
+    @PostMapping("/v0/auth/signin")
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody @Valid SignInRequest request){
+        return ResponseEntity.ok(authService.signin(request));
+    }
+
+    @Operation(
+            summary = "MODIFY USER AUTHORITY",
+            description = "Method to modify the authority of the user in the database. Only the admin can do it",
+            tags = {"Auth"})
+    @PatchMapping("/v1/auth/modify_user_authority") // modify user authority
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> modifyUserAuthority(@RequestParam int id, @RequestParam String auth){
+        return ResponseEntity.ok(authService.modifyUserAuthority(id, auth));
+    }
+
 }
