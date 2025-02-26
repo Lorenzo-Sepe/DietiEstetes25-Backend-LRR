@@ -19,11 +19,11 @@
 	  "-c",
 	  "sudo chown -R spring:spring /var/run/docker.sock"
 	],
-	"settings": {
-	  "terminal.integrated.shell.linux": "/bin/bash"
-	},
 	"customizations": {
 	  "vscode": {
+		"settings": {
+		  "terminal.integrated.shell.linux": "/bin/bash"
+		},
 		"extensions": [
 		  "vscjava.vscode-java-pack"
 		]
