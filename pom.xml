@@ -26,13 +26,15 @@
 		<tag/>
 		<url/>
 	</scm>
-	<properties>
-		<java.version>21</java.version>
-		<jjwt.version>0.11.5</jjwt.version>
-		<springdoc>2.5.0</springdoc>
-		<sonar.host>http://http://localhost:9000</sonar.host>
-		<sonar.projectKey>Backend-DietiEstates25</sonar.projectKey>
-		<sonar.token>sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2</sonar.token>
+    <properties>
+        <java.version>21</java.version>
+        <jjwt.version>0.11.5</jjwt.version>
+        <springdoc>2.5.0</springdoc>
+        <sonar.host>http://http://localhost:9000</sonar.host>
+        <sonar.projectKey>Backend-DietiEstates25</sonar.projectKey>
+        <sonar.token>sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2</sonar.token>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
 	<dependencies>
 		<dependency>
