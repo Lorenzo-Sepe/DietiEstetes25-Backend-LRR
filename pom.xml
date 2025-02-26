@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.unina</groupId>
 	<artifactId>dietiestates25</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>Dieti Estates 25 Backend</name>
 	<description>Progetto finale di ingegneria del software Federico II</description>
 	<url/>
@@ -32,7 +32,7 @@
 		<springdoc>2.5.0</springdoc>
 		<sonar.host>http://http://localhost:9000</sonar.host>
 		<sonar.projectKey>Backend-DietiEstates25</sonar.projectKey>
-		<sonar.login>sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2</sonar.login>
+		<sonar.token>sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2</sonar.token>
     </properties>
 	<dependencies>
 		<dependency>

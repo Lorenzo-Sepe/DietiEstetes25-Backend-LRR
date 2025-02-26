@@ -8,6 +8,7 @@ class DietiEstates25BackendApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// The code is not ready to be tested yet
 	}
 
 }

@@ -33,8 +33,7 @@ public class ImmobileService {
     }
 
     public Immobile getImmobile(int immobileId) {
-        Immobile immobile = immobileRepository.findById(immobileId)
+        return immobileRepository.findById(immobileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Immobile", "Id", immobileId));
-        return immobile;
     }
 }

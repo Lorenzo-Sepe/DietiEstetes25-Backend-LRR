@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface AuthorityRepository extends JpaRepository<Authority, Byte> {
 
     Optional<Authority> findByDefaultAuthorityTrue();
-    // SELECT * FROM authority WHERE default_authority = true AND visible = true;
 
     Optional<Authority> findByAuthorityName(AuthorityName authorityName);
-    // SELECT * FROM authority WHERE authority_name = 'MEMBER' AND visible = true;
 }
