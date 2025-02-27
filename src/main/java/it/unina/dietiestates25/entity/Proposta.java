@@ -19,8 +19,10 @@ public class Proposta {
     private int id;
 
     @NotNull(message = "Il prezzo della proposta è obbligatorio")
+    @Positive(message = "Il prezzo della proposta deve essere maggiore di 0")
     private double prezzoProposta;
 
+    @Positive(message = "Il prezzo della contro proposta deve essere maggiore di 0")
     private Double controproposta;
 
     @NotNull(message = "Il nome è obbligatorio")
