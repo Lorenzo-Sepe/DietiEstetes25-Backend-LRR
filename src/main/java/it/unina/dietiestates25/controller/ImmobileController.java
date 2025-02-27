@@ -1,6 +1,6 @@
 package it.unina.dietiestates25.controller;
 
-import it.unina.dietiestates25.dto.request.ImmobileRequest;
+import it.unina.dietiestates25.dto.request.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.entity.Immobile;
 import it.unina.dietiestates25.service.ImmobileService;
 import jakarta.validation.Valid;
@@ -18,7 +18,7 @@ public class ImmobileController {
 
     @PostMapping("/pb/immobile/")
     public ResponseEntity<Immobile> createImmobile(
-            @RequestBody @Valid ImmobileRequest request
+            @RequestBody @Valid AnnuncioImmobiliareRequest request
             ) {
         return new ResponseEntity<>(immobileService.createImmobile(request), HttpStatus.CREATED);
     }

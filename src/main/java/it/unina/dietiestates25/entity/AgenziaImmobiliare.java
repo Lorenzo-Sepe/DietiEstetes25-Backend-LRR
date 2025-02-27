@@ -34,7 +34,7 @@ public class AgenziaImmobiliare {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User fondatore;
 
-    @OneToMany(mappedBy = "agenziaImmobiliare", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<User> dipendenti;   
 
 
