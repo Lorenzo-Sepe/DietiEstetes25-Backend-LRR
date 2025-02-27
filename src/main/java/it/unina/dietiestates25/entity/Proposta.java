@@ -33,8 +33,9 @@ public class Proposta {
     @Size(min = 1, max = 100, message = "Il cognome deve avere tra 1 e 100 caratteri")
     private String cognome;
 
-    @NotNull(message = "Lo stato è obbligatorio")
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'IN_TRATTAZIONE'")
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private StatoProposta stato = StatoProposta.IN_TRATTAZIONE;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
