@@ -1,16 +1,12 @@
 {
 	"name": "Spring Boot Dev Container",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "api",
-	"workspaceFolder": "/workspace",
+	"dockerFile": "Dockerfile",
 	"settings": {
-	  "java.home": "/usr/lib/jvm/java-21-openjdk"
+		"java.home": "/usr/lib/jvm/java-21-openjdk"
 	},
 	"extensions": [
-	  "vscjava.vscode-java-pack",
-	  "redhat.java",
-	  "vscjava.vscode-spring-boot-dashboard"
+		"vscjava.vscode-java-pack"
 	],
 	"postCreateCommand": "./mvnw spring-boot:run",
-	"remoteUser": "vscode"
-  }
+	"remoteUser ": "vscode"
+}

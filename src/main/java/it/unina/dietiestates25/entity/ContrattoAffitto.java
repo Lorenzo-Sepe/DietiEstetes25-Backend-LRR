@@ -10,11 +10,15 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class ContrattoAffitto extends Contratto {
 
-    private String rateizzazione;
+    private int tempoMinimo;
+    private int tempoMassimo;
+    private Double caparra;
 
     @Builder
-    public ContrattoAffitto(Double prezzo, String rateizzazione) {
+    public ContrattoAffitto(Double prezzo, int tempoMinimo, int tempoMassimo, Double caparra) {
         super(prezzo);
-        this.rateizzazione = rateizzazione;
+        this.tempoMinimo = tempoMinimo;
+        this.tempoMassimo = tempoMassimo;
+        this.caparra = caparra;
     }
 }
