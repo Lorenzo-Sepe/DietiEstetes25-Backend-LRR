@@ -29,7 +29,7 @@ public class AuthController {
             summary = "LOGIN",
             description = "Method to sign in the user that exists the database to the application",
             tags = {"Auth"})
-    @PostMapping("/v0/auth/signin")
+    @PostMapping("/pb/auth/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody @Valid SignInRequest request){
         return ResponseEntity.ok(authService.signin(request));
     }
@@ -38,7 +38,7 @@ public class AuthController {
             summary = "MODIFY USER AUTHORITY",
             description = "Method to modify the authority of the user in the database. Only the admin can do it",
             tags = {"Auth"})
-    @PatchMapping("/v1/auth/modify_user_authority") // modify user authority
+    @PatchMapping("/auth/modify_user_authority") // modify user authority
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> modifyUserAuthority(@RequestParam int id, @RequestParam String auth){
         return ResponseEntity.ok(authService.modifyUserAuthority(id, auth));
