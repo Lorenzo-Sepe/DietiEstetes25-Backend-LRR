@@ -10,12 +10,12 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class ContrattoVendita extends Contratto {
 
-    private String infoMutuo;
+    private boolean MutuoEstinto;
 
     // Constructor matching superclass
     @Builder
-    public ContrattoVendita(Double prezzo, String infoMutuo) {
+    public ContrattoVendita(Double prezzo, boolean mutuoEstinto) {
         super(prezzo);
-        this.infoMutuo = infoMutuo;
+        MutuoEstinto = mutuoEstinto;
     }
 }
