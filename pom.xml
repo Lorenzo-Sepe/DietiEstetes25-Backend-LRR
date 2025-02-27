@@ -118,7 +118,11 @@
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-starter-storage</artifactId>
+			<version>5.17.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

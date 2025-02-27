@@ -1,10 +1,11 @@
 package it.unina.dietiestates25.controller;
 
+import it.unina.dietiestates25.utils.ImageContainerUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -57,5 +58,16 @@ public class ControllerTESTRAI {
         }
 
         return indicatori;
+    }
+
+
+    private final ImageContainerUtil imageContainerUtil;
+
+
+    @PostMapping("pb/test/upload")
+    public ResponseEntity<String> uploadImage( MultipartFile file ) {
+        String nomePath = "test.png";
+        String imageUrl = imageContainerUtil.uploadImage(file, nomePath);
+        return ResponseEntity.ok(imageUrl);
     }
 }
