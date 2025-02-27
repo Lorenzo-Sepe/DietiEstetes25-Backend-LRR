@@ -19,8 +19,7 @@ public class AnnuncioImmobiliare {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "Il titolo è obbligatorio")
-    @Size(min = 1, max = 255, message = "Il titolo deve avere tra 1 e 255 caratteri")
+    @Column(nullable = false, length = 100)
     private String titolo;
 
     @NotNull(message = "La descrizione è obbligatoria")

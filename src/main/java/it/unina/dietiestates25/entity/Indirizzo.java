@@ -17,27 +17,27 @@ public class Indirizzo {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "La via è obbligatoria")
+    @Column(nullable = false)
     private String via;
 
-    @NotNull(message = "Il numero civico è obbligatorio")
+    @Column(nullable = false)
     private String numeroCivico;
 
-    @NotNull(message = "La città è obbligatoria")
+    @Column(nullable = false)
     private String citta;
 
-    @NotNull(message = "Il CAP è obbligatorio")
+    @Column(nullable = false)
     private String cap;
 
-    @NotNull(message = "La provincia è obbligatoria")
+    @Column(nullable = false)
     private String provincia;
 
-    @NotNull(message = "La nazione è obbligatoria")
+    @Column(nullable = false)
     private String nazione;
 
-    @NotNull(message = "La latitudine è obbligatoria")
+    @Column(nullable = false)
     private Double latitudine;
 
-    @NotNull(message = "La longitudine è obbligatoria")
+    @Column(nullable = false)
     private Double longitudine;
 }

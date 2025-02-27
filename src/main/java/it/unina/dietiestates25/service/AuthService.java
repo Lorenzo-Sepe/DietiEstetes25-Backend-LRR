@@ -35,9 +35,7 @@ public class AuthService {
                 .username(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .enabled(false)
                 .authority(authority)
-                .confirmCode(UUID.randomUUID().toString())
                 .build();
         userRepository.save(user);
         return Msg.USER_SIGNUP_FIRST_STEP;

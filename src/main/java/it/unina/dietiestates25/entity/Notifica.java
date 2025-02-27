@@ -20,16 +20,16 @@ public class Notifica {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "Il contenuto della notifica è obbligatorio")
+    @Column(nullable = false)
     private String contenuto;
 
-    @NotNull(message = "La data di creazione è obbligatoria")
+    @Column(nullable = false)
     private LocalDateTime dataCreazione;
 
-    @NotNull(message = "Il mittente è obbligatorio")
+    @Column(nullable = false)
     private String mittente;
 
-    @NotNull(message = "Il destinatario è obbligatorio")
+    @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User destinatario;
 }

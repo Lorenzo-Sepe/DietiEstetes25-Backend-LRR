@@ -17,7 +17,7 @@ public class ImmaginiImmobile {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "L'URL dell'immagine è obbligatorio")
+    @Column(nullable = true)
     private String url;
 
     private String descrizione;

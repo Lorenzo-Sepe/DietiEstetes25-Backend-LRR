@@ -36,9 +36,6 @@ public class User extends CreationUpdate implements UserDetails {
     @JoinColumn(nullable = false)
     private Authority authority;
 
-    private String confirmCode;
-
-    private boolean enabled; // di default a false
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,8 +57,5 @@ public class User extends CreationUpdate implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+
 }

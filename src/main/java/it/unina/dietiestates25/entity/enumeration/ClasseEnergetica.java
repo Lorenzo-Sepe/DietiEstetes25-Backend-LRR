@@ -1,5 +1,8 @@
-package it.unina.dietiestates25.entity;
+package it.unina.dietiestates25.entity.enumeration;
 
+import lombok.Getter;
+
+@Getter
 public enum ClasseEnergetica {
     A_PLUS_PLUS("A++"),
     A_PLUS("A+"),
@@ -17,7 +20,5 @@ public enum ClasseEnergetica {
         this.label = label;
     }
 
-    public String getLabel() {
-        return label;
-    }
+
 }

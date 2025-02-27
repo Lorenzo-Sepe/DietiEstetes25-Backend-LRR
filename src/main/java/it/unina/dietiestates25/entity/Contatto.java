@@ -17,11 +17,8 @@ public class Contatto {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "Il tipo di contatto è obbligatorio")
-    @Size(min = 1, max = 50, message = "Il tipo di contatto deve avere tra 1 e 50 caratteri")
+    @Column(nullable = false, length = 50)
     private String tipo;
 
-    @NotNull(message = "Il valore del contatto è obbligatorio")
-    @Size(min = 1, max = 255, message = "Il valore del contatto deve avere tra 1 e 255 caratteri")
     private String valore;
 }

@@ -18,16 +18,13 @@ package it.unina.dietiestates25.entity;
         @EqualsAndHashCode.Include
         private int id;
 
-        @NotNull(message = "Il nome è obbligatorio")
-        @Size(min = 1, max = 100, message = "Il nome deve avere tra 1 e 100 caratteri")
+        @Column(nullable = false, length = 100)
         private String nome;
 
-        @NotNull(message = "Il cognome è obbligatorio")
-        @Size(min = 1, max = 100, message = "Il cognome deve avere tra 1 e 100 caratteri")
+        @Column(nullable = false, length = 100)
         private String cognome;
 
         @ManyToOne(optional = false, fetch = FetchType.LAZY)
-        @NotNull(message = "L'utente è obbligatorio")
         private User user;
 
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

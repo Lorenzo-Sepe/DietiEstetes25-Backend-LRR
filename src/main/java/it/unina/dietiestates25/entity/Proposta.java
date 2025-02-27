@@ -18,22 +18,19 @@ public class Proposta {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "Il prezzo della proposta è obbligatorio")
-    @Positive(message = "Il prezzo della proposta deve essere maggiore di 0")
+    @Column(nullable = false)
     private double prezzoProposta;
 
-    @Positive(message = "Il prezzo della contro proposta deve essere maggiore di 0")
+    @Column(nullable = false)
     private Double controproposta;
 
-    @NotNull(message = "Il nome è obbligatorio")
-    @Size(min = 1, max = 100, message = "Il nome deve avere tra 1 e 100 caratteri")
+    @Column(nullable = false, length = 100)
     private String nome;
 
-    @NotNull(message = "Il cognome è obbligatorio")
-    @Size(min = 1, max = 100, message = "Il cognome deve avere tra 1 e 100 caratteri")
+    @Column(nullable = false, length = 100)
     private String cognome;
 
-    @NotNull(message = "Lo stato è obbligatorio")
+    @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private StatoProposta stato = StatoProposta.IN_TRATTAZIONE;
 
