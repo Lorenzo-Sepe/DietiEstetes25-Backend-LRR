@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,10 +24,8 @@ public class AgenziaImmobiliareService {
 
     @Transactional
     public void createAgenzia(AgenziaImmobiliareRequest request) {
-        Authority authority = Authority.builder()
-                .authorityName(AuthorityName.ADMIN)
-                .build();
-        authorityRepository.save(authority);
+        Authority authority = authorityRepository.findByAuthorityName(AuthorityName.ADMIN)
+                .orElseThrow(() -> new InternalServerErrorException("Non è stato possibile trovare l'autorità"));
         User fondatore = User.builder()
                 .email(request.getEmailFondatore())
                 .username(request.getEmailFondatore())
@@ -49,7 +48,17 @@ public class AgenziaImmobiliareService {
     }
 
     public List<AgenziaImmobiliareResponse> getAgenzie() {
-        return agenziaImmobiliareRepository.getAllAgenzieImmobiliari();
+        List<AgenziaImmobiliare> lista = agenziaImmobiliareRepository.findAll();
+        return lista.stream().map(this::convertToResponse).collect(Collectors.toList());
+    }
+
+    private AgenziaImmobiliareResponse convertToResponse(AgenziaImmobiliare agenzia) {
+        return AgenziaImmobiliareResponse.builder()
+                .nomeAzienda(agenzia.getNomeAzienda())
+                .partitaIva(agenzia.getPartitaIva())
+                .ragioneSociale(agenzia.getRagioneSociale())
+                .fondatore(agenzia.getFondatore().getEmail())
+                .build();
     }
 
 
