@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -48,17 +47,7 @@ public class AgenziaImmobiliareService {
     }
 
     public List<AgenziaImmobiliareResponse> getAgenzie() {
-        List<AgenziaImmobiliare> lista = agenziaImmobiliareRepository.findAll();
-        return lista.stream().map(this::convertToResponse).collect(Collectors.toList());
-    }
-
-    private AgenziaImmobiliareResponse convertToResponse(AgenziaImmobiliare agenzia) {
-        return AgenziaImmobiliareResponse.builder()
-                .nomeAzienda(agenzia.getNomeAzienda())
-                .partitaIva(agenzia.getPartitaIva())
-                .ragioneSociale(agenzia.getRagioneSociale())
-                .fondatore(agenzia.getFondatore().getEmail())
-                .build();
+        return agenziaImmobiliareRepository.getAllAgenzieImmobiliari();
     }
 
 
