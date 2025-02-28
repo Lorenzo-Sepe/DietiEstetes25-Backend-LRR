@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,22 +23,17 @@ public class AnnuncioImmobiliare {
     @Column(nullable = false, length = 100)
     private String titolo;
 
-    @NotNull(message = "La descrizione è obbligatoria")
-    @Size(min = 1, max = 1000, message = "La descrizione deve avere tra 1 e 1000 caratteri")
+    @Column(nullable=false,length = 1000)
     private String descrizione;
 
-    @NotNull(message = "La data di pubblicazione è obbligatoria")
-    private LocalDate dataPubblicazione;
+    private LocalDateTime dataPubblicazione;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @NotNull(message = "L'agenta associato all'annuncio e è obbligatorio")
     private User agente;
 
-    @NotNull(message="L' immobile è obbligatorio")
     @OneToOne
     private Immobile immobile;
 
-    @NotNull(message="Il contratto è obbligatorio")
     @OneToOne
     private Contratto contratto;
 

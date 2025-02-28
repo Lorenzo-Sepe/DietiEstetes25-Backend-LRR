@@ -45,9 +45,9 @@ public class Immobile extends CreationUpdate {
     @Enumerated(EnumType.STRING)
     private ClasseEnergetica classeEnergetica;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     private Indirizzo indirizzo;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     private CaratteristicheAggiuntive caratteristicheAggiuntive;
 }
