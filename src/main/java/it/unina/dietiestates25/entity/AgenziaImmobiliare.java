@@ -1,9 +1,6 @@
 package it.unina.dietiestates25.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Set;
@@ -29,10 +26,10 @@ public class AgenziaImmobiliare {
 
     private String partitaIva;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     private User fondatore;
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany( cascade = CascadeType.ALL)
     private Set<User> dipendenti;   
 
 

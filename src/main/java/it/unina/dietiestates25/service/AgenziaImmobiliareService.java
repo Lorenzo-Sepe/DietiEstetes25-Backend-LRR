@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.entity.AgenziaImmobiliare;
 import it.unina.dietiestates25.entity.Authority;
 import it.unina.dietiestates25.entity.User;
@@ -8,7 +9,6 @@ import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
-import it.unina.dietiestates25.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +17,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class AgenziaImmobiliareService {
-    final private AgenziaImmobiliareRepository agenziaImmobiliareRepository;
-    final private UserRepository userRepository;
-    final private AuthorityRepository authorityRepository;
+    private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
+    private final AuthorityRepository authorityRepository;
 
     public void createAgenzia(AgenziaImmobiliareRequest request) {
         Authority authority = Authority.builder()
@@ -47,7 +46,7 @@ public class AgenziaImmobiliareService {
         }
     }
 
-    public List<AgenziaImmobiliare> FindAllAgenzie() {
-        return agenziaImmobiliareRepository.findAll();
+    public List<AgenziaImmobiliareResponse> getAgenzie() {
+        return agenziaImmobiliareRepository.getAllAgenzieImmobiliari();
     }
 }

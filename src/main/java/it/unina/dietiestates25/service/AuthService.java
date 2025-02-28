@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import it.unina.dietiestates25.entity.enumeration.AuthorityName;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

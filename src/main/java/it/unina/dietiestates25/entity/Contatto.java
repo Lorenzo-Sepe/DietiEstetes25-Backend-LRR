@@ -2,7 +2,6 @@ package it.unina.dietiestates25.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.validation.constraints.*;
 
 @Getter
 @Setter

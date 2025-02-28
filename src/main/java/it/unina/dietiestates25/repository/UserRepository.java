@@ -1,7 +1,6 @@
 package it.unina.dietiestates25.repository;
 
 import it.unina.dietiestates25.entity.User;
-import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

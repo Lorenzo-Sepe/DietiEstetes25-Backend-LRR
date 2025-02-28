@@ -1,7 +1,6 @@
 package it.unina.dietiestates25.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -18,25 +17,37 @@ public class CaratteristicheAggiuntive {
     @EqualsAndHashCode.Include
     private int id;
 
-    private boolean balconi = false;
+    @Column(nullable = false)
+    @Builder.Default
+    private final boolean balconi = false;
 
-    private boolean garage = false;
+    @Builder.Default
+    private final boolean garage = false;
 
-    private boolean postiAuto = false;
+    @Builder.Default
+    private final boolean postiAuto = false;
 
-    private boolean giardino = false;
+    @Builder.Default
+    private final boolean giardino = false;
 
-    private boolean ascensore = false;
+    @Builder.Default
+    private final boolean ascensore = false;
 
-    private boolean portiere = false;
+    @Builder.Default
+    private final boolean portiere = false;
 
-    private boolean riscaldamentoCentralizzato = false;
+    @Builder.Default
+    private final boolean riscaldamentoCentralizzato = false;
 
-    private boolean climatizzatori = false;
+    @Builder.Default
+    private final boolean climatizzatori = false;
 
-    private boolean pannelliSolari = false;
+    @Builder.Default
+    private final boolean pannelliSolari = false;
 
-    private boolean cantina = false;
+    @Builder.Default
+    private final boolean cantina = false;
 
-    private boolean soffitta = false;
+    @Builder.Default
+    private final boolean soffitta = false;
 }

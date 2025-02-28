@@ -38,7 +38,7 @@ spring:
     defer-datasource-initialization: true
 
   # all'avvio dell'applicazione viene eseguito data.sql presente in resource
-  sql.init.mode: never
+  sql.init.mode: always
 
   mail:
     # host: smtp.gmail.com
@@ -68,12 +68,9 @@ spring-doc:
 # LOGGING
 logging:
   level:
-    it.cgmconsulting: info
-    org:
-      springframework:
-        boot: info
-        security: info
-    org.hibernate.orm.jdbc.bind: trace
+    root: INFO
+    org.springframework.security: DEBUG
+    it.unina.dietiestates25: DEBUG
   file.name: /Users/Public/dietiestates25/log/dietiestates25_log.txt
   # Rolling policies
   logback:

@@ -3,7 +3,7 @@ package it.unina.dietiestates25.entity;
 import it.unina.dietiestates25.entity.enumeration.StatoProposta;
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.validation.constraints.*;
+
 
 @Getter
 @Setter
@@ -32,6 +32,7 @@ public class Proposta {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private StatoProposta stato = StatoProposta.IN_TRATTAZIONE;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)

@@ -9,6 +9,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionManagement {
+
+    private static final Logger log = LoggerFactory.getLogger(ExceptionManagement.class);
 
     @ExceptionHandler({InternalServerErrorException.class})
     public ResponseEntity<String> internalServerErrorExceptionManagement(InternalServerErrorException ex){
@@ -44,6 +49,7 @@ public class ExceptionManagement {
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<String> accessDeniedExceptionManagement(AccessDeniedException ex){
+        log.error("Access denied: {}", ex.getMessage());
         return new ResponseEntity<>(Msg.ACCESS_DENIED, HttpStatus.FORBIDDEN);
     }
 
@@ -82,5 +88,11 @@ public class ExceptionManagement {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<String> authenticationExceptionManagement(AuthenticationException ex){
+        log.error("Authentication failed: {}", ex.getMessage());
+        return new ResponseEntity<>("Authentication failed: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

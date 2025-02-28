@@ -4,8 +4,6 @@ import it.unina.dietiestates25.entity.common.CreationUpdate;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -26,7 +24,6 @@ public class Immobile extends CreationUpdate {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "immobile")
     private List<ImmaginiImmobile> immagini;
 
-    @NotNull(message = "La tipologia di immobile è obbligatorio")
     @Enumerated(EnumType.STRING)
     private TipologiaImmobile tipologiaImmobile;
 
@@ -34,12 +31,15 @@ public class Immobile extends CreationUpdate {
     int metriQuadri;
 
     @Column(nullable = false)
+    @Builder.Default
     int numeroDiPiani=0;
 
     @Column(nullable = false)
-    int numeroStanze= 0;
+    @Builder.Default
+    int numeroStanze = 0;
 
     @Column(nullable = false)
+    @Builder.Default
     int numeroServizi= 0;
 
     @Enumerated(EnumType.STRING)
