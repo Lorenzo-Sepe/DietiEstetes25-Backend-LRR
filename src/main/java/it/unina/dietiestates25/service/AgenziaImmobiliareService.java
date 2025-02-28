@@ -23,10 +23,8 @@ public class AgenziaImmobiliareService {
 
     @Transactional
     public void createAgenzia(AgenziaImmobiliareRequest request) {
-        Authority authority = Authority.builder()
-                .authorityName(AuthorityName.ADMIN)
-                .build();
-        authorityRepository.save(authority);
+        Authority authority = authorityRepository.findByAuthorityName(AuthorityName.ADMIN)
+                .orElseThrow(() -> new InternalServerErrorException("Non è stato possibile trovare l'autorità"));
         User fondatore = User.builder()
                 .email(request.getEmailFondatore())
                 .username(request.getEmailFondatore())

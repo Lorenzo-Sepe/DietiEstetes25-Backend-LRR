@@ -1,8 +1,10 @@
 package it.unina.dietiestates25.dto.request;
 
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
+@Data
+@Builder
 public class AgenziaImmobiliareRequest {
 
     String nomeAgenzia;
