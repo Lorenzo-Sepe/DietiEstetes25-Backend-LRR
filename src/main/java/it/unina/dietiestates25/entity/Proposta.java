@@ -3,7 +3,7 @@ package it.unina.dietiestates25.entity;
 import it.unina.dietiestates25.entity.enumeration.StatoProposta;
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.validation.constraints.*;
+
 
 @Getter
 @Setter
@@ -18,22 +18,19 @@ public class Proposta {
     @EqualsAndHashCode.Include
     private int id;
 
-    @NotNull(message = "Il prezzo della proposta è obbligatorio")
-    @Positive(message = "Il prezzo della proposta deve essere maggiore di 0")
+    @Column(nullable = false)
     private double prezzoProposta;
 
-    @Positive(message = "Il prezzo della contro proposta deve essere maggiore di 0")
+    @Column(nullable = false)
     private Double controproposta;
 
-    @NotNull(message = "Il nome è obbligatorio")
-    @Size(min = 1, max = 100, message = "Il nome deve avere tra 1 e 100 caratteri")
+    @Column(nullable = false, length = 100)
     private String nome;
 
-    @NotNull(message = "Il cognome è obbligatorio")
-    @Size(min = 1, max = 100, message = "Il cognome deve avere tra 1 e 100 caratteri")
+    @Column(nullable = false, length = 100)
     private String cognome;
 
-    //@Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'IN_TRATTAZIONE'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'IN_TRATTAZIONE'")
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private StatoProposta stato = StatoProposta.IN_TRATTAZIONE;
