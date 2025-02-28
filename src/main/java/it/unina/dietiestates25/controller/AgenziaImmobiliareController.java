@@ -33,8 +33,8 @@ public class AgenziaImmobiliareController {
             description = "Method to add a new agency to the database",
             tags = {"Agenzia"})
     public ResponseEntity<String> createAgenzia(@RequestBody AgenziaImmobiliareRequest request) {
-        agenziaImmobiliareService.createAgenzia(request);
-        return ResponseEntity.ok("Agenzia registrata con successo fai accesso con le credenziali di default: email, admin");
+
+        return new ResponseEntity<String>(agenziaImmobiliareService.createAgenzia(request),HttpStatus.CREATED);
     }
 
     //da cambiare in privato quando il server è funzionante

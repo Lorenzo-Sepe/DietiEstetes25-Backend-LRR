@@ -22,7 +22,7 @@ public class AgenziaImmobiliareService {
     private final AuthorityRepository authorityRepository;
 
     @Transactional
-    public void createAgenzia(AgenziaImmobiliareRequest request) {
+    public String createAgenzia(AgenziaImmobiliareRequest request) {
         Authority authority = authorityRepository.findByAuthorityName(AuthorityName.ADMIN)
                 .orElseThrow(() -> new InternalServerErrorException("Non è stato possibile trovare l'autorità"));
         User fondatore = User.builder()
@@ -35,6 +35,7 @@ public class AgenziaImmobiliareService {
                 .nomeAzienda(request.getNomeAgenzia())
                 .partitaIva(request.getPartitaIva())
                 .ragioneSociale(request.getRagioneSociale())
+                .dominio(request.getDominio())
                 .fondatore(fondatore)
                 .build();
 
@@ -44,6 +45,7 @@ public class AgenziaImmobiliareService {
         }catch (Exception e){
             throw new InternalServerErrorException("Non è stato possibile creare l'agenzia immobiliare " + e.getMessage());
         }
+        return "Agenzia creata con successo. Le credenziali del fondatore sono: " + fondatore.getUsername() + "oppure "+ fondatore.getEmail() +" e la password è admin";
     }
 
     public List<AgenziaImmobiliareResponse> getAgenzie() {

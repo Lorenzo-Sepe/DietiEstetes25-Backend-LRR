@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.unina</groupId>
 	<artifactId>dietiestates25</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.2-SNAPSHOT</version>
 	<name>Dieti Estates 25 Backend</name>
 	<description>Progetto finale di ingegneria del software Federico II</description>
 	<url/>
