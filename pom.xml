@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.unina</groupId>
 	<artifactId>dietiestates25</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>Dieti Estates 25 Backend</name>
 	<description>Progetto finale di ingegneria del software Federico II</description>
 	<url/>
@@ -30,9 +30,10 @@
         <java.version>21</java.version>
         <jjwt.version>0.11.5</jjwt.version>
         <springdoc>2.5.0</springdoc>
-        <sonar.host>http://http://localhost:9000</sonar.host>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>Backend-DietiEstates25</sonar.projectKey>
-        <sonar.token>sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2</sonar.token>
+        <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+        <!--Token Sonar Lorenzo : sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2-->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
@@ -122,6 +123,11 @@
 			<groupId>com.azure.spring</groupId>
 			<artifactId>spring-cloud-azure-starter-storage</artifactId>
 			<version>5.17.1</version>
+		</dependency>
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>4.0.0</version>
 		</dependency>
 	</dependencies>
 

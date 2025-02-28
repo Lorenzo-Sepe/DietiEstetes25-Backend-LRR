@@ -9,6 +9,7 @@ import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AgenziaImmobiliareService {
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
     private final AuthorityRepository authorityRepository;
 
+    @Transactional
     public void createAgenzia(AgenziaImmobiliareRequest request) {
         Authority authority = Authority.builder()
                 .authorityName(AuthorityName.ADMIN)
@@ -49,4 +51,6 @@ public class AgenziaImmobiliareService {
     public List<AgenziaImmobiliareResponse> getAgenzie() {
         return agenziaImmobiliareRepository.getAllAgenzieImmobiliari();
     }
+
+
 }

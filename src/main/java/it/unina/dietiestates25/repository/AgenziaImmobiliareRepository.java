@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface AgenziaImmobiliareRepository extends JpaRepository<AgenziaImmobiliare, Integer> {
 
-    @Query("SELECT new it.unina.dietiestates25.dto.response.AgenzieResponse(" +
+    @Query("SELECT new it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse(" +
             "a.id," +
             "a.nomeAzienda, " +
             "a.ragioneSociale, " +

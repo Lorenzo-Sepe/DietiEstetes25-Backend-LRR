@@ -30,7 +30,7 @@ public class Proposta {
     @Column(nullable = false, length = 100)
     private String cognome;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'IN_TRATTAZIONE'")
+    @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private StatoProposta stato = StatoProposta.IN_TRATTAZIONE;
