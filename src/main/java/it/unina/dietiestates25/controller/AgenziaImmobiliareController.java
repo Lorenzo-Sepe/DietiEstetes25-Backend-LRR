@@ -6,8 +6,11 @@ import it.unina.dietiestates25.dto.request.AgenziaImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.service.AgenziaImmobiliareService;
+import it.unina.dietiestates25.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
@@ -19,8 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class AgenziaImmobiliareController {
-
     private final AgenziaImmobiliareService agenziaImmobiliareService;
+    private final AuthService authService;
+
     //regsitra la tua agenzia immobiliare
     @PostMapping("/pb/agenzia/")
     @Operation(
@@ -33,16 +37,16 @@ public class AgenziaImmobiliareController {
     }
 
     //da cambiare in privato quando il server è funzionante
-    @PostMapping("/pb/addAgent/{idAgenzia}")
+    @PostMapping("/v1/addAgent/")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(
             summary = "ADD A NEW AGENT",
             description = "Method to add a new agent to the database",
             tags = {"Agenzia"})
     public ResponseEntity<User> createAgente(@RequestBody NewAgentRequest request,
-                                             @AuthenticationPrincipal UserDetails userDetails,
-                                             @PathVariable int idAgenzia) {
-        ;
-        return ResponseEntity.ok(agenziaImmobiliareService.createAgente(request, userDetails, idAgenzia));
+                                             @AuthenticationPrincipal UserDetails userDetails) {
+
+        return new ResponseEntity<User>(authService.createAgente(request, userDetails), HttpStatus.CREATED);
     }
 
     //restituisce tutte le agenzie

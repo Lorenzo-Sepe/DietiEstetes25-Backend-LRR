@@ -24,6 +24,9 @@ public class AgenziaImmobiliare {
     @Column(nullable = false, length = 80)
     private String ragioneSociale;
 
+    @Column(nullable = false, length = 20, unique = true)
+    private String dominio;
+
     private String partitaIva;
 
     @OneToOne(cascade = CascadeType.ALL)
