@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -55,7 +56,7 @@ public class AgenziaImmobiliareController {
             summary = "GET ALL AGENCIES",
             description = "Method to get all agencies from the database",
             tags = {"Agenzia"})
-    public ResponseEntity<List<AgenziaImmobiliareResponse>> getAgenzie() {
+    public ResponseEntity<List<AgenziaImmobiliareResponse>> getAgenzie(@RequestParam Pageable pageable) {
         return ResponseEntity.ok(agenziaImmobiliareService.getAgenzie());
     }
 
