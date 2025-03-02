@@ -30,4 +30,7 @@ public class Notifica {
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User destinatario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private CategoriaNotifica categoria;
 }
