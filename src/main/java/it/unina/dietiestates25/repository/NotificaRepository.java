@@ -13,7 +13,5 @@ public interface NotificaRepository extends JpaRepository<Notifica,Integer> {
 
     List<Notifica> findAllByDestinatario(User destinatario, Pageable pageable);
 
-    List<Notifica> findAllByDestinatario(User destinatario);
-
     Integer countByDestinatario(User destinatario);
 }
