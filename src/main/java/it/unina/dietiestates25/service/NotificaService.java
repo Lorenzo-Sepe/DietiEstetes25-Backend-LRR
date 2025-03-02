@@ -1,8 +1,9 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
-import it.unina.dietiestates25.dto.request.PaginableNotificaRequest;
+import it.unina.dietiestates25.dto.request.FiltroNotificaRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
+import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.Notifica;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.repository.NotificaRepository;
@@ -83,7 +84,7 @@ public class NotificaService {
         return notificaRepository.countByDestinatario(userCurrent);
     }
 
-    public List<NotificaResponse> getAllNotifiche(PaginableNotificaRequest request){
+    public List<NotificaResponse> getAllNotifiche(FiltroNotificaRequest request){
 
         User userCurrent = UserContex.getUserCurrent();
 
@@ -94,7 +95,7 @@ public class NotificaService {
         return getListNotificaResponseFromListaNotifica(notifiche);
     }
 
-    private Pageable getPaginableNotifiche(PaginableNotificaRequest request){
+    private Pageable getPaginableNotifiche(FiltroNotificaRequest request){
 
         Pageable pageable;
 
@@ -124,5 +125,31 @@ public class NotificaService {
         }
 
         return notificheResponse;
+    }
+
+    public Integer getNumeroNotificheByCategoria(int idCategoria){
+
+        User userCurrent = UserContex.getUserCurrent();
+
+        CategoriaNotifica categoriaNotifica = CategoriaNotifica.builder()
+                .id(idCategoria)
+                .build();
+
+        return notificaRepository.countByDestinatarioAndCategoria(userCurrent,categoriaNotifica);
+    }
+
+    public List<NotificaResponse> getNotificheByCategoria(FiltroNotificaRequest request){
+
+        User userCurrent = UserContex.getUserCurrent();
+
+        Pageable pageable = getPaginableNotifiche(request);
+
+        CategoriaNotifica categoriaNotifica = CategoriaNotifica.builder()
+                .id(request.getIdCategoria())
+                .build();
+
+        List<Notifica> notifiche = notificaRepository.findAllByDestinatarioAndCategoria(userCurrent,categoriaNotifica,pageable);
+
+        return getListNotificaResponseFromListaNotifica(notifiche);
     }
 }

@@ -5,11 +5,13 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PaginableNotificaRequest {
+public class FiltroNotificaRequest {
 
     private int numeroPagina;
 
     private int numeroDiElementiPerPagina;
 
     private boolean isOrdinatiPerDataDesc;
+
+    private int idCategoria;
 }
