@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
-import com.nimbusds.openid.connect.sdk.federation.trust.marks.TrustMarkClaimsSet;
 import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
+import it.unina.dietiestates25.dto.request.PaginableNotificaRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
 import it.unina.dietiestates25.entity.Notifica;
 import it.unina.dietiestates25.entity.User;
@@ -10,10 +10,12 @@ import it.unina.dietiestates25.utils.UserContex;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,17 +76,53 @@ public class NotificaService {
         return destinatari;
     }
 
-    public ResponseEntity<Integer> getNumeroAllNotifiche(){
+    public Integer getNumeroAllNotifiche(){
 
         User userCurrent = UserContex.getUserCurrent();
-        User raimondo = entityManager.find(User.class, 2);
-        return ResponseEntity.ok(notificaRepository.countByDestinatario(raimondo));
+
+        return notificaRepository.countByDestinatario(userCurrent);
     }
 
-    public ResponseEntity<List<NotificaResponse>> getAllNotifiche(Pageable page){
+    public List<NotificaResponse> getAllNotifiche(PaginableNotificaRequest request){
 
         User userCurrent = UserContex.getUserCurrent();
 
-        return null;
+        Pageable pageable = getPaginableNotifiche(request);
+
+        List<Notifica> notifiche = notificaRepository.findAllByDestinatario(userCurrent,pageable);
+
+        return getListNotificaResponseFromListaNotifica(notifiche);
+    }
+
+    private Pageable getPaginableNotifiche(PaginableNotificaRequest request){
+
+        Pageable pageable;
+
+        if(request.isOrdinatiPerDataDesc()){
+
+            pageable = PageRequest.of(request.getNumeroPagina(),request.getNumeroDiElementiPerPagina(), Sort.by("dataCreazione").descending());
+
+        }else{
+
+            pageable = PageRequest.of(request.getNumeroPagina(),request.getNumeroDiElementiPerPagina(), Sort.by("dataCreazione").ascending());
+        }
+
+        return pageable;
+    }
+
+    private List<NotificaResponse> getListNotificaResponseFromListaNotifica(List<Notifica> notifiche){
+
+        List<NotificaResponse> notificheResponse = new ArrayList<>();
+
+        for(Notifica notifica : notifiche){
+
+            NotificaResponse notificaResponse = new NotificaResponse();
+            notificaResponse.setContenuto(notifica.getContenuto());
+            notificaResponse.setMittente(notifica.getMittente());
+            notificaResponse.setDataDiCreazione(notifica.getDataCreazione());
+            notificheResponse.add(notificaResponse);
+        }
+
+        return notificheResponse;
     }
 }
