@@ -7,6 +7,7 @@ import it.unina.dietiestates25.service.NotificaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,19 +18,23 @@ public class NotificaController {
 
     private final NotificaService notificaService;
 
-    @PostMapping("/pb/notifica/")
+    @PostMapping("/notifica/")
+    @PreAuthorize("hasAnyAuthority('MEMBER')")
     public ResponseEntity<String> inviaNotificaPromozionale(@RequestBody @Valid NotificaPromozionaleRequest request){
 
         return notificaService.inviaNotificaPromozionale(request);
     }
 
-    @GetMapping("/pb/numeroNotifica")
+
+    @GetMapping("/numeroNotifica")
+    @PreAuthorize("hasAnyAuthority('MEMBER')")
     public ResponseEntity<Integer> getNumeroAllNotifiche(){
 
         return ResponseEntity.ok(notificaService.getNumeroAllNotifiche());
     }
 
-    @GetMapping("/pb/notifiche")
+    @GetMapping("/notifiche")
+    @PreAuthorize("hasAnyAuthority('MEMBER')")
     public ResponseEntity<List<NotificaResponse>> getNotifiche(@RequestParam int page, @RequestParam int numeroPerPage, boolean discedente){
 
 
@@ -42,14 +47,16 @@ public class NotificaController {
         return ResponseEntity.ok(notificaService.getAllNotifiche(request));
     }
 
-    @GetMapping("/pb/numeroNotificheByCategoria")
+    @GetMapping("/numeroNotificheByCategoria")
+    @PreAuthorize("hasAnyAuthority('MEMBER')")
     public ResponseEntity<Integer> getNumeroNotiifcaByCategoria(@RequestParam int idCategoria){
 
         return ResponseEntity.ok(notificaService.getNumeroNotificheByCategoria(idCategoria));
     }
 
-    @GetMapping("/pb/notificheByCategoria")
-    public ResponseEntity<List<NotificaResponse>> getNotificheByCategoria(@RequestParam int page, @RequestParam int numeroPerPage, boolean discedente, @RequestParam int idCategoria){
+    @GetMapping("/notificheByCategoria")
+    @PreAuthorize("hasAnyAuthority('MEMBER')")
+    public ResponseEntity<List<NotificaResponse>> getNotificheByCategoria(@RequestParam int page, @RequestParam int numeroPerPage, @RequestParam boolean discedente, @RequestParam int idCategoria){
 
         FiltroNotificaRequest request = FiltroNotificaRequest.builder()
                 .numeroPagina(page)
