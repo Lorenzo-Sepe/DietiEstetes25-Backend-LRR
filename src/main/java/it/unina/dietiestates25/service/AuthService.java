@@ -13,6 +13,7 @@ import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.exception.BadCredentialsException;
 import it.unina.dietiestates25.exception.ConflictException;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
+import it.unina.dietiestates25.exception.UnauthorizedException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
@@ -139,13 +140,21 @@ public class AuthService {
         return sb.toString();
     }
 
-    public String changePassword(String oldPassword, String newPassword) {
+    public String changePassword(String oldPassword, String newPassword, String confirmPassword) {
+
         User user = userRepository.findById(UserContex.getUserCurrent().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", UserContex.getUserCurrent().getId()));
-        if(!passwordEncoder.matches(oldPassword, user.getPassword()))
-            throw new BadCredentialsException("La inserita non corrisponde alla password attuale");
+                .orElseThrow(() -> new UnauthorizedException("Utente non trovato. Assicurati di essere autenticato correttamente."));
+
+        if(!newPassword.equals(confirmPassword))
+            throw new ConflictException("Le password non corrispondono");
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BadCredentialsException("La password inserita non corrisponde alla password attuale");
+        }
+
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+
         return Msg.PASSWORD_CHANGED;
     }
 }

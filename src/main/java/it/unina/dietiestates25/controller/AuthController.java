@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import it.unina.dietiestates25.dto.request.ChangePasswordRequest;
 import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.request.SignUpRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
@@ -40,8 +41,8 @@ public class AuthController {
             tags = {"Auth"})
     @PostMapping("/auth/change_password")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER', 'AGENT')")
-    public ResponseEntity<String> changePassword(@RequestParam String oldPassword, @RequestParam String newPassword){
-        return ResponseEntity.ok(authService.changePassword(oldPassword, newPassword));
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request){
+        return ResponseEntity.ok(authService.changePassword(request.getOldPassword(), request.getNewPassword(),request.getConfirmPassword()));
     }
 
     @Operation(
