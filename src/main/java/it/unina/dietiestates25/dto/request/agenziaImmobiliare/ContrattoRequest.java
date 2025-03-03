@@ -1,4 +1,4 @@
-package it.unina.dietiestates25.dto.request;
+package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
