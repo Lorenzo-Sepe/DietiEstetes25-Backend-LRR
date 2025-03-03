@@ -21,7 +21,6 @@ import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -103,8 +102,8 @@ public class AuthService {
                 .build();
     }
 
-    public User createAgente(NewAgentRequest request, UserDetails userDetails) {
-        User userAdmin = (User) userDetails;
+    public User createAgente(NewAgentRequest request) {
+        User userAdmin = UserContex.getUserCurrent();
         AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(userAdmin)
                 .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare", "dipendente", userAdmin.getUsername()));
 

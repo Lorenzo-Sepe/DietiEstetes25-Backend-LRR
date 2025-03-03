@@ -7,6 +7,7 @@ import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.service.AgenziaImmobiliareService;
 import it.unina.dietiestates25.service.AuthService;
+import it.unina.dietiestates25.utils.UserContex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +44,9 @@ public class AgenziaImmobiliareController {
             summary = "AGGIUNGI UN NUOVO AGENTE",
             description = "Metodo per aggiungere un nuovo agente immobiliare nel database",
             tags = {"Agenzia"})
-    public ResponseEntity<User> createAgente(@RequestBody NewAgentRequest request,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(authService.createAgente(request, userDetails), HttpStatus.CREATED);
+    public ResponseEntity<User> createAgente(@RequestBody NewAgentRequest request) {
+
+        return new ResponseEntity<>(authService.createAgente(request), HttpStatus.CREATED);
     }
 
     // Restituisce tutte le agenzie immobiliari presenti nel database
