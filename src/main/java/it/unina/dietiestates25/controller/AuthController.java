@@ -35,6 +35,16 @@ public class AuthController {
     }
 
     @Operation(
+            summary = "Cambia password",
+            description = "Metodo per cambiare la password dell'utente",
+            tags = {"Auth"})
+    @PostMapping("/auth/change_password")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER', 'AGENT')")
+    public ResponseEntity<String> changePassword(@RequestParam String oldPassword, @RequestParam String newPassword){
+        return ResponseEntity.ok(authService.changePassword(oldPassword, newPassword));
+    }
+
+    @Operation(
             summary = "MODIFY USER AUTHORITY",
             description = "Method to modify the authority of the user in the database. Only the admin can do it",
             tags = {"Auth"})

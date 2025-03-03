@@ -1,30 +1,31 @@
 package it.unina.dietiestates25.service;
 
-import java.security.SecureRandom;
-
 import it.unina.dietiestates25.dto.request.AgenziaImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.NewAgentRequest;
 import it.unina.dietiestates25.dto.request.SignInRequest;
+import it.unina.dietiestates25.dto.request.SignUpRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.entity.AgenziaImmobiliare;
+import it.unina.dietiestates25.entity.Authority;
 import it.unina.dietiestates25.entity.DatiImpiegato;
+import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.exception.BadCredentialsException;
+import it.unina.dietiestates25.exception.ConflictException;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
-import it.unina.dietiestates25.utils.Msg;
-import it.unina.dietiestates25.entity.Authority;
-import it.unina.dietiestates25.entity.User;
-import it.unina.dietiestates25.dto.request.SignUpRequest;
-import it.unina.dietiestates25.exception.ConflictException;
-import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.utils.Msg;
+import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import it.unina.dietiestates25.entity.enumeration.AuthorityName;
+
+import java.security.SecureRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -137,5 +138,15 @@ public class AuthService {
             sb.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
         }
         return sb.toString();
+    }
+
+    public String changePassword(String oldPassword, String newPassword) {
+        User user = userRepository.findById(UserContex.getUserCurrent().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", UserContex.getUserCurrent().getId()));
+        if(!passwordEncoder.matches(oldPassword, user.getPassword()))
+            throw new BadCredentialsException("La inserita non corrisponde alla password attuale");
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return Msg.PASSWORD_CHANGED;
     }
 }
