@@ -81,7 +81,7 @@ public class ControllerTESTRAI {
     //getToken for testing member
     @GetMapping("pb/test/getToken")
     public Object getToken(@RequestParam int id) {
-        User user = userRepository.findById(2)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato", "id", id));
 
 
