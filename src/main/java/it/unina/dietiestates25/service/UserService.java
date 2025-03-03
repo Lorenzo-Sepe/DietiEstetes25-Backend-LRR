@@ -66,7 +66,7 @@ public class UserService {
     }
 
     private String generaEmailBase(String nome, String cognome, String aliasAgenzia) {
-        return String.format("%s.%s@%s.com",
+        return String.format("%s.%s@%s.dietiestate.com",
                 nome.toLowerCase(),
                 cognome.toLowerCase(),
                 aliasAgenzia.toLowerCase());
@@ -77,7 +77,7 @@ public class UserService {
         int contatore = 1;
 
         while (userRepository.countByEmail(email) > 0) {
-            email = String.format("%s.%s%d@%s.com",
+            email = String.format("%s.%s%d@%s.dietiestate.com",
                     nome.toLowerCase(),
                     cognome.toLowerCase(),
                     ++contatore,

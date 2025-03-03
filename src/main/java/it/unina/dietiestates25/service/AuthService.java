@@ -1,6 +1,6 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.NewAgentRequest;
 import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.request.SignUpRequest;

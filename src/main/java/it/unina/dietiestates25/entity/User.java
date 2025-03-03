@@ -25,7 +25,7 @@ public class User extends CreationUpdate implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @JsonIgnore

@@ -96,4 +96,15 @@ public class ControllerTESTRAI {
                 .token(jwt)
                 .build();
     }
+
+    @PostMapping("pb/test/ripetiStringa")
+    public ResponseEntity<String> ripetiStringa(@RequestBody String stringa) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 1; i++) {
+            sb.append(stringa);
+        }
+        return ResponseEntity.ok(sb.toString());
+
+    }
+
 }

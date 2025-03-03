@@ -1,12 +1,10 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
+import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.entity.AgenziaImmobiliare;
-import it.unina.dietiestates25.entity.Authority;
-import it.unina.dietiestates25.entity.DatiImpiegato;
-import it.unina.dietiestates25.entity.User;
-import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
@@ -25,33 +23,22 @@ public class AgenziaImmobiliareService {
     private final AuthorityRepository authorityRepository;
     private  final DatiImpiegatoRepository datiImpiegatoRepository;
     private final UserRepository userRepository;
+    private final  UserService userService;
 
     @Transactional
     public String createAgenzia(AgenziaImmobiliareRequest request) {
-        Authority authority = authorityRepository.findByAuthorityName(AuthorityName.ADMIN)
-                .orElseThrow(() -> new InternalServerErrorException("Non è stato possibile trovare l'autorità"));
-
-        User fondatore = User.builder()
-                .email(request.getEmailFondatore())
-                .username(request.getEmailFondatore())
-                .authority(authority)
-                .password("admin")
-                .build();
-
-        userRepository.save(fondatore);
-        DatiImpiegato datiImpiegato = DatiImpiegato.builder()
+        DipendenteRequest dipendenteRequest = DipendenteRequest.builder()
                 .nome(request.getNomeFondatore())
                 .cognome(request.getCognomeFondatore())
-                .user(fondatore).build();
-        datiImpiegatoRepository.save(datiImpiegato);
-
+                .ruolo("ADMIN").build();
+        NewDipendeteResponse fondatoreResponse = userService.AddDipendete(dipendenteRequest,request.getDominio());
 
         AgenziaImmobiliare agenziaImmobiliare = AgenziaImmobiliare.builder()
                 .nomeAzienda(request.getNomeAgenzia())
                 .partitaIva(request.getPartitaIva())
                 .ragioneSociale(request.getRagioneSociale())
                 .dominio(request.getDominio())
-                .fondatore(fondatore)
+                .fondatore(fondatoreResponse.getUser())
                 .build();
 
         try {
@@ -60,7 +47,9 @@ public class AgenziaImmobiliareService {
         }catch (Exception e){
             throw new InternalServerErrorException("Non è stato possibile creare l'agenzia immobiliare " + e.getMessage());
         }
-        return "Agenzia creata con successo. Le credenziali del fondatore sono: "+ fondatore.getEmail() +" e la password è admin";
+        String response= "Agenzia creata con successo. Le credenziali del fondatore sono:\n"+fondatoreResponse.getUser().getEmail() +"\n"+ fondatoreResponse.getPassword();
+        System.out.println(response);
+        return response;
     }
 
     public List<AgenziaImmobiliareResponse> getAgenzie() {
