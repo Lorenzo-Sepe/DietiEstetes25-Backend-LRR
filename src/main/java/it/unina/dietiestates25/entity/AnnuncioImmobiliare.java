@@ -31,12 +31,12 @@ public class AnnuncioImmobiliare {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User agente;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Immobile immobile;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Contratto contratto;
 
     @OneToMany(mappedBy = "annuncio")
-    private List<Proposta> proposte; // Un annuncio può avere molte proposte
+    private List<Proposta> proposte;
 }

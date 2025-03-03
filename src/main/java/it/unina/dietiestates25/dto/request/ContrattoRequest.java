@@ -1,5 +1,8 @@
 package it.unina.dietiestates25.dto.request;
 
+import it.unina.dietiestates25.entity.ContrattoAffitto;
+import it.unina.dietiestates25.entity.ContrattoVendita;
+import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,5 +16,8 @@ public class ContrattoRequest {
     @Min(value = 0, message = "Il prezzo non può essere negativo")
     private Double prezzo;
 
-    // Aggiungi ulteriori campi specifici per il contratto
+    private DatiAffittoRequest datiAffittoRequest;
+
+    private DatiVenditaRequest datiVenditaRequest;
+
 }
