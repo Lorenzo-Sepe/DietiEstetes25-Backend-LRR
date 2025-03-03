@@ -19,7 +19,7 @@ public class UserService {
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final PasswordService passwordService;
 
-    public NewDipendeteResponse AddDipendete(DipendenteRequest request, String aliasAgenzia) {
+    public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
         String password = passwordService.generaPasswordDipendente();
         AuthorityName authorityName = request.getRuolo().equals("ADMIN") ? AuthorityName.ADMIN : AuthorityName.AGENT;

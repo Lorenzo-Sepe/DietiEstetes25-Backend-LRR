@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@Deprecated
 public class NewAgentRequest {
     @NotBlank
     private String nome;

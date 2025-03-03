@@ -3,6 +3,7 @@ package it.unina.dietiestates25.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -33,7 +34,13 @@ public class AgenziaImmobiliare {
     private User fondatore;
 
     @OneToMany( cascade = CascadeType.ALL)
-    private Set<User> dipendenti;   
+    private Set<User> dipendenti;
 
+    public void addDipendente(User dipendente) {
+        if (this.dipendenti == null) {
+            this.dipendenti = new HashSet<>();
+        }
+        this.dipendenti.add(dipendente);
+    }
 
 }

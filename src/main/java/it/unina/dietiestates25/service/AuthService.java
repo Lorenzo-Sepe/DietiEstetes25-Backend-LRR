@@ -54,7 +54,7 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtAuthenticationResponse signin(SignInRequest request) {
+    public JwtAuthenticationResponse login(SignInRequest request) {
         User user = userRepository.findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
 
