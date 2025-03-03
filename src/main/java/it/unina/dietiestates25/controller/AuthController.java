@@ -32,14 +32,14 @@ public class AuthController {
             tags = {"Auth"})
     @PostMapping("/pb/auth/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody @Valid SignInRequest request){
-        return ResponseEntity.ok(authService.signin(request));
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @Operation(
             summary = "Cambia password",
             description = "Metodo per cambiare la password dell'utente",
             tags = {"Auth"})
-    @PostMapping("/auth/change_password")
+    @PatchMapping("/auth/change_password")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER', 'AGENT')")
     public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request){
         return ResponseEntity.ok(authService.changePassword(request.getOldPassword(), request.getNewPassword(),request.getConfirmPassword()));

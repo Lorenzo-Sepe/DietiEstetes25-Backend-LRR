@@ -1,6 +1,6 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.NewAgentRequest;
 import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.request.SignUpRequest;
@@ -54,7 +54,7 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtAuthenticationResponse signin(SignInRequest request) {
+    public JwtAuthenticationResponse login(SignInRequest request) {
         User user = userRepository.findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
 

@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.controller;
 
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
@@ -72,7 +73,7 @@ public class ControllerTESTRAI {
 
 
     @PostMapping("pb/test/upload")
-    public ResponseEntity<String> uploadImage( MultipartFile file ) {
+    public ResponseEntity<String> uploadImage(@ModelAttribute MultipartFile file ) {
         String nomePath = "test.png";
         String imageUrl = imageContainerUtil.uploadImage(file, nomePath);
         return ResponseEntity.ok(imageUrl);
@@ -95,5 +96,26 @@ public class ControllerTESTRAI {
                 .authority(authority)
                 .token(jwt)
                 .build();
+    }
+
+    @PostMapping("pb/test/ripetiStringa")
+    public ResponseEntity<String> ripetiStringa(@RequestBody String stringa) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 1; i++) {
+            sb.append(stringa);
+        }
+        return ResponseEntity.ok(sb.toString());
+
+    }
+    @PostMapping("pb/test/dtoconfoto")
+    public ResponseEntity<String> dtoConFoto(@ModelAttribute DipendenteRequest request) {
+        String nome= request.getNome();
+        String cognome= request.getCognome();
+        MultipartFile foto= request.getFotoProfilo();
+       String link="nessun link";
+        if(foto!=null){
+        link=imageContainerUtil.uploadImage(foto, nome + cognome + ".png");
+       }
+        return ResponseEntity.ok("user.toString() \nlink: "+link);
     }
 }

@@ -1,4 +1,4 @@
-package it.unina.dietiestates25.dto.request;
+package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
 import it.unina.dietiestates25.entity.ContrattoAffitto;
 import it.unina.dietiestates25.entity.ContrattoVendita;
