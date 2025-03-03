@@ -1,5 +1,10 @@
 package it.unina.dietiestates25.controller;
 
+import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
+import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
+import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.service.JwtService;
 import it.unina.dietiestates25.utils.ImageContainerUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +23,8 @@ public class ControllerTESTRAI {
 
     private final String chiaveApi = "89dcc279975c4ca2bc1f39fb349bc4da";
     private final WebClient.Builder webClientBuilder;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @GetMapping("pb/test/geoapify/{latitudine}/{longitudine}")
     public List<String> verificaVicino(@PathVariable double latitudine, @PathVariable double longitudine) {
@@ -69,5 +76,24 @@ public class ControllerTESTRAI {
         String nomePath = "test.png";
         String imageUrl = imageContainerUtil.uploadImage(file, nomePath);
         return ResponseEntity.ok(imageUrl);
+    }
+
+    //getToken for testing member
+    @GetMapping("pb/test/getToken")
+    public Object getToken(@RequestParam int id) {
+        User user = userRepository.findById(2)
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato", "id", id));
+
+
+        String authority = user.getAuthority().getAuthorityName().name();
+        String jwt = jwtService.generateToken(user);
+
+     return     JwtAuthenticationResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .authority(authority)
+                .token(jwt)
+                .build();
     }
 }
