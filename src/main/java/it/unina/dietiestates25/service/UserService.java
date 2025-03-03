@@ -18,6 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final PasswordService passwordService;
+    private final ImageUploaderService imageUploaderService;
 
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
@@ -36,14 +37,25 @@ public class UserService {
                 .cognome(request.getCognome())
                 .user(user)
                 .build();
-        salvaImpiegato(user, datiImpiegato);
+        Integer idUser = salvaImpiegato(user, datiImpiegato);
+        user.setId(idUser);
+        try {
+            String urlFotoProfilo = null;
+            if(request.getFotoProfilo()!=null){
+                urlFotoProfilo= imageUploaderService.salvaFotoProfilo(request.getFotoProfilo(),idUser);
+            }
+            user.setUrlFotoProfilo(urlFotoProfilo);
+            userRepository.save(user);
+        }catch (Exception e){
+ System.out.println("Non è stata salvata la foto profilo al dipendete : "+user);        }
 
         return NewDipendeteResponse.builder().user(user).password(password).build();
     }
 
-    private void salvaImpiegato(User user, DatiImpiegato datiImpiegato) {
-        userRepository.save(user);
+    private Integer salvaImpiegato(User user, DatiImpiegato datiImpiegato) {
+        Integer idUser=userRepository.save(user).getId();
         datiImpiegatoRepository.save(datiImpiegato);
+        return idUser;
     }
 
 

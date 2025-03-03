@@ -22,6 +22,9 @@ public class User extends CreationUpdate implements UserDetails {
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = true)
+    private String UrlFotoProfilo;
+
     @Column(unique = true, nullable = false)
     private String email;
 
