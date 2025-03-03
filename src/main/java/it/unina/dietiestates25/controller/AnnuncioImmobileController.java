@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.controller;
 
-import it.unina.dietiestates25.dto.request.AnnuncioImmobiliareRequest;
-import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
+
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

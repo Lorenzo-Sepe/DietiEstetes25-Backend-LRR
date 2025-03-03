@@ -3,6 +3,9 @@ package it.unina.dietiestates25.service;
 
 
 import it.unina.dietiestates25.dto.request.*;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ImmobileRequest;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;

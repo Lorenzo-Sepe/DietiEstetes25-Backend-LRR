@@ -1,5 +1,7 @@
 package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
+import it.unina.dietiestates25.dto.request.CaratteristicheAggiuntiveRequest;
+import it.unina.dietiestates25.dto.request.IndirizzoRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
