@@ -2,9 +2,6 @@ package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
 import it.unina.dietiestates25.dto.request.DatiAffittoRequest;
 import it.unina.dietiestates25.dto.request.DatiVenditaRequest;
-import it.unina.dietiestates25.entity.ContrattoAffitto;
-import it.unina.dietiestates25.entity.ContrattoVendita;
-import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -10,9 +10,11 @@ import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
+import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecification;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -183,5 +185,22 @@ public class AnnuncioImmobileService {
         immaginiImmobili.add(img2);
 
         return immaginiImmobili;
+    }
+
+
+    public List<AnnuncioImmobiliare> cercaAnnunci(FiltroAnnuncio filtro) {
+        Specification<AnnuncioImmobiliare> spec = Specification
+                .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
+                .and(AnnuncioImmobiliareSpecification.conTipologiaImmobile(filtro.getTipologiaImmobile()))
+                .and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
+                .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
+               // .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
+                .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
+
+        return annuncioImmobiliareRepository.findAll(spec);
+    }
+
+    public List<AnnuncioImmobiliare> cercaAnnunci() {
+        return annuncioImmobiliareRepository.findAll();
     }
 }
