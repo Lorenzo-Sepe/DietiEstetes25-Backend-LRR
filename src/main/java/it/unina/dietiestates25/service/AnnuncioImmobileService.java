@@ -49,24 +49,14 @@ public class AnnuncioImmobileService {
                 .build();
 
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
-        int immobileId = annuncio.getImmobile().getId();
-        List <MultipartFile> files = recuperaMultipartFiles(request.getImmobile().getImmagini());
-        List<String> imageUrls = imageUploaderService.salvaImmaginiAnnuncio(files, immobileId);
-        List<ImmaginiImmobile> immaginiImmobili = new ArrayList<>();
-        for (int i = 0; i < files.size(); i++) {
-            annuncio.getImmobile().getImmagini().get(i).setUrl(imageUrls.get(i));
-        }
+
+        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncio);
+
         annuncioImmobiliareRepository.save(annuncio);
 
         return "Annuncio creato con successo";
     }
 
-    // Metodo per recuperare tutti i MultipartFile da una lista di ImmaginiImmobiliRequest
-    public List<MultipartFile> recuperaMultipartFiles(List<ImmaginiImmobiliRequest> immaginiRequests) {
-        return immaginiRequests.stream()
-                .map(ImmaginiImmobiliRequest::getFile)
-                .collect(Collectors.toList());
-    }
     private Immobile getImmobileByRequest(ImmobileRequest request){
 
         Immobile immobile = Immobile.builder()
@@ -199,10 +189,35 @@ public class AnnuncioImmobileService {
                     .descrizione(img.getDescrizione())
                     .immobile(immobile)
                     .build();
+
             immaginiImmobili.add(immagine);
         });
 
         return immaginiImmobili;
+    }
+
+    private void updateImmaginiAnnuncio(List<ImmaginiImmobiliRequest> immaginiRequest, AnnuncioImmobiliare annuncio){
+
+        int immobileId = annuncio.getImmobile().getId();
+
+        List <MultipartFile> immaginiFile = getListMultipartFilesFromRequest(immaginiRequest);
+
+        List<String> urlImmagini = imageUploaderService.salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId);
+
+        setUrlToImmaginiAnnuncio(annuncio.getImmobile().getImmagini(),immaginiFile,urlImmagini);
+    }
+
+    private List<MultipartFile> getListMultipartFilesFromRequest(List<ImmaginiImmobiliRequest> immaginiRequests) {
+        return immaginiRequests.stream()
+                .map(ImmaginiImmobiliRequest::getFile)
+                .collect(Collectors.toList());
+    }
+
+    private void setUrlToImmaginiAnnuncio(List<ImmaginiImmobile> immaginiImmobile,List<MultipartFile> immaginiFile,List<String> urlImmagini){
+
+        for (int i = 0; i < immaginiFile.size(); i++) {
+            immaginiImmobile.get(i).setUrl(urlImmagini.get(i));
+        }
     }
 
 
@@ -217,16 +232,4 @@ public class AnnuncioImmobileService {
 
         return annuncioImmobiliareRepository.findAll(spec);
     }
-
-    /*public List<AnnuncioImmobiliareResponse> cercaAnnunci() {
-        List<AnnuncioImmobiliare> annunci= annuncioImmobiliareRepository.findAll();
-        List<AnnuncioImmobiliareResponse> annunciResponse = new ArrayList<>();
-
-        //mapping from entity to response
-        for(AnnuncioImmobiliare annuncio: annunci){
-            AnnuncioImmobiliareResponse response = modelMapper.map(annuncio, AnnuncioImmobiliareResponse.class);
-            annunciResponse.add(response);
-        }
-        return annunciResponse;
-    }*/
 }

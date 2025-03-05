@@ -243,7 +243,7 @@ public class ControllerTESTRAI {
                         .prezzoVendita(((ContrattoVendita) contratto).getPrezzoVendita())
                         .build();
 
-                contrattoResponse.setTipoContratto("VENDITTO");
+                contrattoResponse.setTipoContratto("VENDITA");
                 contrattoResponse.setContrattoVenditaResponse(contrattoVenditaResponse);
             }
 
