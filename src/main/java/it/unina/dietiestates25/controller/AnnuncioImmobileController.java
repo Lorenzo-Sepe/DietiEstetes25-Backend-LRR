@@ -3,6 +3,7 @@ package it.unina.dietiestates25.controller;
 
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
+import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AnnuncioImmobileController {
     }
 
     @GetMapping("/pb/annuncioImmobiliare")
-    List<AnnuncioImmobiliare> GetAllAnnunci(){
+    List<AnnuncioImmobiliareResponse> GetAllAnnunci(){
         return (annuncioImmobileService.cercaAnnunci());
     }
     @PostMapping("/pb/annuncioImmobiliare/cerca")

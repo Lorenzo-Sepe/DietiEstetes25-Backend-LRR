@@ -21,7 +21,6 @@ public class Proposta {
     @Column(nullable = false)
     private double prezzoProposta;
 
-    @Column(nullable = false)
     private Double controproposta;
 
     @Column(nullable = false, length = 100)
@@ -34,10 +33,10 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatoProposta stato;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private Contatto contatto;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

@@ -1,15 +1,20 @@
 package it.unina.dietiestates25.controller;
 
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
+import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
+import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.service.JwtService;
 import it.unina.dietiestates25.utils.ImageContainerUtil;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +31,7 @@ public class ControllerTESTRAI {
     private final WebClient.Builder webClientBuilder;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+
 
     @GetMapping("pb/test/geoapify/{latitudine}/{longitudine}")
     public List<String> verificaVicino(@PathVariable double latitudine, @PathVariable double longitudine) {
@@ -71,7 +77,7 @@ public class ControllerTESTRAI {
 
     private final ImageContainerUtil imageContainerUtil;
 
-
+    @Deprecated
     @PostMapping("pb/test/upload")
     public ResponseEntity<String> uploadImage(@ModelAttribute MultipartFile file ) {
         String nomePath = "test.png";
@@ -107,6 +113,7 @@ public class ControllerTESTRAI {
         return ResponseEntity.ok(sb.toString());
 
     }
+
     @PostMapping("pb/test/dtoconfoto")
     public ResponseEntity<String> dtoConFoto(@ModelAttribute DipendenteRequest request) {
         String nome= request.getNome();
@@ -117,5 +124,22 @@ public class ControllerTESTRAI {
         link=imageContainerUtil.uploadImage(foto, nome + cognome + ".png");
        }
         return ResponseEntity.ok("user.toString() \nlink: "+link);
+    }
+
+
+    private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
+    private ModelMapper modelMapper;
+
+    @Transactional
+    @GetMapping("pb/test/immobili")
+    public List<AnnuncioImmobiliareResponse> getAllImmobileResponses() {
+        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll();
+        List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
+        for(AnnuncioImmobiliare annuncio: annunci){
+            AnnuncioImmobiliareResponse annuncioResponse = modelMapper.map(annuncio, AnnuncioImmobiliareResponse.class);
+            annunciResponse.add(annuncioResponse);
+        }
+
+        return annunciResponse;
     }
 }

@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
 
+import it.unina.dietiestates25.dto.request.ImmobileRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

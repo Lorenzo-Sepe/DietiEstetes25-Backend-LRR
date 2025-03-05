@@ -1,11 +1,10 @@
 package it.unina.dietiestates25.service;
 
 
-
 import it.unina.dietiestates25.dto.request.*;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ImmobileRequest;
+import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
@@ -14,6 +13,7 @@ import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecific
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +26,7 @@ import java.util.List;
 public class AnnuncioImmobileService {
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
+    private final ModelMapper modelMapper;
 
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
@@ -200,7 +201,15 @@ public class AnnuncioImmobileService {
         return annuncioImmobiliareRepository.findAll(spec);
     }
 
-    public List<AnnuncioImmobiliare> cercaAnnunci() {
-        return annuncioImmobiliareRepository.findAll();
+    public List<AnnuncioImmobiliareResponse> cercaAnnunci() {
+        List<AnnuncioImmobiliare> annunci= annuncioImmobiliareRepository.findAll();
+        List<AnnuncioImmobiliareResponse> annunciResponse = new ArrayList<>();
+
+        //mapping from entity to response
+        for(AnnuncioImmobiliare annuncio: annunci){
+            AnnuncioImmobiliareResponse response = modelMapper.map(annuncio, AnnuncioImmobiliareResponse.class);
+            annunciResponse.add(response);
+        }
+        return annunciResponse;
     }
 }
