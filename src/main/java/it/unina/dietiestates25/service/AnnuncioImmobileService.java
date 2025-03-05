@@ -16,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class AnnuncioImmobileService {
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
     private final ModelMapper modelMapper;
-
+    private final ImageUploaderService imageUploaderService;
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
 
@@ -47,11 +49,25 @@ public class AnnuncioImmobileService {
                 .proposte(new ArrayList<>())
                 .build();
 
-        annuncioImmobiliareRepository.save(annuncioImmobiliare);
+        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
+        int immobileId = annuncio.getImmobile().getId();
+        List <MultipartFile> files = recuperaMultipartFiles(request.getImmobile().getImmagini());
+        List<String> imageUrls = imageUploaderService.salvaImmaginiAnnuncio(files, immobileId);
+        List<ImmaginiImmobile> immaginiImmobili = new ArrayList<>();
+        for (int i = 0; i < files.size(); i++) {
+            annuncio.getImmobile().getImmagini().get(i).setUrl(imageUrls.get(i));
+        }
+        annuncioImmobiliareRepository.save(annuncio);
 
         return "Annuncio creato con successo";
     }
 
+    // Metodo per recuperare tutti i MultipartFile da una lista di ImmaginiImmobiliRequest
+    public List<MultipartFile> recuperaMultipartFiles(List<ImmaginiImmobiliRequest> immaginiRequests) {
+        return immaginiRequests.stream()
+                .map(ImmaginiImmobiliRequest::getFile)
+                .collect(Collectors.toList());
+    }
     private Immobile getImmobileByRequest(ImmobileRequest request){
 
         Immobile immobile = Immobile.builder()
@@ -166,24 +182,19 @@ public class AnnuncioImmobileService {
         return contrattoVendita;
     }
 
-    // TODO da implementare
     private List<ImmaginiImmobile> getListaImmaginiFromRequest(List<ImmaginiImmobiliRequest> immagini, Immobile immobile){
 
         List<ImmaginiImmobile> immaginiImmobili = new ArrayList<>();
 
-        ImmaginiImmobile img1 = ImmaginiImmobile.builder()
-                .url("ulr1.it")
-                .descrizione("Prima immagine dell'annuncio")
-                .immobile(immobile)
-                .build();
-        ImmaginiImmobile img2 = ImmaginiImmobile.builder()
-                .url("ulr2.it")
-                .descrizione("seconda immagine dell'annuncio")
-                .immobile(immobile)
-                .build();
+        immagini.stream().forEach(img -> {
 
-        immaginiImmobili.add(img1);
-        immaginiImmobili.add(img2);
+            ImmaginiImmobile immagine = ImmaginiImmobile.builder()
+                    .url("placeholder.it")
+                    .descrizione(img.getDescrizione())
+                    .immobile(immobile)
+                    .build();
+            immaginiImmobili.add(immagine);
+        });
 
         return immaginiImmobili;
     }
