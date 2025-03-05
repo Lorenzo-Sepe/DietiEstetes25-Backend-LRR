@@ -7,6 +7,7 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
+import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
 import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecification;
@@ -26,7 +27,6 @@ import java.util.List;
 public class AnnuncioImmobileService {
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
-    private final ModelMapper modelMapper;
 
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
@@ -131,11 +131,13 @@ public class AnnuncioImmobileService {
 
         Contratto contratto;
 
-        if(request.getDatiAffittoRequest() != null)
+        if(request.getTipoDiContratto().equals("AFFITTO")){
             contratto = getContrattoAffittoFromRequest(request);
+        }
 
-        else
+        else{
             contratto = getContrattoVenditaFromRequest(request);
+        }
 
         return contratto;
     }
@@ -145,11 +147,13 @@ public class AnnuncioImmobileService {
         DatiAffittoRequest datiAffittoRequest = request.getDatiAffittoRequest();
 
         ContrattoAffitto contrattoAffitto = ContrattoAffitto.builder()
-                .caparra(datiAffittoRequest.getCaparra())
-                .tempoMinimo(datiAffittoRequest.getTempoMinimo())
-                .tempoMassimo(datiAffittoRequest.getTempoMassimo())
-                .prezzo(request.getPrezzo())
                 .build();
+
+        contrattoAffitto.setCaparra(datiAffittoRequest.getCaparra());
+        contrattoAffitto.setTempoMinimo(datiAffittoRequest.getTempoMinimo());
+        contrattoAffitto.setTempoMassimo(datiAffittoRequest.getTempoMassimo());
+        contrattoAffitto.setPrezzoAffitto(datiAffittoRequest.getPrezzo());
+        contrattoAffitto.setTipoContratto("AFFITTO");
 
         return contrattoAffitto;
     }
@@ -159,9 +163,12 @@ public class AnnuncioImmobileService {
         DatiVenditaRequest datiVenditaRequest = request.getDatiVenditaRequest();
 
         ContrattoVendita contrattoVendita = ContrattoVendita.builder()
-                .mutuoEstinto(datiVenditaRequest.isMutuoEstinto())
-                .prezzo(request.getPrezzo())
                 .build();
+
+        contrattoVendita.setMutuoEstinto(datiVenditaRequest.isMutuoEstinto());
+        contrattoVendita.setPrezzoVendita(datiVenditaRequest.getPrezzo());
+        contrattoVendita.setTipoContratto(TipoContratto.VENDITA.toString());
+
 
         return contrattoVendita;
     }
@@ -201,7 +208,7 @@ public class AnnuncioImmobileService {
         return annuncioImmobiliareRepository.findAll(spec);
     }
 
-    public List<AnnuncioImmobiliareResponse> cercaAnnunci() {
+    /*public List<AnnuncioImmobiliareResponse> cercaAnnunci() {
         List<AnnuncioImmobiliare> annunci= annuncioImmobiliareRepository.findAll();
         List<AnnuncioImmobiliareResponse> annunciResponse = new ArrayList<>();
 
@@ -211,5 +218,5 @@ public class AnnuncioImmobileService {
             annunciResponse.add(response);
         }
         return annunciResponse;
-    }
+    }*/
 }

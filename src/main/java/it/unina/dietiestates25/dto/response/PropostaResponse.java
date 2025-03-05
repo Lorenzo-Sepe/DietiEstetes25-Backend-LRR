@@ -11,10 +11,7 @@ import lombok.*;
 public class PropostaResponse {
     private double prezzoProposta;
     private Double controproposta;
-    private String nome;
-    private String cognome;
-    private StatoProposta stato;
-    private int userId;
-    private int contattoId;
-    private int annuncioId;
+    private String stato;
+    private UserResponse utente;
+    private ContattoResponse contatto;
 }

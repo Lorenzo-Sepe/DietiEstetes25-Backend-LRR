@@ -7,8 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ImmaginiImmobileResponse {
-    private String url;
+public class UserResponse {
 
-    private String descrizione;
+    String email;
+
+    String username;
+
+    String urlFotoProfilo;
 }

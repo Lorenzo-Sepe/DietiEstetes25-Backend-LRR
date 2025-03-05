@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class IndirizzoResponse {
-    private int id;
     private String via;
     private String numeroCivico;
     private String citta;

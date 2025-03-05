@@ -28,10 +28,11 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request));
     }
 
-    @GetMapping("/pb/annuncioImmobiliare")
+    /*@GetMapping("/pb/annuncioImmobiliare")
     List<AnnuncioImmobiliareResponse> GetAllAnnunci(){
         return (annuncioImmobileService.cercaAnnunci());
-    }
+    }*/
+
     @PostMapping("/pb/annuncioImmobiliare/cerca")
     public List<AnnuncioImmobiliare> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
         return annuncioImmobileService.cercaAnnunci(filtro);

@@ -18,10 +18,10 @@ public abstract class Contratto extends CreationUpdate {
     private int id;
 
     @Column(nullable = false)
-    private Double prezzo;
+    private String tipoContratto;
 
     // Constructor for subclasses to use
-    protected Contratto(Double prezzo) {
-        this.prezzo = prezzo;
+    protected Contratto(String tipoContratto) {
+        this.tipoContratto = tipoContratto;
     }
 }

@@ -11,9 +11,8 @@ import lombok.Setter;
 @Setter
 public class ContrattoRequest {
 
-    @NotNull(message = "Il prezzo è obbligatorio")
-    @Min(value = 0, message = "Il prezzo non può essere negativo")
-    private Double prezzo;
+    @NotNull(message = "Il tipo di contratto + obbligatorio")
+    private String tipoDiContratto;
 
     private DatiAffittoRequest datiAffittoRequest;
 
