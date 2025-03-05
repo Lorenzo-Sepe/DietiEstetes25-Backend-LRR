@@ -137,7 +137,9 @@ public class ControllerTESTRAI {
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
         for(AnnuncioImmobiliare annuncio: annunci){
             AnnuncioImmobiliareResponse annuncioResponse = modelMapper.map(annuncio, AnnuncioImmobiliareResponse.class);
+           // annuncioResponse.getImmobile().setIndirizzo(null);
             annunciResponse.add(annuncioResponse);
+            break;
         }
 
         return annunciResponse;
