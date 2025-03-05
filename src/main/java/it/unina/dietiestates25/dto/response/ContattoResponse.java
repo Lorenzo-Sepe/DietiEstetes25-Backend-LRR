@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @Builder
-public class ImmaginiImmobileResponse {
-    private String url;
+public class ContattoResponse {
 
-    private String descrizione;
+    String tipo;
+
+    String valore;
 }

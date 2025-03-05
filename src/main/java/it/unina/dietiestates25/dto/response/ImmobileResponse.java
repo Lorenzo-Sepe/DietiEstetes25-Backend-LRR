@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ImmobileResponse {
-    private int id;
     private String tipologiaImmobile;
     private int metriQuadri;
     private String classeEnergetica;

@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CaratteristicheAggiuntiveResponse {
-    private int id;
     private boolean balconi;
     private boolean garage;
     private boolean postiAuto;

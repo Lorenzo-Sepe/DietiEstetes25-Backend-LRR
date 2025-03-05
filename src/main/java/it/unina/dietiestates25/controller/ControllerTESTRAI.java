@@ -1,13 +1,12 @@
 package it.unina.dietiestates25.controller;
 
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
-import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
-import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
-import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
-import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.dto.response.*;
+import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import it.unina.dietiestates25.service.JwtService;
 import it.unina.dietiestates25.utils.ImageContainerUtil;
 import lombok.AllArgsConstructor;
@@ -31,6 +30,7 @@ public class ControllerTESTRAI {
     private final WebClient.Builder webClientBuilder;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final AnnuncioImmobileService annuncioImmobileService;
 
 
     @GetMapping("pb/test/geoapify/{latitudine}/{longitudine}")
@@ -128,19 +128,123 @@ public class ControllerTESTRAI {
 
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
-    private ModelMapper modelMapper;
 
     @Transactional
     @GetMapping("pb/test/immobili")
     public List<AnnuncioImmobiliareResponse> getAllImmobileResponses() {
         List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll();
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
+
         for(AnnuncioImmobiliare annuncio: annunci){
-            AnnuncioImmobiliareResponse annuncioResponse = modelMapper.map(annuncio, AnnuncioImmobiliareResponse.class);
-           // annuncioResponse.getImmobile().setIndirizzo(null);
+
+            Indirizzo indirizzoImmobile = annuncio.getImmobile().getIndirizzo();
+            CaratteristicheAggiuntive caratteristicheAggiuntive = annuncio.getImmobile().getCaratteristicheAggiuntive();
+            List<ImmaginiImmobile> immaginiImmobile = annuncio.getImmobile().getImmagini();
+            List<Proposta> proposte = annuncio.getProposte();
+
+            IndirizzoResponse indirizzoResponse = IndirizzoResponse.builder()
+                    .via(indirizzoImmobile.getVia())
+                    .numeroCivico(indirizzoImmobile.getNumeroCivico())
+                    .citta(indirizzoImmobile.getCitta())
+                    .cap(indirizzoImmobile.getCap())
+                    .provincia(indirizzoImmobile.getCap())
+                    .nazione(indirizzoImmobile.getNazione())
+                    .longitudine(indirizzoImmobile.getLongitudine())
+                    .latitudine(indirizzoImmobile.getLatitudine())
+                    .build();
+
+            CaratteristicheAggiuntiveResponse caratteristicheAggiuntiveResponse = CaratteristicheAggiuntiveResponse.builder()
+                    .balconi(caratteristicheAggiuntive.isBalconi())
+                    .garage(caratteristicheAggiuntive.isGarage())
+                    .postiAuto(caratteristicheAggiuntive.isPostiAuto())
+                    .giardino(caratteristicheAggiuntive.isGiardino())
+                    .ascensore(caratteristicheAggiuntive.isAscensore())
+                    .portiere(caratteristicheAggiuntive.isPortiere())
+                    .riscaldamentoCentralizzato(caratteristicheAggiuntive.isRiscaldamentoCentralizzato())
+                    .climatizzatori(caratteristicheAggiuntive.isClimatizzatori())
+                    .pannelliSolari(caratteristicheAggiuntive.isPannelliSolari())
+                    .cantina(caratteristicheAggiuntive.isCantina())
+                    .soffitta(caratteristicheAggiuntive.isSoffitta())
+                    .build();
+
+            List<ImmaginiImmobileResponse> immaginiImmobileResponse = new ArrayList<>();
+            for(ImmaginiImmobile immagine : immaginiImmobile){
+
+                ImmaginiImmobileResponse immagineResponse = ImmaginiImmobileResponse.builder()
+                        .url(immagine.getUrl())
+                        .descrizione(immagine.getDescrizione())
+                        .build();
+
+                immaginiImmobileResponse.add(immagineResponse);
+            }
+
+            ImmobileResponse immobileResponse = ImmobileResponse.builder()
+                    .tipologiaImmobile(annuncio.getImmobile().getTipologiaImmobile().toString())
+                    .metriQuadri(annuncio.getImmobile().getMetriQuadri())
+                    .classeEnergetica(annuncio.getImmobile().getClasseEnergetica().toString())
+                    .numeroServizi(annuncio.getImmobile().getNumeroServizi())
+                    .numeroStanze(annuncio.getImmobile().getNumeroStanze())
+                    .numeroDiPiani(annuncio.getImmobile().getNumeroDiPiani())
+                    .indirizzo(indirizzoResponse)
+                    .caratteristicheAggiuntive(caratteristicheAggiuntiveResponse)
+                    .immagini(immaginiImmobileResponse)
+                    .build();
+
+            List<PropostaResponse> proposteRespose = new ArrayList<>();
+            for(Proposta proposta : proposte){
+
+                UserResponse userReponse = UserResponse.builder()
+                        .email(proposta.getUser().getEmail())
+                        .username(proposta.getUser().getUsername())
+                        .urlFotoProfilo(proposta.getUser().getUrlFotoProfilo())
+                        .build();
+
+                ContattoResponse contattoResponse = ContattoResponse.builder()
+                        .tipo(proposta.getContatto().getTipo())
+                        .valore(proposta.getContatto().getValore())
+                        .build();
+
+                PropostaResponse propostaResponse = PropostaResponse.builder()
+                        .prezzoProposta(proposta.getPrezzoProposta())
+                        .controproposta(proposta.getPrezzoProposta())
+                        .stato(proposta.getStato().toString())
+                        .utente(userReponse)
+                        .contatto(contattoResponse)
+                        .build();
+
+                proposteRespose.add(propostaResponse);
+            }
+
+            UserResponse agenteCreatoreAnnuncio = UserResponse.builder()
+                    .email(annuncio.getAgente().getEmail())
+                    .username(annuncio.getAgente().getUsername())
+                    .urlFotoProfilo(annuncio.getAgente().getUrlFotoProfilo())
+                    .build();
+
+            Contratto contratto = annuncio.getContratto();
+
+            if(contratto.getTipoContratto().equals("AFFITTO")){
+
+
+
+            }else{
+
+
+            }
+
+            AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
+                    .titolo(annuncio.getTitolo())
+                    .descrizione(annuncio.getDescrizione())
+                    .immobile(immobileResponse)
+                    .proposte(proposteRespose)
+                    .agente(agenteCreatoreAnnuncio)
+                    .contratto(annuncio.getContratto())
+                    .build();
+
             annunciResponse.add(annuncioResponse);
-            break;
         }
+
+        int puntoBreak;
 
         return annunciResponse;
     }
