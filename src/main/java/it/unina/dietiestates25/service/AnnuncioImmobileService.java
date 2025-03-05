@@ -4,7 +4,6 @@ package it.unina.dietiestates25.service;
 import it.unina.dietiestates25.dto.request.*;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
-import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipoContratto;
@@ -14,7 +13,6 @@ import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecific
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +27,8 @@ import java.util.stream.Collectors;
 public class AnnuncioImmobileService {
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
+    private final ImageUploaderService imageUploaderService;
+
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
 
