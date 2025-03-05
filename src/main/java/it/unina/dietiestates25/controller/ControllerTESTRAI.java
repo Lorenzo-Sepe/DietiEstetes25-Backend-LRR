@@ -222,14 +222,29 @@ public class ControllerTESTRAI {
                     .build();
 
             Contratto contratto = annuncio.getContratto();
+            ContrattoResponse contrattoResponse = ContrattoResponse.builder().build();
 
-            if(contratto.getTipoContratto().equals("AFFITTO")){
+            if(contratto instanceof ContrattoAffitto){
 
+                ContrattoAffittoResponse contrattoAffittoResponse = ContrattoAffittoResponse.builder()
+                        .caparra(((ContrattoAffitto) contratto).getCaparra())
+                        .prezzoAffitto(((ContrattoAffitto) contratto).getPrezzoAffitto())
+                        .tempoMinimo(((ContrattoAffitto) contratto).getTempoMinimo())
+                        .tempoMassimo(((ContrattoAffitto) contratto).getTempoMassimo())
+                        .build();
 
+                        contrattoResponse.setContrattoAffittoResponse(contrattoAffittoResponse);
+                        contrattoResponse.setTipoContratto("AFFITTO");
 
-            }else{
+            }else if(contratto instanceof ContrattoVendita){
 
+                ContrattoVenditaResponse contrattoVenditaResponse = ContrattoVenditaResponse.builder()
+                        .mutuoEstinto(((ContrattoVendita) contratto).isMutuoEstinto())
+                        .prezzoVendita(((ContrattoVendita) contratto).getPrezzoVendita())
+                        .build();
 
+                contrattoResponse.setTipoContratto("VENDITTO");
+                contrattoResponse.setContrattoVenditaResponse(contrattoVenditaResponse);
             }
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
@@ -238,13 +253,11 @@ public class ControllerTESTRAI {
                     .immobile(immobileResponse)
                     .proposte(proposteRespose)
                     .agente(agenteCreatoreAnnuncio)
-                    .contratto(annuncio.getContratto())
+                    .contratto(contrattoResponse)
                     .build();
 
             annunciResponse.add(annuncioResponse);
         }
-
-        int puntoBreak;
 
         return annunciResponse;
     }

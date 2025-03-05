@@ -15,7 +15,7 @@ public class AnnuncioImmobiliareResponse {
     private String descrizione;
     private UserResponse agente;
     private ImmobileResponse immobile;
-    private Contratto contratto;
+    private ContrattoResponse contratto;
     private List<PropostaResponse> proposte;
 }
 
