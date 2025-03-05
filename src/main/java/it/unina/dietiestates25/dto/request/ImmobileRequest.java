@@ -35,6 +35,6 @@ public class ImmobileRequest {
 
     private CaratteristicheAggiuntiveRequest caratteristicheAggiuntive; // DTO per le caratteristiche aggiuntive
 
-    private List<String> immagini; // Lista di URL delle immagini
+    private List<ImmaginiImmobiliRequest> immagini; // Lista di URL delle immagini
 }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @Component
 @AllArgsConstructor
@@ -17,8 +18,9 @@ public class ImageContainerUtil {
 
     public String uploadImage(MultipartFile file, String nomePath) {
         try {
-            String estensione= file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-            nomePath += estensione;
+            String estensione = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+            String currentDate = LocalDate.now().toString();
+            nomePath += "-" + currentDate + estensione;
             // Get a BlobClient to upload the image file
             BlobClient blobClient = blobContainerClient.getBlobClient(nomePath);
             blobClient.upload(file.getInputStream(), file.getSize(), true);
