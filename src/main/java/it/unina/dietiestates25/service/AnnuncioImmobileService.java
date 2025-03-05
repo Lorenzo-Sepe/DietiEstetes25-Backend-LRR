@@ -167,7 +167,7 @@ public class AnnuncioImmobileService {
     }
 
     // TODO da implementare
-    private List<ImmaginiImmobile> getListaImmaginiFromRequest(List<String> immagini,Immobile immobile){
+    private List<ImmaginiImmobile> getListaImmaginiFromRequest(List<ImmaginiImmobiliRequest> immagini, Immobile immobile){
 
         List<ImmaginiImmobile> immaginiImmobili = new ArrayList<>();
 
