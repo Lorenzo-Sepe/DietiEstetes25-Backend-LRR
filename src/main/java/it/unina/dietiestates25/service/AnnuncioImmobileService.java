@@ -1,7 +1,6 @@
 package it.unina.dietiestates25.service;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import it.unina.dietiestates25.dto.request.*;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
@@ -256,7 +255,7 @@ public class AnnuncioImmobileService {
         }
 
         return annunciResponse;
-    }*/
+    }
 
 
    // Verifica se l'utente corrente è il proprietario dell'annuncio
