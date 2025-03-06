@@ -40,4 +40,11 @@ public class AnnuncioImmobileController {
         annuncioImmobileService.cancellaAnnuncioImmobiliare(id);
         return new ResponseEntity<>("Annuncio eliminato con successo", HttpStatus.OK);
     }
+
+    @PatchMapping("/annuncioImmobiliare/{id}")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
+    public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id, @RequestBody AnnuncioImmobiliareRequest request) {
+        annuncioImmobileService.modificaAnnuncioImmobiliare(id, request);
+        return new ResponseEntity<>("Annuncio modificato con successo", HttpStatus.OK);
+    }
 }

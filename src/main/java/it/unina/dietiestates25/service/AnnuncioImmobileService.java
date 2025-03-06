@@ -477,4 +477,9 @@ public class AnnuncioImmobileService {
         verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
         annuncioImmobiliareRepository.deleteById(id);
     }
+
+    public void modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
+        verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
+        //TODO: implementare metodo per modificare annuncio immobiliare
+    }
 }
