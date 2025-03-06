@@ -5,15 +5,19 @@ import it.unina.dietiestates25.dto.request.*;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
 import it.unina.dietiestates25.entity.*;
+import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
+import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
 import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecification;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +32,7 @@ public class AnnuncioImmobileService {
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
     private final ImageUploaderService imageUploaderService;
+    private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
 
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
@@ -229,4 +234,34 @@ public class AnnuncioImmobileService {
         }
         return annunciResponse;
     }*/
+
+
+   // Verifica se l'utente corrente è il proprietario dell'annuncio
+    private boolean isProprietarioAnnuncio(AnnuncioImmobiliare annuncio) {
+        User utenteCorrente = UserContex.getUserCurrent();
+        return annuncio.getAgente().equals(utenteCorrente);
+    }
+
+    // Verifica se l'utente corrente è il capo dell'agenzia
+    private boolean isAdminDellaAgenzia(AnnuncioImmobiliare annuncio) {
+        User utenteCorrente = UserContex.getUserCurrent();
+        AgenziaImmobiliare agenziaDelUtenteCorrente= agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(utenteCorrente)
+                .orElseThrow(() -> new AccessDeniedException("Non sei un dipendente di nessuna agenzia immobiliare"));
+        User agenteAnnuncio = annuncio.getAgente();
+        AgenziaImmobiliare agenziaAssociataAnnuncio = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(agenteAnnuncio).orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare associata all'annuncio","id",annuncio.getId()));
+        return agenziaAssociataAnnuncio.equals(agenziaDelUtenteCorrente);
+    }
+
+    // Verifica se l'utente corrente ha il permesso di modificare l'annuncio
+    public void verificaPermessoModificaAnnuncio(AnnuncioImmobiliare annuncio) {
+        if(UserContex.getRoleCurrent() == AuthorityName.MEMBER) {
+            throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio");
+        }else if(UserContex.getRoleCurrent() == AuthorityName.ADMIN && !isAdminDellaAgenzia(annuncio)) {
+            throw new AccessDeniedException("Questo annuncio è di un altra Agenzia Immobiliare\nNon hai il permesso di modificare questo annuncio");
+
+        }
+        if (UserContex.getRoleCurrent() == AuthorityName.AGENT && !isProprietarioAnnuncio(annuncio)) {
+            throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio\n puoi modificar solo i tuoi Annunci immobiliari");
+        }
+    }
 }
