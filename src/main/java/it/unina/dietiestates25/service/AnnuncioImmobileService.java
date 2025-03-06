@@ -1,9 +1,11 @@
 package it.unina.dietiestates25.service;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import it.unina.dietiestates25.dto.request.*;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
+import it.unina.dietiestates25.dto.response.*;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipoContratto;
@@ -221,15 +223,219 @@ public class AnnuncioImmobileService {
     }
 
 
-    public List<AnnuncioImmobiliare> cercaAnnunci(FiltroAnnuncio filtro) {
-        Specification<AnnuncioImmobiliare> spec = Specification
+    public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
+
+        Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
+
+        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll(spec);
+
+        List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
+
+        for(AnnuncioImmobiliare annuncio : annunci){
+
+            ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
+            List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
+            ContrattoResponse contrattoResponse = getContrattoResponse(annuncio.getContratto());
+            UserResponse agenteCreatoreAnnuncio = getAgenteCreatoreAnnuncio(annuncio.getAgente());
+
+            AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
+                    .titolo(annuncio.getTitolo())
+                    .descrizione(annuncio.getDescrizione())
+                    .immobile(immobileResponse)
+                    .proposte(proposteResponse)
+                    .agente(agenteCreatoreAnnuncio)
+                    .contratto(contrattoResponse)
+                    .build();
+
+            annunciResponse.add(annuncioResponse);
+        }
+
+        return annunciResponse;
+    }
+
+    //TODO cambiare la logica del range del prezzo in seguito al cambiamento fatto in contratto (prezzo è passato ai figli)
+    private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncio filtro){
+
+        Specification<AnnuncioImmobiliare> specfication = Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
                 .and(AnnuncioImmobiliareSpecification.conTipologiaImmobile(filtro.getTipologiaImmobile()))
-                .and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
+                //.and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
                 .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
-               // .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
+                //.and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
                 .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
 
-        return annuncioImmobiliareRepository.findAll(spec);
+        return specfication;
+    }
+
+    private ImmobileResponse getImmobileResponse(Immobile immobile){
+
+        IndirizzoResponse indirizzoResponse = getIndirizzoResponse(immobile.getIndirizzo());
+        CaratteristicheAggiuntiveResponse caratteristicheAggiuntiveResponse = getCaratteristicheAggiuntiveResponse(immobile.getCaratteristicheAggiuntive());
+        List<ImmaginiImmobileResponse> immaginiImmobileResponse = getListImmaginiImmobiliResponse(immobile.getImmagini());
+
+        ImmobileResponse immobileResponse = ImmobileResponse.builder()
+                .tipologiaImmobile(immobile.getTipologiaImmobile().toString())
+                .metriQuadri(immobile.getMetriQuadri())
+                .classeEnergetica(immobile.getClasseEnergetica().toString())
+                .numeroServizi(immobile.getNumeroServizi())
+                .numeroStanze(immobile.getNumeroStanze())
+                .numeroDiPiani(immobile.getNumeroDiPiani())
+                .indirizzo(indirizzoResponse)
+                .caratteristicheAggiuntive(caratteristicheAggiuntiveResponse)
+                .immagini(immaginiImmobileResponse)
+                .build();
+
+        return immobileResponse;
+    }
+
+    private IndirizzoResponse getIndirizzoResponse(Indirizzo indirizzoImmobile){
+
+        IndirizzoResponse indirizzoResponse = IndirizzoResponse.builder()
+                .via(indirizzoImmobile.getVia())
+                .numeroCivico(indirizzoImmobile.getNumeroCivico())
+                .citta(indirizzoImmobile.getCitta())
+                .cap(indirizzoImmobile.getCap())
+                .provincia(indirizzoImmobile.getCap())
+                .nazione(indirizzoImmobile.getNazione())
+                .longitudine(indirizzoImmobile.getLongitudine())
+                .latitudine(indirizzoImmobile.getLatitudine())
+                .build();
+
+        return indirizzoResponse;
+    }
+
+    private CaratteristicheAggiuntiveResponse getCaratteristicheAggiuntiveResponse(CaratteristicheAggiuntive caratteristicheAggiuntive){
+
+        CaratteristicheAggiuntiveResponse caratteristicheAggiuntiveResponse = CaratteristicheAggiuntiveResponse.builder()
+                .balconi(caratteristicheAggiuntive.isBalconi())
+                .garage(caratteristicheAggiuntive.isGarage())
+                .postiAuto(caratteristicheAggiuntive.isPostiAuto())
+                .giardino(caratteristicheAggiuntive.isGiardino())
+                .ascensore(caratteristicheAggiuntive.isAscensore())
+                .portiere(caratteristicheAggiuntive.isPortiere())
+                .riscaldamentoCentralizzato(caratteristicheAggiuntive.isRiscaldamentoCentralizzato())
+                .climatizzatori(caratteristicheAggiuntive.isClimatizzatori())
+                .pannelliSolari(caratteristicheAggiuntive.isPannelliSolari())
+                .cantina(caratteristicheAggiuntive.isCantina())
+                .soffitta(caratteristicheAggiuntive.isSoffitta())
+                .build();
+
+        return caratteristicheAggiuntiveResponse;
+    }
+
+    private List<ImmaginiImmobileResponse> getListImmaginiImmobiliResponse(List<ImmaginiImmobile> immaginiImmobile){
+
+        List<ImmaginiImmobileResponse> immaginiImmobileResponse = new ArrayList<>();
+
+        for(ImmaginiImmobile immagine : immaginiImmobile){
+
+            ImmaginiImmobileResponse immagineResponse = ImmaginiImmobileResponse.builder()
+                    .url(immagine.getUrl())
+                    .descrizione(immagine.getDescrizione())
+                    .build();
+
+            immaginiImmobileResponse.add(immagineResponse);
+        }
+
+        return immaginiImmobileResponse;
+    }
+
+    private List<PropostaResponse> getListPropostaResponse(List<Proposta> proposte){
+
+        List<PropostaResponse> proposteRespose = new ArrayList<>();
+
+        for(Proposta proposta : proposte){
+
+            UserResponse userResponse = getUserProponente(proposta);
+            ContattoResponse contattoResponse = getContattoResponse(proposta);
+
+            PropostaResponse propostaResponse = PropostaResponse.builder()
+                    .prezzoProposta(proposta.getPrezzoProposta())
+                    .controproposta(proposta.getPrezzoProposta())
+                    .stato(proposta.getStato().toString())
+                    .utente(userResponse)
+                    .contatto(contattoResponse)
+                    .build();
+
+            proposteRespose.add(propostaResponse);
+        }
+
+        return proposteRespose;
+    }
+
+    private UserResponse getUserProponente(Proposta proposta){
+
+        UserResponse userProponente = UserResponse.builder()
+                .email(proposta.getUser().getEmail())
+                .username(proposta.getUser().getUsername())
+                .urlFotoProfilo(proposta.getUser().getUrlFotoProfilo())
+                .build();
+
+        return userProponente;
+    }
+
+    private ContattoResponse getContattoResponse(Proposta proposta){
+
+        ContattoResponse contattoResponse = ContattoResponse.builder()
+                .tipo(proposta.getContatto().getTipo())
+                .valore(proposta.getContatto().getValore())
+                .build();
+
+        return contattoResponse;
+    }
+
+    private ContrattoResponse getContrattoResponse(Contratto contratto){
+
+        ContrattoResponse contrattoResponse = ContrattoResponse.builder().build();
+
+        if(contratto instanceof ContrattoAffitto){
+
+            ContrattoAffittoResponse contrattoAffittoResponse = getContrattoAffitto((ContrattoAffitto)contratto);
+
+            contrattoResponse.setContrattoAffittoResponse(contrattoAffittoResponse);
+            contrattoResponse.setTipoContratto("AFFITTO");
+
+        }else if(contratto instanceof ContrattoVendita){
+
+            ContrattoVenditaResponse contrattoVenditaResponse = getContrattoVendita((ContrattoVendita) contratto);
+
+            contrattoResponse.setTipoContratto("VENDITA");
+            contrattoResponse.setContrattoVenditaResponse(contrattoVenditaResponse);
+        }
+
+        return contrattoResponse;
+    }
+
+    private ContrattoAffittoResponse getContrattoAffitto(ContrattoAffitto contratto){
+
+        ContrattoAffittoResponse contrattoAffittoResponse = ContrattoAffittoResponse.builder()
+                .caparra(contratto.getCaparra())
+                .prezzoAffitto(contratto.getPrezzoAffitto())
+                .tempoMinimo( contratto.getTempoMinimo())
+                .tempoMassimo(contratto.getTempoMassimo())
+                .build();
+
+        return contrattoAffittoResponse;
+    }
+
+    private ContrattoVenditaResponse getContrattoVendita(ContrattoVendita contratto){
+
+        ContrattoVenditaResponse contrattoVenditaResponse = ContrattoVenditaResponse.builder()
+                .mutuoEstinto(contratto.isMutuoEstinto())
+                .prezzoVendita(contratto.getPrezzoVendita())
+                .build();
+
+        return contrattoVenditaResponse;
+    }
+
+    private UserResponse getAgenteCreatoreAnnuncio(User agente){
+
+        UserResponse agenteCreatoreAnnuncio = UserResponse.builder()
+                .email(agente.getEmail())
+                .username(agente.getUsername())
+                .urlFotoProfilo(agente.getUrlFotoProfilo())
+                .build();
+
+        return agenteCreatoreAnnuncio;
     }
 }

@@ -193,7 +193,7 @@ public class ControllerTESTRAI {
             List<PropostaResponse> proposteRespose = new ArrayList<>();
             for(Proposta proposta : proposte){
 
-                UserResponse userReponse = UserResponse.builder()
+                UserResponse userResponse = UserResponse.builder()
                         .email(proposta.getUser().getEmail())
                         .username(proposta.getUser().getUsername())
                         .urlFotoProfilo(proposta.getUser().getUrlFotoProfilo())
@@ -208,7 +208,7 @@ public class ControllerTESTRAI {
                         .prezzoProposta(proposta.getPrezzoProposta())
                         .controproposta(proposta.getPrezzoProposta())
                         .stato(proposta.getStato().toString())
-                        .utente(userReponse)
+                        .utente(userResponse)
                         .contatto(contattoResponse)
                         .build();
 

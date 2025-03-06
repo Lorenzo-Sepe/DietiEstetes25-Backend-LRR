@@ -21,7 +21,7 @@ public class Immobile extends CreationUpdate {
     @EqualsAndHashCode.Include
     private int id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "immobile")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "immobile")
     private List<ImmaginiImmobile> immagini;
 
     @Enumerated(EnumType.STRING)

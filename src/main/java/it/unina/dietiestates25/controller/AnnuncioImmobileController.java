@@ -4,7 +4,6 @@ package it.unina.dietiestates25.controller;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
-import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +27,9 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request));
     }
 
-    /*@GetMapping("/pb/annuncioImmobiliare")
-    List<AnnuncioImmobiliareResponse> GetAllAnnunci(){
-        return (annuncioImmobileService.cercaAnnunci());
-    }*/
-
     @PostMapping("/pb/annuncioImmobiliare/cerca")
-    public List<AnnuncioImmobiliare> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
+    public List<AnnuncioImmobiliareResponse> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
+
         return annuncioImmobileService.cercaAnnunci(filtro);
     }
 }
