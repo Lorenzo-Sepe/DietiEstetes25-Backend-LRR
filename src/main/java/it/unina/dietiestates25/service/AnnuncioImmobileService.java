@@ -472,4 +472,9 @@ public class AnnuncioImmobileService {
 
         return agenteCreatoreAnnuncio;
     }
+
+    public void cancellaAnnuncioImmobiliare(int id) {
+        verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
+        annuncioImmobiliareRepository.deleteById(id);
+    }
 }

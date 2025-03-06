@@ -6,6 +6,7 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliar
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,5 +32,12 @@ public class AnnuncioImmobileController {
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
 
         return annuncioImmobileService.cercaAnnunci(filtro);
+    }
+
+    @DeleteMapping("/annuncioImmobiliare/{id}")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
+    public ResponseEntity<String> cancellaAnnuncioImmobiliare(@PathVariable int id) {
+        annuncioImmobileService.cancellaAnnuncioImmobiliare(id);
+        return new ResponseEntity<>("Annuncio eliminato con successo", HttpStatus.OK);
     }
 }
