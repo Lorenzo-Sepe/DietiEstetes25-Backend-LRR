@@ -28,7 +28,7 @@ public class AnnuncioImmobiliare {
 
     private LocalDateTime dataPubblicazione;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private User agente;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -37,6 +37,6 @@ public class AnnuncioImmobiliare {
     @OneToOne(cascade = CascadeType.ALL)
     private Contratto contratto;
 
-    @OneToMany(mappedBy = "annuncio")
+    @OneToMany(mappedBy = "annuncio", fetch = FetchType.EAGER)
     private List<Proposta> proposte;
 }

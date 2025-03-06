@@ -26,7 +26,7 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
-    public static Specification<AnnuncioImmobiliare> conRangePrezzo(Double prezzoMin, Double prezzoMax) {
+    /*public static Specification<AnnuncioImmobiliare> conRangePrezzo(Double prezzoMin, Double prezzoMax) {
         return (root, query, cb) -> {
             if (prezzoMin == null && prezzoMax == null) {
                 return null;
@@ -38,7 +38,7 @@ public class AnnuncioImmobiliareSpecification {
             return prezzoMin != null ? cb.greaterThanOrEqualTo(contratto.get("prezzo"), prezzoMin)
                     : cb.lessThanOrEqualTo(contratto.get("prezzo"), prezzoMax);
         };
-    }
+    }*/
 
     public static Specification<AnnuncioImmobiliare> conRangeMetriQuadri(Integer minMq, Integer maxMq) {
         return (root, query, cb) -> {
