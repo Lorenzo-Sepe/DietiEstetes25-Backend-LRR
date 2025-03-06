@@ -1,6 +1,5 @@
 package it.unina.dietiestates25.service;
 
-    import it.unina.dietiestates25.dto.request.ControPropostaRequest;
     import it.unina.dietiestates25.dto.request.PropostaRequest;
     import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
     import it.unina.dietiestates25.entity.Contatto;
@@ -68,21 +67,31 @@ package it.unina.dietiestates25.service;
             }
         }
 
-        public void aggiungiUnaControProposta(ControPropostaRequest request) {
-            Proposta proposta = propostaRepository.findById(request.getPropostaId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", request.getPropostaId()));
+        public void aggiungiUnaControProposta(int propostaId, Double controproposta) {
+            Proposta proposta = propostaRepository.findById(propostaId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
+            verificaProprietarioAnnuncio(proposta);
+
             if(proposta.getControproposta()!=null || proposta.getControproposta() != 0){
                 throw new BadRequestException("La proposta ha già una controproposta");
             }
             checkPropostaStatus(proposta);
-            proposta.setControproposta(request.getPrezzo());
+            proposta.setControproposta(controproposta);
             proposta.setStato(StatoProposta.IN_TRATTAZIONE);
             propostaRepository.save(proposta);
+        }
+
+        private static void verificaProprietarioAnnuncio(Proposta proposta) {
+            int agenteProprietarioAnnuncioId= proposta.getAnnuncio().getAgente().getId();
+            if(agenteProprietarioAnnuncioId != UserContex.getUserCurrent().getId()){
+                throw new BadRequestException("Non sei autorizzato a fare una controproposta su questa proposta\n non sei il proprietario dell'annuncio");
+            }
         }
 
         public void accettaProposta(int propostaId) {
             Proposta proposta = propostaRepository.findById(propostaId)
                     .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
+            verificaProprietarioAnnuncio(proposta);
             checkPropostaStatus(proposta);
             proposta.setStato(StatoProposta.ACCETTATO);
             propostaRepository.save(proposta);
@@ -91,6 +100,7 @@ package it.unina.dietiestates25.service;
         public void rifiutaProposta(int propostaId) {
             Proposta proposta = propostaRepository.findById(propostaId)
                     .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
+            verificaProprietarioAnnuncio(proposta);
             checkPropostaStatus(proposta);
             proposta.setStato(StatoProposta.RIFIUTATO);
             propostaRepository.save(proposta);
