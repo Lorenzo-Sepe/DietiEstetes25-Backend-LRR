@@ -17,6 +17,7 @@ import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecific
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -229,10 +230,10 @@ public class AnnuncioImmobileService {
     //_______________________________________________________________________________________________________________________________________________
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
-
+        Pageable pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
         Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
 
-        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll(spec);
+        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
 
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
 
@@ -294,7 +295,7 @@ public class AnnuncioImmobileService {
         Specification<AnnuncioImmobiliare> specfication = Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
                 .and(AnnuncioImmobiliareSpecification.conTipologiaImmobile(filtro.getTipologiaImmobile()))
-                //.and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
+                .and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
                 .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
                 //.and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
                 .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
