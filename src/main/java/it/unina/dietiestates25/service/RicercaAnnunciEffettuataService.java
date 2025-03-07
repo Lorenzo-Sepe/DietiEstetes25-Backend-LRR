@@ -1,8 +1,9 @@
+/*
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +11,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Service
+@Service @RequiredArgsConstructor
 public class RicercaAnnunciEffettuataService {
 
-    @Autowired
-    private RicercaAnnunciEffettuataRepository repository;
+    private RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
 
     public List<RicercaAnnunciEffettuata> cercaAnnunci(String localita, BigDecimal prezzoMin, BigDecimal prezzoMax) {
         Specification<RicercaAnnunciEffettuata> spec = (root, query, criteriaBuilder) -> {
@@ -36,6 +36,7 @@ public class RicercaAnnunciEffettuataService {
             return criteriaBuilder.and(localitaPredicate, prezzoPredicate);
         };
 
-        return repository.findAll(spec);
+        return ricercaAnnunciEffettuataRepository.findAll(spec);
     }
 }
+ */
