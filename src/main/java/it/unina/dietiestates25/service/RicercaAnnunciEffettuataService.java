@@ -16,7 +16,7 @@ public class RicercaAnnunciEffettuataService {
     @Autowired
     private RicercaAnnunciEffettuataRepository repository;
 
-    public List<RicercaAnnunciEffettuata> cercaAnnunci(String localita, BigDecimal prezzoMin, BigDecimal prezzoMax) {
+    /*public List<RicercaAnnunciEffettuata> cercaAnnunci(String localita, BigDecimal prezzoMin, BigDecimal prezzoMax) {
         Specification<RicercaAnnunciEffettuata> spec = (root, query, criteriaBuilder) -> {
             Predicate localitaPredicate;
             if (localita == null || localita.isEmpty()) {
@@ -37,5 +37,5 @@ public class RicercaAnnunciEffettuataService {
         };
 
         return repository.findAll(spec);
-    }
+    }*/
 }

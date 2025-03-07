@@ -35,6 +35,8 @@ public class AnnuncioImmobileService {
     private final ImageUploaderService imageUploaderService;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
 
+    //-------------------------------------------------------CREA ANNUNCIO-------------------------------------------------------
+
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
 
@@ -56,6 +58,7 @@ public class AnnuncioImmobileService {
 
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
+        immobile.setImmagini(getListaImmaginiFromRequest(request.getImmobile().getImmagini(),immobile));
         updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncio);
 
         annuncioImmobiliareRepository.save(annuncio);
@@ -226,7 +229,7 @@ public class AnnuncioImmobileService {
         }
     }
 
-    //_______________________________________________________________________________________________________________________________________________
+    //-------------------------------------------------------GET ANNUNCI-------------------------------------------------------
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
 
@@ -256,36 +259,6 @@ public class AnnuncioImmobileService {
         }
 
         return annunciResponse;
-    }
-
-
-   // Verifica se l'utente corrente è il proprietario dell'annuncio
-    private boolean isProprietarioAnnuncio(AnnuncioImmobiliare annuncio) {
-        User utenteCorrente = UserContex.getUserCurrent();
-        return annuncio.getAgente().equals(utenteCorrente);
-    }
-
-    // Verifica se l'utente corrente è il capo dell'agenzia
-    private boolean isAdminDellaAgenzia(AnnuncioImmobiliare annuncio) {
-        User utenteCorrente = UserContex.getUserCurrent();
-        AgenziaImmobiliare agenziaDelUtenteCorrente= agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(utenteCorrente)
-                .orElseThrow(() -> new AccessDeniedException("Non sei un dipendente di nessuna agenzia immobiliare"));
-        User agenteAnnuncio = annuncio.getAgente();
-        AgenziaImmobiliare agenziaAssociataAnnuncio = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(agenteAnnuncio).orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare associata all'annuncio","id",annuncio.getId()));
-        return agenziaAssociataAnnuncio.equals(agenziaDelUtenteCorrente);
-    }
-
-    // Verifica se l'utente corrente ha il permesso di modificare l'annuncio
-    public void verificaPermessoModificaAnnuncio(AnnuncioImmobiliare annuncio) {
-        if(UserContex.getRoleCurrent() == AuthorityName.MEMBER) {
-            throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio");
-        }else if(UserContex.getRoleCurrent() == AuthorityName.ADMIN && !isAdminDellaAgenzia(annuncio)) {
-            throw new AccessDeniedException("Questo annuncio è di un altra Agenzia Immobiliare\nNon hai il permesso di modificare questo annuncio");
-
-        }
-        if (UserContex.getRoleCurrent() == AuthorityName.AGENT && !isProprietarioAnnuncio(annuncio)) {
-            throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio\n puoi modificar solo i tuoi Annunci immobiliari");
-        }
     }
 
     //TODO cambiare la logica del range del prezzo in seguito al cambiamento fatto in contratto (prezzo è passato ai figli)
@@ -474,13 +447,77 @@ public class AnnuncioImmobileService {
         return agenteCreatoreAnnuncio;
     }
 
+
+    //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
+
+    //TODO: implementare metodo per modificare annuncio immobiliare
+    public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
+
+
+        AnnuncioImmobiliare annuncioImmobiliare = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
+
+        verificaPermessoModificaAnnuncio(annuncioImmobiliare);
+
+        Immobile immobile = annuncioImmobiliare.getImmobile();
+
+        Contratto contratto = getContrattoFromRequest(request.getContratto());
+
+        User agenteImmobliare = UserContex.getUserCurrent();
+
+        annuncioImmobiliare.setImmobile(immobile);
+        annuncioImmobiliare.setContratto(contratto);
+        annuncioImmobiliare.setAgente(agenteImmobliare);
+        annuncioImmobiliare.setDescrizione(request.getDescrizione());
+        annuncioImmobiliare.setTitolo(request.getTitolo());
+
+        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
+
+        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncio);
+
+        annuncioImmobiliareRepository.save(annuncio);
+
+        return "Annuncio modificato con successo";
+
+
+    }
+
+    //-------------------------------------------------------CANCELLA ANNUNCIO-------------------------------------------------------
+
+
     public void cancellaAnnuncioImmobiliare(int id) {
         verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
         annuncioImmobiliareRepository.deleteById(id);
     }
 
-    public void modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
-        verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
-        //TODO: implementare metodo per modificare annuncio immobiliare
+    //-------------------------------------------------------METODI DI SUPPORTO PER MODIFICA/CANCELLA ANNUNCIO-------------------------------------------------------
+
+
+    // Verifica se l'utente corrente ha il permesso di modificare l'annuncio
+    public void verificaPermessoModificaAnnuncio(AnnuncioImmobiliare annuncio) {
+        if(UserContex.getRoleCurrent() == AuthorityName.MEMBER) {
+            throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio");
+        }else if(UserContex.getRoleCurrent() == AuthorityName.ADMIN && !isAdminDellaAgenzia(annuncio)) {
+            throw new AccessDeniedException("Questo annuncio è di un altra Agenzia Immobiliare\nNon hai il permesso di modificare questo annuncio");
+
+        }
+        if (UserContex.getRoleCurrent() == AuthorityName.AGENT && !isProprietarioAnnuncio(annuncio)) {
+            throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio\n puoi modificar solo i tuoi Annunci immobiliari");
+        }
+    }
+
+    // Verifica se l'utente corrente è il proprietario dell'annuncio
+    private boolean isProprietarioAnnuncio(AnnuncioImmobiliare annuncio) {
+        User utenteCorrente = UserContex.getUserCurrent();
+        return annuncio.getAgente().equals(utenteCorrente);
+    }
+
+    // Verifica se l'utente corrente è il capo dell'agenzia
+    private boolean isAdminDellaAgenzia(AnnuncioImmobiliare annuncio) {
+        User utenteCorrente = UserContex.getUserCurrent();
+        AgenziaImmobiliare agenziaDelUtenteCorrente= agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(utenteCorrente)
+                .orElseThrow(() -> new AccessDeniedException("Non sei un dipendente di nessuna agenzia immobiliare"));
+        User agenteAnnuncio = annuncio.getAgente();
+        AgenziaImmobiliare agenziaAssociataAnnuncio = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(agenteAnnuncio).orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare associata all'annuncio","id",annuncio.getId()));
+        return agenziaAssociataAnnuncio.equals(agenziaDelUtenteCorrente);
     }
 }

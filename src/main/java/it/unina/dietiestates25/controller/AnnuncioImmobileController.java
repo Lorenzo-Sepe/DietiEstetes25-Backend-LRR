@@ -29,9 +29,9 @@ public class AnnuncioImmobileController {
     }
 
     @PostMapping("/pb/annuncioImmobiliare/cerca")
-    public List<AnnuncioImmobiliareResponse> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
 
-        return annuncioImmobileService.cercaAnnunci(filtro);
+        return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
     @DeleteMapping("/annuncioImmobiliare/{id}")
@@ -44,7 +44,6 @@ public class AnnuncioImmobileController {
     @PatchMapping("/annuncioImmobiliare/{id}")
     @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
     public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id, @RequestBody AnnuncioImmobiliareRequest request) {
-        annuncioImmobileService.modificaAnnuncioImmobiliare(id, request);
-        return new ResponseEntity<>("Annuncio modificato con successo", HttpStatus.OK);
+        return ResponseEntity.ok(annuncioImmobileService.modificaAnnuncioImmobiliare(id, request));
     }
 }
