@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class FiltroAnnuncio {
+    private Integer numeroPagina;
+    private Integer numeroDiElementiPerPagina;
     private String titolo;
     private TipologiaImmobile tipologiaImmobile;
     private Double prezzoMin;
