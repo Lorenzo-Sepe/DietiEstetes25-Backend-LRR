@@ -2,8 +2,10 @@ package it.unina.dietiestates25.service.specification;
 
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
-import jakarta.persistence.criteria.*;
 
 public class AnnuncioImmobiliareSpecification {
 
@@ -26,19 +28,53 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
-    /*public static Specification<AnnuncioImmobiliare> conRangePrezzo(Double prezzoMin, Double prezzoMax) {
+    public static Specification<AnnuncioImmobiliare> conRangePrezzo(Double prezzoMin, Double prezzoMax) {
         return (root, query, cb) -> {
             if (prezzoMin == null && prezzoMax == null) {
                 return null;
             }
+
+            // Creiamo il join con la tabella del Contratto
             Join<AnnuncioImmobiliare, Contratto> contratto = root.join("contratto");
+
+            // Definiamo le espressioni per il prezzo
+            Expression<Double> prezzoAffitto = contratto.get("prezzoAffitto");
+            Expression<Double> prezzoVendita = contratto.get("prezzoVendita");
+
+            // Predicati per il range di prezzo
+            Predicate rangeAffitto = null;
+            Predicate rangeVendita = null;
+
             if (prezzoMin != null && prezzoMax != null) {
-                return cb.between(contratto.get("prezzo"), prezzoMin, prezzoMax);
+                // Per l'affitto
+                rangeAffitto = cb.between(prezzoAffitto, prezzoMin, prezzoMax);
+                // Per la vendita
+                rangeVendita = cb.between(prezzoVendita, prezzoMin, prezzoMax);
+            } else if (prezzoMin != null) {
+                // Per l'affitto
+                rangeAffitto = cb.greaterThanOrEqualTo(prezzoAffitto, prezzoMin);
+                // Per la vendita
+                rangeVendita = cb.greaterThanOrEqualTo(prezzoVendita, prezzoMin);
+            } else if (prezzoMax != null) {
+                // Per l'affitto
+                rangeAffitto = cb.lessThanOrEqualTo(prezzoAffitto, prezzoMax);
+                // Per la vendita
+                rangeVendita = cb.lessThanOrEqualTo(prezzoVendita, prezzoMax);
             }
-            return prezzoMin != null ? cb.greaterThanOrEqualTo(contratto.get("prezzo"), prezzoMin)
-                    : cb.lessThanOrEqualTo(contratto.get("prezzo"), prezzoMax);
+
+            // Se ci sono condizioni sul prezzo, combiniamo i predicati
+            if (rangeAffitto != null && rangeVendita != null) {
+                // Concateniamo le condizioni per entrambi i tipi di contratto
+                return cb.or(rangeAffitto, rangeVendita);
+            } else if (rangeAffitto != null) {
+                return rangeAffitto;
+            } else if (rangeVendita != null) {
+                return rangeVendita;
+            }
+
+            return null;
         };
-    }*/
+    }
 
     public static Specification<AnnuncioImmobiliare> conRangeMetriQuadri(Integer minMq, Integer maxMq) {
         return (root, query, cb) -> {
