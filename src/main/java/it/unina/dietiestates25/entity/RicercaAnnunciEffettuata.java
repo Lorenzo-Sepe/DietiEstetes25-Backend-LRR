@@ -27,7 +27,7 @@ public class RicercaAnnunciEffettuata {
 
     private TipologiaImmobile tipologiaImmobile;
     private TipoContratto tipologiaContratto;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> localita;
     private BigDecimal prezzoMin;
     private BigDecimal prezzoMax;
