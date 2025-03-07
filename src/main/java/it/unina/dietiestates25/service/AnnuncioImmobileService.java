@@ -211,7 +211,7 @@ public class AnnuncioImmobileService {
 
         List <MultipartFile> immaginiFile = getListMultipartFilesFromRequest(immaginiRequest);
 
-        List<String> urlImmagini = imageUploaderService.salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId);
+        List<String> urlImmagini = imageUploaderService.salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId,0);
 
         setUrlToImmaginiAnnuncio(annuncio.getImmobile().getImmagini(),immaginiFile,urlImmagini);
     }
@@ -450,43 +450,172 @@ public class AnnuncioImmobileService {
 
     //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
 
-    //TODO: implementare metodo per modificare annuncio immobiliare
     public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
-
 
         AnnuncioImmobiliare annuncioImmobiliare = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
 
         verificaPermessoModificaAnnuncio(annuncioImmobiliare);
 
-        Immobile immobile = annuncioImmobiliare.getImmobile();
-
-        Contratto contratto = getContrattoFromRequest(request.getContratto());
-
-        User agenteImmobliare = UserContex.getUserCurrent();
-
-        annuncioImmobiliare.setImmobile(immobile);
-        annuncioImmobiliare.setContratto(contratto);
-        annuncioImmobiliare.setAgente(agenteImmobliare);
-        annuncioImmobiliare.setDescrizione(request.getDescrizione());
-        annuncioImmobiliare.setTitolo(request.getTitolo());
-
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
-        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncio);
+        updateImmobile(request.getImmobile(),annuncio.getImmobile());
+        updateContratto(request.getContratto(),annuncio.getContratto());
+        annuncio.setTitolo(request.getTitolo());
+        annuncio.setDescrizione(request.getDescrizione());
+
+        //TODO testare la funzione e valutare se si può scrivere un codice migliore
+        updateImmagini(request.getImmobile().getImmagini(),annuncio);
 
         annuncioImmobiliareRepository.save(annuncio);
 
         return "Annuncio modificato con successo";
 
+    }
 
+    private void updateImmobile(ImmobileRequest request,Immobile immobile){
+
+        immobile.setTipologiaImmobile(getEnumTipologiaImmobileFromString(request.getTipologiaImmobile()));
+        immobile.setMetriQuadri(request.getMetriQuadri());
+        immobile.setClasseEnergetica(getEnumClasseEnergeticaFromString(request.getClasseEnergetica()));
+        immobile.setNumeroServizi(request.getNumeroServizi());
+        immobile.setNumeroStanze(request.getNumeroStanze());
+        immobile.setNumeroDiPiani(request.getNumeroDiPiani());
+        updateIndirizzo(request.getIndirizzo(),immobile.getIndirizzo());
+        updateCaratteristicheAggiuntive(request.getCaratteristicheAggiuntive(),immobile.getCaratteristicheAggiuntive());
+    }
+
+    private void updateIndirizzo(IndirizzoRequest request,Indirizzo indirizzo){
+
+        indirizzo.setNazione(request.getNazione());
+        indirizzo.setCap(request.getCap());
+        indirizzo.setCitta(request.getCitta());
+        indirizzo.setProvincia(request.getProvincia());
+        indirizzo.setVia(request.getVia());
+        indirizzo.setNumeroCivico(request.getNumeroCivico());
+        indirizzo.setLongitudine(request.getLongitudine());
+        indirizzo.setLatitudine(request.getLatitudine());
+    }
+
+    private void updateCaratteristicheAggiuntive(CaratteristicheAggiuntiveRequest request, CaratteristicheAggiuntive caratteristicheAggiuntive){
+
+        caratteristicheAggiuntive.setAscensore(request.isAscensore());
+        caratteristicheAggiuntive.setBalconi(request.isBalconi());
+        caratteristicheAggiuntive.setCantina(request.isCantina());
+        caratteristicheAggiuntive.setClimatizzatori(request.isClimatizzatori());
+        caratteristicheAggiuntive.setGarage(request.isGarage());
+        caratteristicheAggiuntive.setPannelliSolari(request.isPannelliSolari());
+        caratteristicheAggiuntive.setPortiere(request.isPortiere());
+        caratteristicheAggiuntive.setGiardino(request.isGiardino());
+        caratteristicheAggiuntive.setRiscaldamentoCentralizzato(request.isRiscaldamentoCentralizzato());
+        caratteristicheAggiuntive.setSoffitta(request.isSoffitta());
+        caratteristicheAggiuntive.setPostiAuto(caratteristicheAggiuntive.isPostiAuto());
+    }
+
+    private void updateContratto(ContrattoRequest request, Contratto contratto){
+
+        if(request.getTipoDiContratto().equals("AFFITTO")){
+
+            updateContrattoAffitto(request.getDatiAffittoRequest(),(ContrattoAffitto) contratto);
+        }
+
+        else{
+            updateContrattoVendita(request.getDatiVenditaRequest(), (ContrattoVendita)  contratto);
+        }
+    }
+
+    private void updateContrattoAffitto(DatiAffittoRequest request,ContrattoAffitto contratto){
+
+        contratto.setCaparra(request.getCaparra());
+        contratto.setTempoMinimo(request.getTempoMinimo());
+        contratto.setTempoMassimo(request.getTempoMassimo());
+        contratto.setPrezzoAffitto(request.getPrezzo());
+        contratto.setTipoContratto("AFFITTO");
+    }
+
+    private void updateContrattoVendita(DatiVenditaRequest request,ContrattoVendita contratto){
+
+        contratto.setMutuoEstinto(request.isMutuoEstinto());
+        contratto.setPrezzoVendita(request.getPrezzo());
+        contratto.setTipoContratto(TipoContratto.VENDITA.toString());
+    }
+
+    private void updateImmagini(List<ImmaginiImmobiliRequest> request, AnnuncioImmobiliare annuncio){
+
+        List<ImmaginiImmobile> nuovaListaImmagini = new ArrayList<>();
+
+        int numeroImmaginiGiaInserite = addImmaginiGiaEsistentiToNuovaListaImmagini(request,nuovaListaImmagini,annuncio.getImmobile());
+
+        List<String> urls = imageUploaderService.salvaImmaginiAnnuncioToBlob(getListaImmaginiFile(request), annuncio.getId(),numeroImmaginiGiaInserite+1);
+
+        addNuoveImmaginiToNuovaListaImmagini(urls,request,nuovaListaImmagini,annuncio.getImmobile());
+
+        annuncio.getImmobile().setImmagini(nuovaListaImmagini);
+    }
+
+    private int addImmaginiGiaEsistentiToNuovaListaImmagini(List<ImmaginiImmobiliRequest> request, List<ImmaginiImmobile> nuoveImmagini, Immobile immobile){
+
+        int countInserimenti = 0;
+
+        for(ImmaginiImmobiliRequest immagine : request ){
+
+                if(immagine.getUrlImmagineEsistente() != null){
+                ImmaginiImmobile immagineGiaEsistente = ImmaginiImmobile.builder()
+                        .immobile(immobile)
+                        .descrizione(immagine.getDescrizione())
+                        .url(immagine.getUrlImmagineEsistente())
+                        .build();
+
+                nuoveImmagini.add(immagineGiaEsistente);
+
+                countInserimenti++;
+            }
+        }
+
+        return countInserimenti;
+    }
+
+    private List<MultipartFile> getListaImmaginiFile(List<ImmaginiImmobiliRequest> request){
+
+        List<MultipartFile> immaginiFile = new ArrayList<>();
+
+        for(ImmaginiImmobiliRequest immagine : request ){
+
+            if(immagine.getFile() != null){
+
+                immaginiFile.add(immagine.getFile());
+            }
+        }
+
+        return immaginiFile;
+    }
+
+    private void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,List<ImmaginiImmobile> nuoveImmagini,Immobile immobile) {
+
+        for(int i=0;i<request.size();i++){
+
+            if(request.get(i).getFile() != null){
+
+                ImmaginiImmobile immaginiImmobile = ImmaginiImmobile.builder()
+                        .immobile(immobile)
+                        .descrizione(request.get(i).getDescrizione())
+                        .url(urls.get(i))
+                        .build();
+
+                nuoveImmagini.add(immaginiImmobile);
+            }
+        }
     }
 
     //-------------------------------------------------------CANCELLA ANNUNCIO-------------------------------------------------------
 
 
-    public void cancellaAnnuncioImmobiliare(int id) {
+    public String cancellaAnnuncioImmobiliare(int id) {
+
         verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
+
         annuncioImmobiliareRepository.deleteById(id);
+
+        return "Annuncio cancellato";
     }
 
     //-------------------------------------------------------METODI DI SUPPORTO PER MODIFICA/CANCELLA ANNUNCIO-------------------------------------------------------

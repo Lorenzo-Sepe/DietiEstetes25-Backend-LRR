@@ -22,7 +22,7 @@ public class AnnuncioImmobileController {
     private final AnnuncioImmobileService annuncioImmobileService;
 
     @PostMapping("/annuncioImmobiliare")
-    @PreAuthorize("hasAnyAuthority('MEMBER')")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
     ResponseEntity<String> creaAnnuncioImmobiliare(@ModelAttribute AnnuncioImmobiliareRequest request){
 
         return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request));
@@ -37,13 +37,14 @@ public class AnnuncioImmobileController {
     @DeleteMapping("/annuncioImmobiliare/{id}")
     @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
     public ResponseEntity<String> cancellaAnnuncioImmobiliare(@PathVariable int id) {
-        annuncioImmobileService.cancellaAnnuncioImmobiliare(id);
-        return new ResponseEntity<>("Annuncio eliminato con successo", HttpStatus.OK);
+
+        return ResponseEntity.ok(annuncioImmobileService.cancellaAnnuncioImmobiliare(id));
     }
 
     @PatchMapping("/annuncioImmobiliare/{id}")
     @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
-    public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id, @RequestBody AnnuncioImmobiliareRequest request) {
+    public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id, @ModelAttribute AnnuncioImmobiliareRequest request) {
+
         return ResponseEntity.ok(annuncioImmobileService.modificaAnnuncioImmobiliare(id, request));
     }
 }
