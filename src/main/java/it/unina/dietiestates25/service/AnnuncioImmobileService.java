@@ -498,7 +498,7 @@ public class AnnuncioImmobileService {
         caratteristicheAggiuntive.setGiardino(request.isGiardino());
         caratteristicheAggiuntive.setRiscaldamentoCentralizzato(request.isRiscaldamentoCentralizzato());
         caratteristicheAggiuntive.setSoffitta(request.isSoffitta());
-        caratteristicheAggiuntive.setPostiAuto(caratteristicheAggiuntive.isPostiAuto());
+        caratteristicheAggiuntive.setPostiAuto(request.isPostiAuto());
     }
 
     private void updateContratto(ContrattoRequest request, Contratto contratto){
