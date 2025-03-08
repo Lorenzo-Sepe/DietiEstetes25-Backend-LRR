@@ -57,12 +57,11 @@ public class AnnuncioImmobileService {
                 .proposte(new ArrayList<>())
                 .build();
 
-        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
+        annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
-        immobile.setImmagini(getListaImmaginiFromRequest(request.getImmobile().getImmagini(),immobile));
-        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncio);
+        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
 
-        annuncioImmobiliareRepository.save(annuncio);
+        annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
         return "Annuncio creato con successo";
     }
@@ -80,7 +79,7 @@ public class AnnuncioImmobileService {
                 .caratteristicheAggiuntive(getCaratteristicheAggiuntiveFromRequest(request.getCaratteristicheAggiuntive()))
                 .build();
 
-        immobile.setImmagini(getListaImmaginiFromRequest(request.getImmagini(),immobile));
+        //immobile.setImmagini(getListaImmaginiFromRequest(request.getImmagini(),immobile));
 
         return immobile;
     }
@@ -188,24 +187,6 @@ public class AnnuncioImmobileService {
         return contrattoVendita;
     }
 
-    private List<ImmaginiImmobile> getListaImmaginiFromRequest(List<ImmaginiImmobiliRequest> immagini, Immobile immobile){
-
-        List<ImmaginiImmobile> immaginiImmobili = new ArrayList<>();
-
-        immagini.stream().forEach(img -> {
-
-            ImmaginiImmobile immagine = ImmaginiImmobile.builder()
-                    .url("placeholder.it")
-                    .descrizione(img.getDescrizione())
-                    .immobile(immobile)
-                    .build();
-
-            immaginiImmobili.add(immagine);
-        });
-
-        return immaginiImmobili;
-    }
-
     private void updateImmaginiAnnuncio(List<ImmaginiImmobiliRequest> immaginiRequest, AnnuncioImmobiliare annuncio){
 
         int immobileId = annuncio.getImmobile().getId();
@@ -214,7 +195,7 @@ public class AnnuncioImmobileService {
 
         List<String> urlImmagini = imageUploaderService.salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId,0);
 
-        setUrlToImmaginiAnnuncio(annuncio.getImmobile().getImmagini(),immaginiFile,urlImmagini);
+        annuncio.getImmobile().setImmagini(getListaImmaginiImmobili(urlImmagini,immaginiRequest,annuncio.getImmobile()));
     }
 
     private List<MultipartFile> getListMultipartFilesFromRequest(List<ImmaginiImmobiliRequest> immaginiRequests) {
@@ -223,11 +204,21 @@ public class AnnuncioImmobileService {
                 .collect(Collectors.toList());
     }
 
-    private void setUrlToImmaginiAnnuncio(List<ImmaginiImmobile> immaginiImmobile,List<MultipartFile> immaginiFile,List<String> urlImmagini){
+    private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini,List<ImmaginiImmobiliRequest> request,Immobile immobile){
 
-        for (int i = 0; i < immaginiFile.size(); i++) {
-            immaginiImmobile.get(i).setUrl(urlImmagini.get(i));
+        List<ImmaginiImmobile> immaginiImmobile = new ArrayList<>();
+
+        for(int i=0; i< request.size();i++){
+
+            ImmaginiImmobile immagine = ImmaginiImmobile.builder()
+                    .immobile(immobile)
+                    .descrizione(request.get(i).getDescrizione())
+                    .url(urlImmagini.get(i))
+                    .build();
+            immaginiImmobile.add(immagine);
         }
+
+        return immaginiImmobile;
     }
 
     //-------------------------------------------------------GET ANNUNCI-------------------------------------------------------
@@ -453,11 +444,9 @@ public class AnnuncioImmobileService {
 
     public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
 
-        AnnuncioImmobiliare annuncioImmobiliare = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
+        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
 
-        verificaPermessoModificaAnnuncio(annuncioImmobiliare);
-
-        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.save(annuncioImmobiliare);
+        verificaPermessoModificaAnnuncio(annuncio);
 
         updateImmobile(request.getImmobile(),annuncio.getImmobile());
         updateContratto(request.getContratto(),annuncio.getContratto());
@@ -542,18 +531,17 @@ public class AnnuncioImmobileService {
 
     private void updateImmagini(List<ImmaginiImmobiliRequest> request, AnnuncioImmobiliare annuncio){
 
-        List<ImmaginiImmobile> nuovaListaImmagini = new ArrayList<>();
+        annuncio.getImmobile().getImmagini().clear();
 
-        int numeroImmaginiGiaInserite = addImmaginiGiaEsistentiToNuovaListaImmagini(request,nuovaListaImmagini,annuncio.getImmobile());
+        int numeroImmaginiGiaInserite = addImmaginiGiaEsistentiToNuovaListaImmagini(request,annuncio);
 
         List<String> urls = imageUploaderService.salvaImmaginiAnnuncioToBlob(getListaImmaginiFile(request), annuncio.getId(),numeroImmaginiGiaInserite+1);
 
-        addNuoveImmaginiToNuovaListaImmagini(urls,request,nuovaListaImmagini,annuncio.getImmobile());
+        addNuoveImmaginiToNuovaListaImmagini(urls,request,annuncio);
 
-        annuncio.getImmobile().setImmagini(nuovaListaImmagini);
     }
 
-    private int addImmaginiGiaEsistentiToNuovaListaImmagini(List<ImmaginiImmobiliRequest> request, List<ImmaginiImmobile> nuoveImmagini, Immobile immobile){
+    private int addImmaginiGiaEsistentiToNuovaListaImmagini(List<ImmaginiImmobiliRequest> request, AnnuncioImmobiliare annuncio){
 
         int countInserimenti = 0;
 
@@ -561,12 +549,12 @@ public class AnnuncioImmobileService {
 
                 if(immagine.getUrlImmagineEsistente() != null){
                 ImmaginiImmobile immagineGiaEsistente = ImmaginiImmobile.builder()
-                        .immobile(immobile)
+                        .immobile(annuncio.getImmobile())
                         .descrizione(immagine.getDescrizione())
                         .url(immagine.getUrlImmagineEsistente())
                         .build();
 
-                nuoveImmagini.add(immagineGiaEsistente);
+                annuncio.getImmobile().getImmagini().add(immagineGiaEsistente);
 
                 countInserimenti++;
             }
@@ -590,19 +578,23 @@ public class AnnuncioImmobileService {
         return immaginiFile;
     }
 
-    private void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,List<ImmaginiImmobile> nuoveImmagini,Immobile immobile) {
+    private void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,AnnuncioImmobiliare annuncio) {
+
+        int countFile = 0;
 
         for(int i=0;i<request.size();i++){
 
             if(request.get(i).getFile() != null){
 
                 ImmaginiImmobile immaginiImmobile = ImmaginiImmobile.builder()
-                        .immobile(immobile)
+                        .immobile(annuncio.getImmobile())
                         .descrizione(request.get(i).getDescrizione())
-                        .url(urls.get(i))
+                        .url(urls.get(countFile))
                         .build();
 
-                nuoveImmagini.add(immaginiImmobile);
+                annuncio.getImmobile().getImmagini().add(immaginiImmobile);
+
+                countFile++;
             }
         }
     }
@@ -623,7 +615,7 @@ public class AnnuncioImmobileService {
 
 
     // Verifica se l'utente corrente ha il permesso di modificare l'annuncio
-    public void verificaPermessoModificaAnnuncio(AnnuncioImmobiliare annuncio) {
+    private void verificaPermessoModificaAnnuncio(AnnuncioImmobiliare annuncio) {
         if(UserContex.getRoleCurrent() == AuthorityName.MEMBER) {
             throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio");
         }else if(UserContex.getRoleCurrent() == AuthorityName.ADMIN && !isAdminDellaAgenzia(annuncio)) {
