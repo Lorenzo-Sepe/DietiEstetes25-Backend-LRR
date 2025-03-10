@@ -21,7 +21,7 @@ public class AnnuncioImmobileController {
     private final AnnuncioImmobileService annuncioImmobileService;
 
     @PostMapping("/annuncioImmobiliare")
-    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('AGENT')")
     ResponseEntity<String> creaAnnuncioImmobiliare(@ModelAttribute AnnuncioImmobiliareRequest request){
 
         return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request));
