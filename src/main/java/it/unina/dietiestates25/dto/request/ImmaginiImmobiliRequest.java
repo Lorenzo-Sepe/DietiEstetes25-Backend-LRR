@@ -9,4 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImmaginiImmobiliRequest {
     private MultipartFile file;
     private String descrizione;
+    private String urlImmagineEsistente;
 }

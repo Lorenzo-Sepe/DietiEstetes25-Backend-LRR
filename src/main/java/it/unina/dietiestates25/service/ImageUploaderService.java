@@ -21,8 +21,8 @@ public class ImageUploaderService {
     }
 
 
-   public List<String> salvaImmaginiAnnuncioToBlob(List<MultipartFile> files, int annuncioId) {
-       AtomicInteger counter = new AtomicInteger(0);
+   public List<String> salvaImmaginiAnnuncioToBlob(List<MultipartFile> files, int annuncioId,int valoreInizialeCounter) {
+       AtomicInteger counter = new AtomicInteger(valoreInizialeCounter);
        return files.stream()
                .map(file -> {
                    String nomePath = "annuncio" + annuncioId + "-" + counter.getAndIncrement();
