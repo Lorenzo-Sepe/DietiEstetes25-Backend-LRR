@@ -5,9 +5,11 @@ import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
+import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,14 @@ public class AnnuncioImmobileController {
 
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
+
+    private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
+    @PostMapping("/annuncioImmobiliare/cerca")
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutentificazinr(@RequestBody FiltroAnnuncio filtro) {
+        ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro );
+        return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
+    }
+
 
     @DeleteMapping("/annuncioImmobiliare/{id}")
     @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
