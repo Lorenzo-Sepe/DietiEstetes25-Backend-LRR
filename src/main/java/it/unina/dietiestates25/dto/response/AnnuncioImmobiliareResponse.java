@@ -11,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AnnuncioImmobiliareResponse {
+
+    private int id;
     private String titolo;
     private String descrizione;
     private UserResponse agente;

@@ -13,6 +13,9 @@ public class PropostaResponse {
     private double prezzoProposta;
     private Double controproposta;
     private String stato;
+    private DatiUserPropostaResponse datiProponente;
+
+    //TODO non dovrebbe servire
     private UserResponse utente;
     private ContattoResponse contatto;
 }

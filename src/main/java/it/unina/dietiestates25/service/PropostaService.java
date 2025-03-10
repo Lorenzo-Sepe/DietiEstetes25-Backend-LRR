@@ -3,6 +3,7 @@ package it.unina.dietiestates25.service;
     import it.unina.dietiestates25.dto.request.PageableProposte;
     import it.unina.dietiestates25.dto.request.PropostaRequest;
     import it.unina.dietiestates25.dto.response.ContattoResponse;
+    import it.unina.dietiestates25.dto.response.DatiUserPropostaResponse;
     import it.unina.dietiestates25.dto.response.PropostaResponse;
     import it.unina.dietiestates25.dto.response.UserResponse;
     import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
@@ -72,8 +73,7 @@ package it.unina.dietiestates25.service;
                         .stato(proposta.getStato().toString())
                         .prezzoProposta(proposta.getPrezzoProposta())
                         .controproposta(proposta.getControproposta())
-                        .utente(getUserResponse(proposta.getUser()))
-                        .contatto(getContattoResponse(proposta.getContatto()))
+                        .datiProponente(getDatiUserPropostaResponse(proposta))
                         .build();
 
                 proposteReponse.add(propostaResponse);
@@ -82,15 +82,15 @@ package it.unina.dietiestates25.service;
             return proposteReponse;
         }
 
-        private UserResponse getUserResponse(User user){
+        private DatiUserPropostaResponse getDatiUserPropostaResponse(Proposta proposta){
 
-            UserResponse userResponse = UserResponse.builder()
-                    .email(user.getEmail())
-                    .username(user.getUsername())
-                    .urlFotoProfilo(user.getUrlFotoProfilo())
+            DatiUserPropostaResponse datiUser = DatiUserPropostaResponse.builder()
+                    .nome(proposta.getNome())
+                    .cognome(proposta.getCognome())
+                    .contatto(getContattoResponse(proposta.getContatto()))
                     .build();
 
-            return userResponse;
+            return datiUser;
         }
 
         private ContattoResponse getContattoResponse(Contatto contatto){

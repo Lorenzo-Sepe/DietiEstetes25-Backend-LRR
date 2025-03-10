@@ -193,22 +193,23 @@ public class ControllerTESTRAI {
             List<PropostaResponse> proposteRespose = new ArrayList<>();
             for(Proposta proposta : proposte){
 
-                UserResponse userResponse = UserResponse.builder()
-                        .email(proposta.getUser().getEmail())
-                        .username(proposta.getUser().getUsername())
-                        .urlFotoProfilo(proposta.getUser().getUrlFotoProfilo())
-                        .build();
 
                 ContattoResponse contattoResponse = ContattoResponse.builder()
                         .tipo(proposta.getContatto().getTipo())
                         .valore(proposta.getContatto().getValore())
                         .build();
 
+                DatiUserPropostaResponse datiProponente = DatiUserPropostaResponse.builder()
+                        .nome(proposta.getNome())
+                        .cognome(proposta.getCognome())
+                        .contatto(contattoResponse)
+                        .build();
+
                 PropostaResponse propostaResponse = PropostaResponse.builder()
                         .prezzoProposta(proposta.getPrezzoProposta())
                         .controproposta(proposta.getPrezzoProposta())
                         .stato(proposta.getStato().toString())
-                        .utente(userResponse)
+                        .datiProponente(datiProponente)
                         .contatto(contattoResponse)
                         .build();
 
