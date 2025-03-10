@@ -92,6 +92,9 @@ logging:
 # CUSTOM PROPERTIES
 application:
   security:
+    geo-api:
+      secret-key: ${GEO_API_KEY}
+      base-url: https://api.geoapify.com/v2/places?categories={categoria}&filter=circle:{longitudine},{latitudine},500&apiKey={apiKey}
     jwt:
       secret-key: ${JWT_SECRET_KEY}
       # 12 ORE in millisecondi
