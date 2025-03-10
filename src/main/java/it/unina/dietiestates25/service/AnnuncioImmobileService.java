@@ -449,7 +449,7 @@ public class AnnuncioImmobileService {
         verificaPermessoModificaAnnuncio(annuncio);
 
         updateImmobile(request.getImmobile(),annuncio.getImmobile());
-        updateContratto(request.getContratto(),annuncio.getContratto());
+        updateContratto(request.getContratto(),annuncio);
         annuncio.setTitolo(request.getTitolo());
         annuncio.setDescrizione(request.getDescrizione());
 
@@ -501,15 +501,20 @@ public class AnnuncioImmobileService {
         caratteristicheAggiuntive.setPostiAuto(request.isPostiAuto());
     }
 
-    private void updateContratto(ContrattoRequest request, Contratto contratto){
+    private void updateContratto(ContrattoRequest request,AnnuncioImmobiliare annuncio){
 
         if(request.getTipoDiContratto().equals("AFFITTO")){
 
-            updateContrattoAffitto(request.getDatiAffittoRequest(),(ContrattoAffitto) contratto);
+            annuncio.setContratto(new ContrattoAffitto());
+
+            updateContrattoAffitto(request.getDatiAffittoRequest(),(ContrattoAffitto)annuncio.getContratto());
         }
 
         else{
-            updateContrattoVendita(request.getDatiVenditaRequest(), (ContrattoVendita)  contratto);
+
+            annuncio.setContratto(new ContrattoVendita());
+
+            updateContrattoVendita(request.getDatiVenditaRequest(), (ContrattoVendita)annuncio.getContratto());
         }
     }
 
