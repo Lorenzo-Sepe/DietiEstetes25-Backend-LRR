@@ -39,6 +39,6 @@ public class Proposta {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private Contatto contatto;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private AnnuncioImmobiliare annuncio; // Molte proposte possono appartenere a un solo annuncio
 }

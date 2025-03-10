@@ -30,7 +30,6 @@ package it.unina.dietiestates25.service;
                     .valore(request.getInformazioniContatto())
                     .build();
             Proposta proposta = Proposta.builder()
-                    .user(utente)
                     .annuncio(annuncio)
                     .cognome(request.getCognome())
                     .nome(request.getNome())
@@ -39,6 +38,8 @@ package it.unina.dietiestates25.service;
                     .prezzoProposta(request.getPrezzo())
                     .build();
             try {
+                propostaRepository.save(proposta);
+                proposta.setUser(utente);
                 propostaRepository.save(proposta);
             } catch (Exception e) {
                 throw new InternalServerErrorException("Non è stato possibile inviare la proposta: ");
@@ -72,7 +73,7 @@ package it.unina.dietiestates25.service;
                     .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
             verificaProprietarioAnnuncio(proposta);
 
-            if(proposta.getControproposta()!=null || proposta.getControproposta() != 0){
+            if(proposta.getControproposta()!=null && proposta.getControproposta() != 0){
                 throw new BadRequestException("La proposta ha già una controproposta");
             }
             checkPropostaStatus(proposta);
