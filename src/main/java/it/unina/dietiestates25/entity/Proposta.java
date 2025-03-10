@@ -4,6 +4,8 @@ import it.unina.dietiestates25.entity.enumeration.StatoProposta;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -41,4 +43,6 @@ public class Proposta {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private AnnuncioImmobiliare annuncio; // Molte proposte possono appartenere a un solo annuncio
+
+    private LocalDateTime dataDellaProposta;
 }
