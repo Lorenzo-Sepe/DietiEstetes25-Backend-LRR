@@ -6,6 +6,7 @@ import it.unina.dietiestates25.dto.response.*;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
+import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
@@ -28,6 +29,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -37,8 +39,8 @@ public class ControllerTESTRAI {
     private final AnnuncioImmobileService annuncioImmobileService;
     private  final NearbyPlacesChecker nearbyPlacesChecker;
     @GetMapping("pb/test/geoapify2/{latitudine}/{longitudine}")
-    public List<String> verificaVicino2(@PathVariable double latitudine, @PathVariable double longitudine) {
-        return nearbyPlacesChecker.getpuntiInteresseVicini(latitudine, longitudine);
+    public Set<VicinoA> verificaVicino2(@PathVariable double latitudine, @PathVariable double longitudine) {
+        return nearbyPlacesChecker.getPuntiInteresseVicini(latitudine, longitudine);
     }
     private final UserRepository userRepository;
 

@@ -1,20 +1,19 @@
 package it.unina.dietiestates25.utils;
 
+import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import it.unina.dietiestates25.entity.utilities.Point;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class NearbyPlacesChecker {
 
     public List<String> getProvinceVicine(Point centro, double raggio) {
         List<String> provinceVicine = new ArrayList<>();
-        
+
         try {
             // Leggi il file GeoJSON
             String geojsonContent = Files.readString(Paths.get("src/main/resources/limits_IT_provinces.geojson"));
@@ -43,7 +42,7 @@ public class NearbyPlacesChecker {
                 JSONObject feature = features.getJSONObject(i);
                 JSONObject geometry = feature.getJSONObject("geometry");
                 String type = geometry.getString("type");
-                
+
                 // Ottieni le coordinate della provincia
                 JSONArray coordinates;
                 if (type.equals("Polygon")) {
@@ -58,7 +57,7 @@ public class NearbyPlacesChecker {
                     JSONArray point = coordinates.getJSONArray(j);
                     double provinceLon = point.getDouble(0);
                     double provinceLat = point.getDouble(1);
-                    
+
                     // Calcola la distanza usando la formula di Haversine
                     double distance = haversineDistance(centro.getLatitudine(), centro.getLongitudine(), provinceLat, provinceLon);
                     if (distance <= raggio) {
@@ -75,38 +74,38 @@ public class NearbyPlacesChecker {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return provinceVicine;
     }
 
     // Metodo per calcolare la distanza tra due punti usando la formula di Haversine
     private double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
         double earthRadius = 6371; // Raggio della Terra in km
-        
+
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
-        
+
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                    Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                    Math.sin(dLon/2) * Math.sin(dLon/2);
-                   
+
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return earthRadius * c;
     }
 
-    public List<String> getpuntiInteresseVicini(@PathVariable double latitudine, @PathVariable double longitudine) {
-        List<String> indicatori = new ArrayList<>();
+    public Set<VicinoA> getPuntiInteresseVicini(@PathVariable double latitudine, @PathVariable double longitudine) {
+        Set<VicinoA> indicatori = new HashSet<>();
 
-        // Categorie da verificare
-        Map<String, String> categorie = Map.of(
-                "Vicino a scuole", "education.school",
-                "Vicino a parchi", "leisure.park",
-                "Vicino a trasporto pubblico", "public_transport"
+        // Mappa delle categorie con corrispondente valore enum
+        Map<VicinoA, String> categorie = Map.of(
+                VicinoA.SCUOLE, "education.school",
+                VicinoA.PARCHEGGI, "leisure.park",
+                VicinoA.TRASPORTO_PUBBLICO, "public_transport"
         );
 
         WebClient webClient = webClientBuilder.build();
 
-        for (Map.Entry<String, String> voce : categorie.entrySet()) {
+        for (Map.Entry<VicinoA, String> voce : categorie.entrySet()) {
             String url = urlBase.replace("{categoria}", voce.getValue())
                     .replace("{latitudine}", String.valueOf(latitudine))
                     .replace("{longitudine}", String.valueOf(longitudine))
@@ -123,8 +122,8 @@ public class NearbyPlacesChecker {
                     .bodyToMono(Map.class)
                     .block(); // Chiamata sincrona
 
-            if (risposta != null && risposta.containsKey(FEATURES_KEY) && 
-                ((List<?>) risposta.get(FEATURES_KEY)).size() > 0) {
+            if (risposta != null && risposta.containsKey(FEATURES_KEY) &&
+                    ((List<?>) risposta.get(FEATURES_KEY)).size() > 0) {
                 indicatori.add(voce.getKey());
             }
         }

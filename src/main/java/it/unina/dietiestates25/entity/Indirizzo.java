@@ -1,7 +1,10 @@
 package it.unina.dietiestates25.entity;
 
+import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,4 +42,7 @@ public class Indirizzo {
 
     @Column(nullable = false)
     private Double longitudine;
+
+    @ElementCollection(targetClass = VicinoA.class, fetch = FetchType.EAGER)
+    private Set<VicinoA> luoghiVicini;
 }

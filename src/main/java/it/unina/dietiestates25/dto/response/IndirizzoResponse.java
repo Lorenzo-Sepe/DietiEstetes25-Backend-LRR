@@ -1,6 +1,9 @@
 package it.unina.dietiestates25.dto.response;
 
+import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,4 +19,5 @@ public class IndirizzoResponse {
     private String nazione;
     private Double latitudine;
     private Double longitudine;
+    private Set<VicinoA> vicinoA;
 }
