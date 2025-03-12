@@ -1,16 +1,22 @@
 package it.unina.dietiestates25.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.*;
 import it.unina.dietiestates25.entity.*;
+import it.unina.dietiestates25.entity.enumeration.TipoContratto;
+import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
+import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import it.unina.dietiestates25.service.JwtService;
 import it.unina.dietiestates25.utils.ImageContainerUtil;
+import it.unina.dietiestates25.utils.NearbyPlacesChecker;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +33,17 @@ import java.util.Map;
 @AllArgsConstructor
 public class ControllerTESTRAI {
 
-    private final String chiaveApi = "89dcc279975c4ca2bc1f39fb349bc4da";
-    private final WebClient.Builder webClientBuilder;
-    private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AnnuncioImmobileService annuncioImmobileService;
+    private  final NearbyPlacesChecker nearbyPlacesChecker;
+    @GetMapping("pb/test/geoapify2/{latitudine}/{longitudine}")
+    public List<String> verificaVicino2(@PathVariable double latitudine, @PathVariable double longitudine) {
+        return nearbyPlacesChecker.getpuntiInteresseVicini(latitudine, longitudine);
+    }
+    private final UserRepository userRepository;
 
+    private final String chiaveApi = "89dcc279975c4ca2bc1f39fb349bc4da";
+    private final WebClient.Builder webClientBuilder;
 
     @GetMapping("pb/test/geoapify/{latitudine}/{longitudine}")
     public List<String> verificaVicino(@PathVariable double latitudine, @PathVariable double longitudine) {
@@ -132,7 +144,10 @@ public class ControllerTESTRAI {
     @Transactional
     @GetMapping("pb/test/immobili")
     public List<AnnuncioImmobiliareResponse> getAllImmobileResponses() {
-        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll();
+        int pagina= 0;
+        int dimensionePagina= 10;
+        Pageable pageable = Pageable.ofSize(dimensionePagina).withPage(pagina);
+        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll(pageable).toList();
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
 
         for(AnnuncioImmobiliare annuncio: annunci){
@@ -261,4 +276,67 @@ public class ControllerTESTRAI {
 
         return annunciResponse;
     }
+
+
+    private  final RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
+    @GetMapping("pb/test/ricerche")
+    public List<Integer> trovaUtentiInteressati(@RequestParam BigDecimal min, @RequestParam BigDecimal max) {
+        List<Integer> utentiInteressati = new ArrayList<>();
+        List<String> listLocalita = new ArrayList<>();
+        listLocalita.add("Napoli");
+        listLocalita.add("Roma");
+        for (String localita : listLocalita) {
+            List<RicercaAnnunciEffettuata> ricerche = ricercaAnnunciEffettuataRepository.findByTipologiaImmobileAndTipologiaContrattoAndLocalitaAndPrezzoMinLessThanEqualAndPrezzoMaxGreaterThanEqual(
+                    TipologiaImmobile.APPARTAMENTO,
+                    TipoContratto.AFFITTO,
+                    localita,
+                    min.multiply(BigDecimal.valueOf(0.9)),  // Range -10%
+                    max.multiply(BigDecimal.valueOf(1.1))   // Range +10%
+            );
+
+            utentiInteressati.addAll(
+                    ricerche.stream()
+                            .map(r -> r.getUtente().getId())
+                            .toList()
+            );
+        }
+        String localita =listLocalita.getFirst();
+        Specification<RicercaAnnunciEffettuata> spec = (root, query, criteriaBuilder) -> {
+            if (localita == null || localita.isEmpty()) {
+                return criteriaBuilder.conjunction(); // Restituisce sempre vero
+            }
+            return criteriaBuilder.isMember(localita, root.get("localita"));
+        };
+
+        List<RicercaAnnunciEffettuata> ricerche = ricercaAnnunciEffettuataRepository.findAll(spec);
+
+        return utentiInteressati.stream().distinct().toList(); // Rimuoviamo i duplicati
+    }
+
+//addFakeRicerche
+    @PostMapping("pb/test/ricerche")
+    @Operation(summary = "Aggiungi ricerche fittizie")
+    public String addFakeRicerche(@RequestParam int id) {
+        User utente = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Utente non trovato", "id", id));
+        List<String> listLocalita = new ArrayList<>();
+        listLocalita.add("Napoli");
+        listLocalita.add("Roma");
+
+
+                RicercaAnnunciEffettuata ricerca = RicercaAnnunciEffettuata.builder()
+                        .utente(utente)
+                        .tipologiaImmobile(TipologiaImmobile.APPARTAMENTO)
+                        .tipologiaContratto(TipoContratto.AFFITTO)
+                        .localita(listLocalita)
+                        .prezzoMin(BigDecimal.valueOf(500))
+                        .prezzoMax(BigDecimal.valueOf(1000))
+                        .build();
+
+                    ricercaAnnunciEffettuataRepository.save(ricerca);
+
+
+        return "Ricerche fittizie aggiunte";
+    }
+
+
 }
