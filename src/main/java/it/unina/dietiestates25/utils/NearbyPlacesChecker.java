@@ -25,6 +25,7 @@ public class NearbyPlacesChecker {
     private final WebClient.Builder webClientBuilder;
     @Value("${application.security.geo-api.secret-key}")
     private String chiaveApi;
+
     // URL base per Geoapify
     @Value("${application.security.geo-api.base-url}")
     private String urlBase;

@@ -13,8 +13,8 @@ import java.util.List;
 public class IndirizzoService {
     private final NearbyPlacesChecker nearbyPlacesChecker;
 
-    public List<String> getProvinceVicine(ProvinciaRequest request) {
-        Point centro = new Point(request.getLatitudine(), request.getLongitudine());
-        return nearbyPlacesChecker.getProvinceVicine(centro, request.getRaggio());
+    public List<String> getProvinceVicine(double lat, double lon, int raggio) {
+        Point centro = new Point(lat, lon);
+        return nearbyPlacesChecker.getProvinceVicine(centro, raggio);
     }
 }
