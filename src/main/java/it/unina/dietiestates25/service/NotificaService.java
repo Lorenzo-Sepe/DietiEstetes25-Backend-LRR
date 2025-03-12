@@ -1,12 +1,16 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.dto.request.FiltroNotificaRequest;
+import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.Notifica;
 import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
+import it.unina.dietiestates25.factory.GeneratoreContenutoFactory;
+import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
 import it.unina.dietiestates25.repository.NotificaRepository;
+import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.constraints.NotBlank;
@@ -151,5 +155,28 @@ public class NotificaService {
         List<Notifica> notifiche = notificaRepository.findAllByDestinatarioAndCategoria(userCurrent,categoriaNotifica,pageable);
 
         return getListNotificaResponseFromListaNotifica(notifiche);
+    }
+
+
+    public <T extends DatiContenutoNotifica> void inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario, T dati) {
+        // Ottieni il generatore di contenuto tipizzato in base al tipo di notifica
+        GeneratoreContenutoNotifica<T> generatore = GeneratoreContenutoFactory.getGeneratore(tipoNotifica);
+        // Genera il contenuto HTML
+        String contenutoHtml = generatore.generaContenuto(dati);
+
+        // Creazione della notifica utilizzando il builder
+        Notifica notifica = Notifica.builder()
+                .contenuto(contenutoHtml)
+                .dataCreazione(LocalDateTime.now())
+                .mittente("Sistema") // oppure il mittente dinamico
+                // ATTENZIONE: il campo categoria nella classe Notifica è mappato come entità.
+                //TODO
+                // Occorrerebbe convertire il TipoNotifica in CategoriaNotifica oppure gestirlo opportunamente.
+                .categoria(null)
+                .destinatario(destinatario)
+                .build();
+
+        // Salva la notifica nel database
+        notificaRepository.save(notifica);
     }
 }
