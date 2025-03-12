@@ -19,6 +19,8 @@ public class RicercaAnnunciEffettuataService {
     private RicercaAnnunciEffettuataRepository repository;
 
     public void salvaRicercaAnnunciEffettuata(FiltroAnnuncio filtro) {
+        //TODO controllare se si deve o no salvare l'annuncio
+
         User user= UserContex.getUserCurrent();
         RicercaAnnunciEffettuata ricerca= RicercaAnnunciEffettuata.builder().utente(user).build();
         List <String> localita= getLocalita(filtro);
@@ -36,6 +38,7 @@ public class RicercaAnnunciEffettuataService {
 
         ricerca.setTipologiaImmobile(filtro.getTipologiaImmobile());
         ricerca.setTipologiaContratto(filtro.getTipologiaContratto());
+
         repository.save(ricerca);
     }
 
