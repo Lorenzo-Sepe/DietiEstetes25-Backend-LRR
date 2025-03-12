@@ -4,12 +4,12 @@ package it.unina.dietiestates25.controller;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
+import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +37,17 @@ public class AnnuncioImmobileController {
 
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
     @PostMapping("/annuncioImmobiliare/cerca")
+    @PreAuthorize("hasAuthority('MEMBER')")
     public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutentificazinr(@RequestBody FiltroAnnuncio filtro) {
         ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro );
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
+    }
+
+    //TODO AGGIUNGERE UNA DTO RESPONSE
+    @GetMapping("/annuncioImmobiliare/storicoRicerche")
+    @PreAuthorize("hasAuthority('MEMBER')")
+    public ResponseEntity<List<RicercaAnnunciEffettuata>> getStoricoRicerche() {
+        return ResponseEntity.ok(ricercaAnnunciEffettuataService.getStoricoRicerche());
     }
 
 

@@ -25,12 +25,12 @@ public class RicercaAnnunciEffettuataService {
         ricerca.setLocalita(localita);
         ricerca.setDataRicerca(LocalDateTime.now());
         if(filtro.getPrezzoMin() ==null  || filtro.getPrezzoMin()<0)
-            ricerca.setPrezzoMin(BigDecimal.ZERO);
+            ricerca.setPrezzoMin(null);
         else
             ricerca.setPrezzoMin(BigDecimal.valueOf(filtro.getPrezzoMin()));
 
         if (filtro.getPrezzoMax() == null || filtro.getPrezzoMax()<0)
-            ricerca.setPrezzoMax(BigDecimal.valueOf(Double.MAX_VALUE));
+            ricerca.setPrezzoMax(null);
         else
             ricerca.setPrezzoMax(BigDecimal.valueOf(filtro.getPrezzoMax()));
 
@@ -43,12 +43,21 @@ public class RicercaAnnunciEffettuataService {
         if (filtro.getProvincia()!=null && filtro.getProvincia().isBlank()){
             return List.of(filtro.getProvincia());
         }
-        double latitudine= filtro.getLatCentro();
-        double longitudine= filtro.getLonCentro();
-        double raggio= filtro.getRaggioKm();
+
+        Double latitudine= filtro.getLatCentro();
+        Double longitudine= filtro.getLonCentro();
+        Double raggio= filtro.getRaggioKm();
+        if (latitudine!=null && longitudine!=null && raggio!=null){
 
         //TODO: implementare ricerca province in base a latitudine, longitudine e raggio
         return List.of("Napoli");
+        }
+        return List.of();
+    }
+
+    public List<RicercaAnnunciEffettuata> getStoricoRicerche() {
+        User user= UserContex.getUserCurrent();
+        return repository.findByUtente(user);
     }
 
     /*public List<RicercaAnnunciEffettuata> cercaAnnunci(String localita, BigDecimal prezzoMin, BigDecimal prezzoMax) {
