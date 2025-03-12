@@ -35,6 +35,12 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
+    @PostMapping("/annuncioImmobiliare/cercaByStaff")
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnuniByStaff(@RequestBody FiltroAnnuncio filtro){
+
+        return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
+    }
+
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
     @PostMapping("/annuncioImmobiliare/cerca")
     @PreAuthorize("hasAuthority('MEMBER')")

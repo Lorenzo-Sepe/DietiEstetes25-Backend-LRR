@@ -33,7 +33,7 @@ public class AgenziaImmobiliare {
     @OneToOne(cascade = CascadeType.ALL)
     private User fondatore;
 
-    @OneToMany( cascade = CascadeType.ALL)
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<User> dipendenti;
 
     public void addDipendente(User dipendente) {

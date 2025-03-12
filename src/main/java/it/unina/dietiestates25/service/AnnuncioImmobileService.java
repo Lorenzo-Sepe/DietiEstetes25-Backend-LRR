@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -221,13 +222,13 @@ public class AnnuncioImmobileService {
         return immaginiImmobile;
     }
 
-    //-------------------------------------------------------GET ANNUNCI PER MEMBER-------------------------------------------------------
+    //-------------------------------------------------------GET ANNUNCI-------------------------------------------------------
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
-        Pageable pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
-        Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
 
-        List<AnnuncioImmobiliare> annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
+        AuthorityName ruoloUserCurrent = UserContex.getRoleCurrent();
+
+        List<AnnuncioImmobiliare> annunci = getAnnunciByRuolo(ruoloUserCurrent,filtro);
 
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
 
@@ -252,6 +253,34 @@ public class AnnuncioImmobileService {
         }
 
         return annunciResponse;
+    }
+
+    private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo,FiltroAnnuncio filtro){
+
+        List<AnnuncioImmobiliare> annunci;
+
+        Pageable pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
+
+        if(ruolo == null || ruolo == AuthorityName.MEMBER ){
+
+            Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
+
+            annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
+
+        } else if(ruolo == AuthorityName.AGENT){
+
+            annunci = annuncioImmobiliareRepository.findByAgente(UserContex.getUserCurrent(),pageable);
+
+        } else {
+
+            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent()).get();
+
+            Set<User> dipendentiAgenziaImmobiliare = agenziaImmobiliare.getDipendenti();
+
+            annunci = annuncioImmobiliareRepository.findByAgenteIn(dipendentiAgenziaImmobiliare,pageable);
+        }
+
+        return annunci;
     }
 
     private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncio filtro){
@@ -444,15 +473,6 @@ public class AnnuncioImmobileService {
                 .build();
 
         return agenteCreatoreAnnuncio;
-    }
-
-    //------------------------------------------------------GET ANNUNCI PER PANNELLO AGENTI/ADMIN----------------------------------------
-
-    private List<AnnuncioImmobiliareResponse> getAnnunciByStaff(){
-
-        List<AnnuncioImmobiliareResponse> annunci = new ArrayList<>();
-
-        return annunci;
     }
 
     //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
