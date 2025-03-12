@@ -221,7 +221,7 @@ public class AnnuncioImmobileService {
         return immaginiImmobile;
     }
 
-    //-------------------------------------------------------GET ANNUNCI-------------------------------------------------------
+    //-------------------------------------------------------GET ANNUNCI PER MEMBER-------------------------------------------------------
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
         Pageable pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
@@ -442,6 +442,14 @@ public class AnnuncioImmobileService {
         return agenteCreatoreAnnuncio;
     }
 
+    //------------------------------------------------------GET ANNUNCI PER PANNELLO AGENTI/ADMIN----------------------------------------
+
+    private List<AnnuncioImmobiliareResponse> getAnnunciByStaff(){
+
+        List<AnnuncioImmobiliareResponse> annunci = new ArrayList<>();
+
+        return annunci;
+    }
 
     //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
 
