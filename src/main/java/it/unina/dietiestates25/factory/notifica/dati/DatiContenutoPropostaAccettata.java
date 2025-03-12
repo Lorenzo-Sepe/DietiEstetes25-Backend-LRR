@@ -7,5 +7,20 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica{
     private String nomeDestinatario;
-    private int idProposta;
+
+     private String titoloAnnuncio;
+     private Double prezzoProposto;
+
+    private String urlImmagineImmobile;
+
+    private String IndirizzoImmobile;
+
+    private String prezzo;
+
+    private String descrizione;
+
+    private String urlProfiloAgente;
+
+    private String nomeAgente;
+
 }

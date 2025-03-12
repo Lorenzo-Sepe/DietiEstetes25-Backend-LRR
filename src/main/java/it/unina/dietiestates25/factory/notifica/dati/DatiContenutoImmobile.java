@@ -8,4 +8,16 @@ import lombok.Getter;
 public class DatiContenutoImmobile implements DatiContenutoNotifica{
     private String indirizzoImmobile;
     private double prezzo;
+
+    private String nomeDestinatario;
+
+    private String tipoContratto;
+
+    private String tipoImmobile;
+
+    private String urlImmagineImmobile;
+
+    private String descrizione;
+
+    private String urlAnnuncioImmobile;
 }
