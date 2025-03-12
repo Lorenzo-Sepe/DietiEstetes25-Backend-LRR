@@ -234,15 +234,16 @@ public class AnnuncioImmobileService {
         for(AnnuncioImmobiliare annuncio : annunci){
 
             ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
-            List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
+            //List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
             ContrattoResponse contrattoResponse = getContrattoResponse(annuncio.getContratto());
             UserResponse agenteCreatoreAnnuncio = getAgenteCreatoreAnnuncio(annuncio.getAgente());
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
+                    .id(annuncio.getId())
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
                     .immobile(immobileResponse)
-                    .proposte(proposteResponse)
+                    //.proposte(proposteResponse)
                     .agente(agenteCreatoreAnnuncio)
                     .contratto(contrattoResponse)
                     .build();
@@ -344,6 +345,8 @@ public class AnnuncioImmobileService {
         return immaginiImmobileResponse;
     }
 
+    //TODO questa parte di codice andrebbe eliminata perché c'è una get proposte da chiamare a parte
+    /*
     private List<PropostaResponse> getListPropostaResponse(List<Proposta> proposte){
 
         List<PropostaResponse> proposteRespose = new ArrayList<>();
@@ -386,7 +389,7 @@ public class AnnuncioImmobileService {
                 .build();
 
         return contattoResponse;
-    }
+    }*/
 
     private ContrattoResponse getContrattoResponse(Contratto contratto){
 

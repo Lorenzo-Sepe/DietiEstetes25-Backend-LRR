@@ -22,12 +22,6 @@ public class AnnuncioImmobiliareRequest {
     @Size(min = 1, max = 1000, message = "La descrizione deve avere tra 1 e 1000 caratteri")
     private String descrizione;
 
-    @NotNull(message = "La data di pubblicazione è obbligatoria")
-    private LocalDate dataPubblicazione;
-
-    @NotNull(message = "L'agente associato all'annuncio è obbligatorio")
-    private Integer agenteId;
-
     @NotNull(message = "L'immobile è obbligatorio")
     private ImmobileRequest immobile;
 

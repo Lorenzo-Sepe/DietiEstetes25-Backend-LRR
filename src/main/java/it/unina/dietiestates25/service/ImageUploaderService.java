@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.utils.ImageContainerUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ImageUploaderService {
 
     private final ImageContainerUtil imageContainerUtil;

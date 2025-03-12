@@ -4,6 +4,8 @@ import it.unina.dietiestates25.entity.enumeration.StatoProposta;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -33,12 +35,14 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatoProposta stato;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.EAGER)
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
     private Contatto contatto;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private AnnuncioImmobiliare annuncio; // Molte proposte possono appartenere a un solo annuncio
+
+    private LocalDateTime dataDellaProposta;
 }
