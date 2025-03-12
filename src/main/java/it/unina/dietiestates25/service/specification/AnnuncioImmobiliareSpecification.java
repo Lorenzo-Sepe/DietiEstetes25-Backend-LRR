@@ -109,6 +109,19 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
+    public static Specification<AnnuncioImmobiliare> conProvincia(String provincia){
+        return (root, query, cb) -> {
+            if (provincia == null || provincia.isEmpty()) {
+                return null;
+            }
+            Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
+            Join<Immobile, Indirizzo> indirizzo = immobile.join("indirizzo");
+
+            return cb.like(cb.lower(indirizzo.get("provincia")), "%" + provincia.toLowerCase() + "%");
+
+        };
+    }
+
     public static Specification<AnnuncioImmobiliare> conCaratteristicheAggiuntive(Boolean balconi, Boolean garage, Boolean pannelliSolari) {
         return (root, query, cb) -> {
             Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");

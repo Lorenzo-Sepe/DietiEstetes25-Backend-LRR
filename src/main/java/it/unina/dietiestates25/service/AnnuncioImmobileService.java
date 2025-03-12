@@ -254,15 +254,19 @@ public class AnnuncioImmobileService {
         return annunciResponse;
     }
 
-    //TODO cambiare la logica del range del prezzo in seguito al cambiamento fatto in contratto (prezzo è passato ai figli)
     private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncio filtro){
-
+        if( filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
+            filtro.setLatCentro(null);
+            filtro.setLonCentro(null);
+            filtro.setRaggioKm(null);
+        }
         Specification<AnnuncioImmobiliare> specfication = Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
                 .and(AnnuncioImmobiliareSpecification.conTipologiaImmobile(filtro.getTipologiaImmobile()))
                 .and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
                 .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
-                //.and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
+                .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
+                .and(AnnuncioImmobiliareSpecification.conProvincia(filtro.getProvincia()))
                 .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
 
         return specfication;

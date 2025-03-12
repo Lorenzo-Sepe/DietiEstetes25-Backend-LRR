@@ -31,4 +31,6 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
             @Param("prezzoMin") BigDecimal prezzoMin);
     @Query("SELECT DISTINCT r.utente FROM RicercaAnnunciEffettuata r WHERE :localita MEMBER OF r.localita")
     List<User> findUtentiByLocalita(@Param("localita") String localita);
+
+    List<RicercaAnnunciEffettuata> findByUtente(User user);
 }
