@@ -6,14 +6,12 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliar
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
 import it.unina.dietiestates25.dto.response.*;
 import it.unina.dietiestates25.entity.*;
-import it.unina.dietiestates25.entity.enumeration.AuthorityName;
-import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
-import it.unina.dietiestates25.entity.enumeration.TipoContratto;
-import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
+import it.unina.dietiestates25.entity.enumeration.*;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
 import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecification;
+import it.unina.dietiestates25.utils.NearbyPlacesChecker;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -61,10 +59,17 @@ public class AnnuncioImmobileService {
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
         updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
-
+        setLuoghiVicini(immobile.getIndirizzo(),annuncioImmobiliare);
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
         return "Annuncio creato con successo";
+    }
+
+        private final NearbyPlacesChecker nearbyPlacesChecker ;
+    private void setLuoghiVicini(Indirizzo indirizzo, AnnuncioImmobiliare annuncioImmobiliare) {
+        Set<VicinoA>postiVicini= nearbyPlacesChecker.getPuntiInteresseVicini(indirizzo.getLatitudine(),indirizzo.getLongitudine());
+        indirizzo.setLuoghiVicini(postiVicini);
+        annuncioImmobiliare.getImmobile().setIndirizzo(indirizzo);
     }
 
     private Immobile getImmobileByRequest(ImmobileRequest request){
@@ -333,6 +338,7 @@ public class AnnuncioImmobileService {
                 .nazione(indirizzoImmobile.getNazione())
                 .longitudine(indirizzoImmobile.getLongitudine())
                 .latitudine(indirizzoImmobile.getLatitudine())
+                .vicinoA(indirizzoImmobile.getLuoghiVicini())
                 .build();
 
         return indirizzoResponse;
