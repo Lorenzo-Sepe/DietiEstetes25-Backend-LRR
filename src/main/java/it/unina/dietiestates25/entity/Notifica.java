@@ -28,9 +28,11 @@ public class Notifica {
     private String mittente;
 
     @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User destinatario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private CategoriaNotifica categoria;
+
+    private boolean isLetta;
 }

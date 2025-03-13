@@ -89,4 +89,15 @@ public class NotificaController {
 
         return ResponseEntity.ok(notificaService.getNotificheByCategoria(request));
     }
+
+    @PatchMapping("/checkNotifica")
+    @Operation(
+            summary = "Set Visualizzazione Notifica",
+            description = "Metodo per settare a true il campo letto della notifica",
+            tags = {"Notifiche"})
+    @PreAuthorize("hasAnyAuthority('MEMBER')")
+    public ResponseEntity<String> setTrueVisualizzazioneNotifica(@RequestParam int idNotifica){
+
+       return ResponseEntity.ok(notificaService.setTrueVisualizzazioneNotifica(idNotifica));
+    }
 }
