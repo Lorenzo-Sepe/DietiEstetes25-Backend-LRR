@@ -34,6 +34,7 @@ public class AnnuncioImmobileService {
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
     private final ImageUploaderService imageUploaderService;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
+    private final NearbyPlacesChecker nearbyPlacesChecker ;
 
     //-------------------------------------------------------CREA ANNUNCIO-------------------------------------------------------
 
@@ -59,17 +60,9 @@ public class AnnuncioImmobileService {
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
         updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
-        setLuoghiVicini(immobile.getIndirizzo(),annuncioImmobiliare);
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
         return "Annuncio creato con successo";
-    }
-
-        private final NearbyPlacesChecker nearbyPlacesChecker ;
-    private void setLuoghiVicini(Indirizzo indirizzo, AnnuncioImmobiliare annuncioImmobiliare) {
-        Set<VicinoA>postiVicini= nearbyPlacesChecker.getPuntiInteresseVicini(indirizzo.getLatitudine(),indirizzo.getLongitudine());
-        indirizzo.setLuoghiVicini(postiVicini);
-        annuncioImmobiliare.getImmobile().setIndirizzo(indirizzo);
     }
 
     private Immobile getImmobileByRequest(ImmobileRequest request){
@@ -123,9 +116,17 @@ public class AnnuncioImmobileService {
                 .numeroCivico(request.getNumeroCivico())
                 .longitudine(request.getLongitudine())
                 .latitudine(request.getLatitudine())
+                .luoghiVicini(getPostiVicino(request.getLatitudine(),request.getLongitudine()))
                 .build();
 
         return indirizzo;
+    }
+
+    private Set<VicinoA> getPostiVicino(double latitudine, double longitudine){
+
+        Set<VicinoA> postiVicini = nearbyPlacesChecker.getPuntiInteresseVicini(latitudine,longitudine);
+
+        return postiVicini;
     }
 
     private CaratteristicheAggiuntive getCaratteristicheAggiuntiveFromRequest(CaratteristicheAggiuntiveRequest request){
