@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,19 +39,18 @@ public class NotificaService {
 
         int count = 0;
 
-        Notifica notifica = Notifica.builder().contenuto(request.getContenuto())
-                .dataCreazione(LocalDateTime.now())
-                .mittente(getNomeAzenziaImmobiliare(mittente))
-                .contenuto(request.getContenuto())
-                .build();
-
         List<User> destinatari = getDestinatariNotifica(request.getAreaDiInteresse(), request.getTipoDiContrattoDiInteresse(), request.getTipologiaDiImmobileDiInteresse());
 
         for(User destinatario : destinatari){
 
             try{
 
-                notifica.setDestinatario(destinatario);
+                Notifica notifica = Notifica.builder().contenuto(request.getContenuto())
+                        .dataCreazione(LocalDateTime.now())
+                        .mittente(getNomeAzenziaImmobiliare(mittente))
+                        .contenuto(request.getContenuto())
+                        .destinatario(destinatario)
+                        .build();
 
                 notificaRepository.save(notifica);
 
@@ -69,8 +69,8 @@ public class NotificaService {
 
     private List<User> getDestinatariNotifica(@NotBlank String areaDiInteresse, String tipoDiContrattoDiInteresse, String tipologiaDiImmobileDiInteresse){
 
-        User utente = entityManager.getReference(User.class, 2);
-        User utente2 = entityManager.getReference(User.class, 3);
+        User utente = entityManager.getReference(User.class, 1);
+        User utente2 = entityManager.getReference(User.class, 2);
 
         List<User> destinatari = new ArrayList<>();
 
@@ -121,9 +121,11 @@ public class NotificaService {
         for(Notifica notifica : notifiche){
 
             NotificaResponse notificaResponse = new NotificaResponse();
+            notificaResponse.setId(notifica.getId());
             notificaResponse.setContenuto(notifica.getContenuto());
             notificaResponse.setMittente(notifica.getMittente());
             notificaResponse.setDataDiCreazione(notifica.getDataCreazione());
+            notificaResponse.setLetta(notifica.isLetta());
             notificheResponse.add(notificaResponse);
         }
 
@@ -183,5 +185,30 @@ public class NotificaService {
 
         // Salva la notifica nel database
         notificaRepository.save(notifica);
+    }
+
+    public String setTrueVisualizzazioneNotifica(int idNotifica){
+
+        Notifica notifica = notificaRepository.findById(idNotifica).get();
+
+        checkIsPropretarioNotifica(notifica);
+
+        notifica.setLetta(true);
+
+        notificaRepository.save(notifica);
+
+        return "Notifica settata come letta";
+    }
+
+    private void checkIsPropretarioNotifica(Notifica notifica){
+
+        User userCurrent = UserContex.getUserCurrent();
+
+        User proprietarioNotifica = notifica.getDestinatario();
+
+        if(!(userCurrent.equals(proprietarioNotifica))){
+
+            throw new AccessDeniedException("Permesso negato.\n L'utente che vuole settare letta la notifica non è il propretario della notifica.");
+        }
     }
 }
