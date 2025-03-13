@@ -1,38 +1,41 @@
 package it.unina.dietiestates25.service;
 
-    import it.unina.dietiestates25.dto.request.PageableProposte;
-    import it.unina.dietiestates25.dto.request.PropostaRequest;
-    import it.unina.dietiestates25.dto.response.ContattoResponse;
-    import it.unina.dietiestates25.dto.response.DatiUserPropostaResponse;
-    import it.unina.dietiestates25.dto.response.PropostaResponse;
-    import it.unina.dietiestates25.dto.response.UserResponse;
-    import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
-    import it.unina.dietiestates25.entity.Contatto;
-    import it.unina.dietiestates25.entity.Proposta;
-    import it.unina.dietiestates25.entity.User;
-    import it.unina.dietiestates25.entity.enumeration.StatoProposta;
-    import it.unina.dietiestates25.exception.BadRequestException;
-    import it.unina.dietiestates25.exception.InternalServerErrorException;
-    import it.unina.dietiestates25.exception.ResourceNotFoundException;
-    import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
-    import it.unina.dietiestates25.repository.PropostaRepository;
-    import it.unina.dietiestates25.utils.UserContex;
-    import lombok.RequiredArgsConstructor;
-    import org.springframework.data.domain.PageRequest;
-    import org.springframework.data.domain.Pageable;
-    import org.springframework.data.domain.Sort;
-    import org.springframework.stereotype.Service;
+import it.unina.dietiestates25.dto.request.PageableProposte;
+import it.unina.dietiestates25.dto.request.PropostaRequest;
+import it.unina.dietiestates25.dto.response.ContattoResponse;
+import it.unina.dietiestates25.dto.response.DatiUserPropostaResponse;
+import it.unina.dietiestates25.dto.response.PropostaResponse;
+import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
+import it.unina.dietiestates25.entity.Contatto;
+import it.unina.dietiestates25.entity.Proposta;
+import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.entity.enumeration.StatoProposta;
+import it.unina.dietiestates25.exception.BadRequestException;
+import it.unina.dietiestates25.exception.InternalServerErrorException;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
+import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
+import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
+import it.unina.dietiestates25.repository.PropostaRepository;
+import it.unina.dietiestates25.utils.UserContex;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
-    import java.util.ArrayList;
-    import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
     @RequiredArgsConstructor
     public class PropostaService {
         final private PropostaRepository propostaRepository;
         final private AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
+    private final NotificaService notificaService;
+    private final DatiImpiegatoRepository datiImpiegatoRepository;
 
-        //----------------------------------GET-----------------------------------------------------------------------
+    //----------------------------------GET-----------------------------------------------------------------------
 
         public List<PropostaResponse> getProposte(int idAnnuncio, PageableProposte pageableRequest){
 
@@ -152,6 +155,7 @@ package it.unina.dietiestates25.service;
             }
         }
 
+        @Transactional
         public void aggiungiUnaControProposta(int propostaId, Double controproposta) {
             Proposta proposta = propostaRepository.findById(propostaId)
                     .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
@@ -164,7 +168,11 @@ package it.unina.dietiestates25.service;
             proposta.setControproposta(controproposta);
             proposta.setStato(StatoProposta.IN_TRATTAZIONE);
             propostaRepository.save(proposta);
+
+
+            notificaService.inviaNotificaControproposta(proposta);
         }
+
 
         private static void verificaProprietarioAnnuncio(Proposta proposta) {
             int agenteProprietarioAnnuncioId= proposta.getAnnuncio().getAgente().getId();
@@ -173,6 +181,7 @@ package it.unina.dietiestates25.service;
             }
         }
 
+        @Transactional
         public void accettaProposta(int propostaId) {
             Proposta proposta = propostaRepository.findById(propostaId)
                     .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
@@ -180,8 +189,10 @@ package it.unina.dietiestates25.service;
             checkPropostaStatus(proposta);
             proposta.setStato(StatoProposta.ACCETTATO);
             propostaRepository.save(proposta);
+            notificaService.inviaNotificaAccettazione(proposta);
         }
 
+        @Transactional
         public void rifiutaProposta(int propostaId) {
             Proposta proposta = propostaRepository.findById(propostaId)
                     .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
@@ -189,6 +200,7 @@ package it.unina.dietiestates25.service;
             checkPropostaStatus(proposta);
             proposta.setStato(StatoProposta.RIFIUTATO);
             propostaRepository.save(proposta);
+            notificaService.inviaNotificaRifiuto(proposta);
         }
 
         private void checkPropostaStatus(Proposta proposta) {

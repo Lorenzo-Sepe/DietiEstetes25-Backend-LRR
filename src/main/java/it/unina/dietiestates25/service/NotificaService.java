@@ -8,8 +8,10 @@ import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.exception.UnauthorizedException;
 import it.unina.dietiestates25.factory.GeneratoreContenutoFactory;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoControproposta;
+import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoImmobile;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
+import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
 import it.unina.dietiestates25.utils.UserContex;
@@ -35,6 +37,7 @@ public class NotificaService {
 
     private final EntityManager entityManager;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
+    private final DatiImpiegatoRepository datiImpiegatoRepository;
 
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
 
@@ -164,12 +167,27 @@ public class NotificaService {
         return getListNotificaResponseFromListaNotifica(notifiche);
     }
 
-
-    public void inviaNotificaControproposta(User destinatario, Proposta proposta, DatiImpiegato datiImpiegato) {
-        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, datiImpiegato);
-        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, destinatario, dati);
+    private DatiImpiegato getDatiImpiegato(Proposta proposta) {
+        return datiImpiegatoRepository.findByUser_Id(proposta.getAnnuncio().getAgente().getId())
+                .orElseThrow(() -> new UnauthorizedException("Permesso negato.\n L'utente non è un impiegato"));
     }
 
+    public void inviaNotificaControproposta( Proposta proposta) {
+        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
+        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, proposta.getUser(), dati);
+    }
+    public void inviaNotificaAccettazione( Proposta proposta) {
+        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
+        inviaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA, proposta.getUser(), dati);
+    }
+    public void inviaNotificaRifiuto(Proposta proposta) {
+        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
+        inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), dati);
+    }
+    public void InviaNotificcaNuovoAnnuncio(User destinatario, AnnuncioImmobiliare annuncio) {
+        DatiContenutoImmobile dati = DatiContenutoImmobile.fromAnnuncio(annuncio, destinatario);
+        inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE, destinatario, dati);
+    }
 
     private <T extends DatiContenutoNotifica> void inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario, T dati) {
         // Ottieni il generatore di contenuto tipizzato in base al tipo di notifica

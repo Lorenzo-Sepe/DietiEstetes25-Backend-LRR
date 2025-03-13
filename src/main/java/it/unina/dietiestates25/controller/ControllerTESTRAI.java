@@ -9,6 +9,7 @@ import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
+import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
@@ -38,6 +39,8 @@ public class ControllerTESTRAI {
     private final JwtService jwtService;
     private final AnnuncioImmobileService annuncioImmobileService;
     private  final NearbyPlacesChecker nearbyPlacesChecker;
+    private final DatiImpiegatoRepository datiImpiegatoRepository;
+
     @GetMapping("pb/test/geoapify2/{latitudine}/{longitudine}")
     public Set<VicinoA> verificaVicino2(@PathVariable double latitudine, @PathVariable double longitudine) {
         return nearbyPlacesChecker.getPuntiInteresseVicini(latitudine, longitudine);
@@ -341,5 +344,13 @@ public class ControllerTESTRAI {
         return "Ricerche fittizie aggiunte";
     }
 
+    @PostMapping("pb/test/getDatiImpiegatoByUserID/{id}")
+    public DatiImpiegato getDatiImpiegatoByUserID(@PathVariable int id) {
+        DatiImpiegato datiImpiegato=  datiImpiegatoRepository.findByUser_Id(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato non trovati", "id", id));
+        datiImpiegato.setUser(null);
+        datiImpiegato.setContatti(null);
+        return datiImpiegato;
+    }
 
 }
