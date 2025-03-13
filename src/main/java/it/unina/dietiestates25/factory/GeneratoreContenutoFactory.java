@@ -16,6 +16,7 @@ public class GeneratoreContenutoFactory {
         generatori.put(CategoriaNotificaName.PROPOSTA_RIFIUTATA, new GeneratoreContenutoPropostaRifiutata());
         generatori.put(CategoriaNotificaName.CONTROPROPOSTA, new GeneratoreContenutoControproposta());
         generatori.put(CategoriaNotificaName.OPPORTUNITA_IMMOBILE, new GeneratoreContenutoImmobile());
+        generatori.put(CategoriaNotificaName.PROMOZIONI, new GeneratoreContenutoPromozioni());
     }
 
     /**
