@@ -1,13 +1,9 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
-import it.unina.dietiestates25.dto.request.NewAgentRequest;
 import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.request.SignUpRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
-import it.unina.dietiestates25.entity.AgenziaImmobiliare;
 import it.unina.dietiestates25.entity.Authority;
-import it.unina.dietiestates25.entity.DatiImpiegato;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.exception.BadCredentialsException;
@@ -55,7 +51,7 @@ public class AuthService {
 
     @Transactional
     public JwtAuthenticationResponse login(SignInRequest request) {
-        User user = userRepository.findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
+        User user = userRepository. findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
 
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
@@ -92,53 +88,7 @@ public class AuthService {
         return Msg.AUTHORITY_CHANGED;
     }
 
-    public User createAdmin(AgenziaImmobiliareRequest request){
-        Authority authority = authorityRepository.findByAuthorityName(AuthorityName.ADMIN)
-                .orElseThrow(() -> new ResourceNotFoundException("Authority", "authorityName", AuthorityName.ADMIN));
-        return User.builder()
-                .email(request.getEmailFondatore())
-                .username(request.getEmailFondatore())
-                .authority(authority)
-                .password("admin")
-                .build();
-    }
 
-    public User createAgente(NewAgentRequest request) {
-        User userAdmin = UserContex.getUserCurrent();
-        AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(userAdmin)
-                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare", "dipendente", userAdmin.getUsername()));
-
-        String newUsername = request.getNome() + request.getCognome();
-        String newMail = request.getNome() +"."+ request.getCognome() +generateUniqueId(3)+ "@" + agenziaImmobiliare.getDominio()+"dietiestates25.com";
-
-        if(userRepository.existsByUsernameOrEmail(newUsername, newMail))
-            throw new ConflictException(Msg.USER_ALREADY_PRESENT);
-        Authority authority = authorityRepository.findByAuthorityName(AuthorityName.AGENT)
-                .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
-        User user = User.builder()
-                .username(newUsername)
-                .email(newMail)
-                .password(passwordEncoder.encode("admin"))
-                .authority(authority)
-                .build();
-        userRepository.save(user);
-        DatiImpiegato datiImpiegato= DatiImpiegato.builder()
-                .nome(request.getNome())
-                .cognome(request.getCognome())
-                .user(user)
-                .build();
-        datiImpiegatoRepository.save(datiImpiegato);
-        return user;
-    }
-
-    public static String generateUniqueId(int length) {
-        String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            sb.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
-        }
-        return sb.toString();
-    }
 
     public String changePassword(String oldPassword, String newPassword, String confirmPassword) {
 
