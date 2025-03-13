@@ -41,7 +41,8 @@ public class AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
         User user = User.builder()
                 .username(request.username())
-                .email(request.email())
+                .email(request.email().toLowerCase())
+                .nomeVisualizzato(request.nomeVisulizzato())
                 .password(passwordEncoder.encode(request.password()))
                 .authority(authority)
                 .build();
@@ -51,7 +52,7 @@ public class AuthService {
 
     @Transactional
     public JwtAuthenticationResponse login(SignInRequest request) {
-        User user = userRepository. findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
+        User user = userRepository. findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail().toLowerCase())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
 
         if(!passwordEncoder.matches(request.password(), user.getPassword()))

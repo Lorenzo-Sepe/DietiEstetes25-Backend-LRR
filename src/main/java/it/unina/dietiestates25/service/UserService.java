@@ -25,9 +25,11 @@ public class UserService {
         String password = passwordService.generaPasswordDipendente();
         AuthorityName authorityName = request.getRuolo().equals("ADMIN") ? AuthorityName.ADMIN : AuthorityName.AGENT;
 
-        User user = User.builder()
+        //Agente Nome C.
+        String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";        User user = User.builder()
                 .email(email)
                 .username(email)
+                .nomeVisualizzato(nomeVisualizzato)
                 .authority(authorityRepository.findByAuthorityName(authorityName).orElseThrow())
                 .password(passwordService.cifrarePassword(password))
                 .build();

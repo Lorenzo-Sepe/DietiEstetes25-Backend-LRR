@@ -15,6 +15,10 @@ public record SignUpRequest(
         @Email(message = "Formato email non valido")
         String email,
 
+        @NotBlank(message = "Il nome visualizzato non può essere nullo o vuoto")
+        @Size(max = 20, min = 3, message = "Il nome visualizzato deve essere compreso tra 3 e 20 caratteri")
+        String nomeVisulizzato,
+
         @NotBlank(message = "La password non può essere nulla o vuota")
         @Size(min = 8, max = 16, message = "La password deve essere compresa tra 8 e 16 caratteri")
         @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$£%^&+=!]).*$",

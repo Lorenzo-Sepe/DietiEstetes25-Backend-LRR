@@ -31,6 +31,10 @@ public class User extends CreationUpdate implements UserDetails {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column( nullable = false)
+    private String nomeVisualizzato;
+
+
     @JsonIgnore
     @Column(nullable = false)
     private String password;
