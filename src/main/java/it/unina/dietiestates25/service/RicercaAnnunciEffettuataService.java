@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
+import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
@@ -101,28 +102,13 @@ public class RicercaAnnunciEffettuataService {
         return repository.findByUtente(user);
     }
 
-    /*public List<RicercaAnnunciEffettuata> cercaAnnunci(String localita, BigDecimal prezzoMin, BigDecimal prezzoMax) {
-        Specification<RicercaAnnunciEffettuata> spec = (root, query, criteriaBuilder) -> {
-            Predicate localitaPredicate;
-            if (localita == null || localita.isEmpty()) {
-                localitaPredicate = (Predicate) criteriaBuilder.conjunction();
-            } else {
-                localitaPredicate = (Predicate) criteriaBuilder.isMember(localita, root.get("localita"));
-            }
+    public List<User>UtentiInteressati(NotificaPromozionaleRequest request){
+        if(request.getIntervallogiorniStoricoRicerca()<0)
+            request.setIntervallogiorniStoricoRicerca(7);
 
-            Predicate prezzoPredicate = (Predicate) criteriaBuilder.conjunction();
-            if (prezzoMin != null) {
-                prezzoPredicate = criteriaBuilder.and(prezzoPredicate, criteriaBuilder.greaterThanOrEqualTo(root.get("prezzoMin"), prezzoMin));
-            }
-            if (prezzoMax != null) {
-                prezzoPredicate = criteriaBuilder.and(prezzoPredicate, criteriaBuilder.lessThanOrEqualTo(root.get("prezzoMax"), prezzoMax));
-            }
+        return repository.trovaUtentiPerCriteri(request.getBudgetMin(), request.getBudgetMax(), request.getAreaDiInteresse(), request.getTipoDiContrattoDiInteresse(), request.getTipologiaDiImmobileDiInteresse(), LocalDateTime.now().minusDays(request.getIntervallogiorniStoricoRicerca()));
+    }
 
-            return criteriaBuilder.and(localitaPredicate, prezzoPredicate);
-        };
-
-        return repository.findAll(spec);
-    }*/
 
 
 }

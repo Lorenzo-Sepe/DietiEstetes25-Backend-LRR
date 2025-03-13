@@ -18,7 +18,6 @@ import it.unina.dietiestates25.utils.ImageContainerUtil;
 import it.unina.dietiestates25.utils.NearbyPlacesChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -285,39 +284,6 @@ public class ControllerTESTRAI {
 
 
     private  final RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
-    @GetMapping("pb/test/ricerche")
-    public List<Integer> trovaUtentiInteressati(@RequestParam BigDecimal min, @RequestParam BigDecimal max) {
-        List<Integer> utentiInteressati = new ArrayList<>();
-        List<String> listLocalita = new ArrayList<>();
-        listLocalita.add("Napoli");
-        listLocalita.add("Roma");
-        for (String localita : listLocalita) {
-            List<RicercaAnnunciEffettuata> ricerche = ricercaAnnunciEffettuataRepository.findByTipologiaImmobileAndTipologiaContrattoAndLocalitaAndPrezzoMinLessThanEqualAndPrezzoMaxGreaterThanEqual(
-                    TipologiaImmobile.APPARTAMENTO,
-                    TipoContratto.AFFITTO,
-                    localita,
-                    min.multiply(BigDecimal.valueOf(0.9)),  // Range -10%
-                    max.multiply(BigDecimal.valueOf(1.1))   // Range +10%
-            );
-
-            utentiInteressati.addAll(
-                    ricerche.stream()
-                            .map(r -> r.getUtente().getId())
-                            .toList()
-            );
-        }
-        String localita =listLocalita.getFirst();
-        Specification<RicercaAnnunciEffettuata> spec = (root, query, criteriaBuilder) -> {
-            if (localita == null || localita.isEmpty()) {
-                return criteriaBuilder.conjunction(); // Restituisce sempre vero
-            }
-            return criteriaBuilder.isMember(localita, root.get("localita"));
-        };
-
-        List<RicercaAnnunciEffettuata> ricerche = ricercaAnnunciEffettuataRepository.findAll(spec);
-
-        return utentiInteressati.stream().distinct().toList(); // Rimuoviamo i duplicati
-    }
 
 //addFakeRicerche
     @PostMapping("pb/test/ricerche")

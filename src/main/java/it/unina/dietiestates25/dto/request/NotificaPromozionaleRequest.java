@@ -1,10 +1,11 @@
 package it.unina.dietiestates25.dto.request;
 
+import it.unina.dietiestates25.entity.enumeration.TipoContratto;
+import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Data
 public class NotificaPromozionaleRequest {
@@ -15,8 +16,13 @@ public class NotificaPromozionaleRequest {
     @NotBlank
     private String areaDiInteresse;
 
-    private String tipoDiContrattoDiInteresse;
+    private TipoContratto tipoDiContrattoDiInteresse;
 
-    private String tipologiaDiImmobileDiInteresse;
+    private TipologiaImmobile tipologiaDiImmobileDiInteresse;
 
+    private BigDecimal budgetMin;
+
+    private BigDecimal budgetMax;
+
+    private int IntervallogiorniStoricoRicerca;
 }

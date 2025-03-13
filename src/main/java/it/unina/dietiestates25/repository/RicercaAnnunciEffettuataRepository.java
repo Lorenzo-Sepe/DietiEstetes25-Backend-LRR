@@ -12,29 +12,31 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface RicercaAnnunciEffettuataRepository extends JpaRepository<RicercaAnnunciEffettuata, Integer>, JpaSpecificationExecutor<RicercaAnnunciEffettuata> {
 
-    @Query("SELECT r FROM RicercaAnnunciEffettuata r WHERE " +
-            "r.tipologiaImmobile = :tipologiaImmobile " +
-            "AND r.tipologiaContratto = :tipologiaContratto " +
-            "AND :localita MEMBER OF r.localita " +
-            "AND r.prezzoMin <= :prezzoMax " +
-            "AND r.prezzoMax >= :prezzoMin")
-    List<RicercaAnnunciEffettuata> findByTipologiaImmobileAndTipologiaContrattoAndLocalitaAndPrezzoMinLessThanEqualAndPrezzoMaxGreaterThanEqual(
-            @Param("tipologiaImmobile") TipologiaImmobile tipologiaImmobile,
-            @Param("tipologiaContratto") TipoContratto tipologiaContratto,
-            @Param("localita") String localita,
-            @Param("prezzoMax") BigDecimal prezzoMax,
-            @Param("prezzoMin") BigDecimal prezzoMin);
-    @Query("SELECT DISTINCT r.utente FROM RicercaAnnunciEffettuata r WHERE :localita MEMBER OF r.localita")
-    List<User> findUtentiByLocalita(@Param("localita") String localita);
 
     List<RicercaAnnunciEffettuata> findByUtente(User user);
 
     Optional<RicercaAnnunciEffettuata> findFirstByUtenteOrderByDataRicercaDesc(User user);
+
+
+    @Query("SELECT r.utente FROM RicercaAnnunciEffettuata r " +
+            "WHERE (:prezzoMin IS NULL OR r.prezzoMin >= :prezzoMin) " +
+            "AND (:prezzoMax IS NULL OR r.prezzoMax <= :prezzoMax) " +
+            "AND (:luogo IS NULL OR :luogo MEMBER OF r.localita) " +
+            "AND (:tipologiaContratto IS NULL OR r.tipologiaContratto = :tipologiaContratto) " +
+            "AND (:tipologiaImmobile IS NULL OR r.tipologiaImmobile = :tipologiaImmobile) " +
+            "AND r.dataRicerca >= :dataSettimana")
+    List<User> trovaUtentiPerCriteri(@Param("prezzoMin") BigDecimal prezzoMin,
+                                     @Param("prezzoMax") BigDecimal prezzoMax,
+                                     @Param("luogo") String luogo,
+                                     @Param("tipologiaContratto") TipoContratto tipologiaContratto,
+                                     @Param("tipologiaImmobile") TipologiaImmobile tipologiaImmobile,
+                                     @Param("dataSettimana") LocalDateTime dataSettimana);
 
 }

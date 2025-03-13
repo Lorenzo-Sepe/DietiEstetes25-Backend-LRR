@@ -16,7 +16,6 @@ import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.persistence.EntityManager;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,13 +37,14 @@ public class NotificaService {
     private final EntityManager entityManager;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
+    private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
 
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
 
 
         int count = 0;
 
-        List<User> destinatari = getDestinatariNotifica(request.getAreaDiInteresse(), request.getTipoDiContrattoDiInteresse(), request.getTipologiaDiImmobileDiInteresse());
+        List<User> destinatari = getDestinatariNotifica(request);
 
         for(User destinatario : destinatari){
 
@@ -69,6 +69,10 @@ public class NotificaService {
         return ResponseEntity.ok("numero di notifiche inviate: " + count);
     }
 
+    private List<User> getDestinatariNotifica(NotificaPromozionaleRequest request) {
+        return  ricercaAnnunciEffettuataService.UtentiInteressati(request);
+    }
+
     private String getNomeAzenziaImmobiliare(){
         AgenziaImmobiliare agenzia =agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent())
                 .orElseThrow(() -> new UnauthorizedException("Permesso negato.\n L'utente non è un dipendente di un'agenzia immobiliare"));
@@ -76,18 +80,7 @@ public class NotificaService {
         return "promozioni@"+agenzia.getDominio()+".dietiEstate.it";
     }
 
-    private List<User> getDestinatariNotifica(@NotBlank String areaDiInteresse, String tipoDiContrattoDiInteresse, String tipologiaDiImmobileDiInteresse){
-//TODO Implementare la ricerca degli utenti in base ai filtri
-        User utente = entityManager.getReference(User.class, 1);
-        User utente2 = entityManager.getReference(User.class, 2);
 
-        List<User> destinatari = new ArrayList<>();
-
-        destinatari.add(utente);
-        destinatari.add(utente2);
-
-        return destinatari;
-    }
 
     public Integer getNumeroAllNotifiche(){
 
