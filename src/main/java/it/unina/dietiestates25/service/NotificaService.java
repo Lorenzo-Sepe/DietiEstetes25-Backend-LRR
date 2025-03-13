@@ -5,9 +5,11 @@ import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
+import it.unina.dietiestates25.exception.UnauthorizedException;
 import it.unina.dietiestates25.factory.GeneratoreContenutoFactory;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoControproposta;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
+import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
 import it.unina.dietiestates25.utils.UserContex;
@@ -32,11 +34,10 @@ public class NotificaService {
     private final NotificaRepository notificaRepository;
 
     private final EntityManager entityManager;
+    private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
 
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
 
-        //TODO Da implementare
-        String mittente = "Qui Raimondo scoprirà cme ottenere il mittente";
 
         int count = 0;
 
@@ -48,7 +49,7 @@ public class NotificaService {
 
                 Notifica notifica = Notifica.builder().contenuto(request.getContenuto())
                         .dataCreazione(LocalDateTime.now())
-                        .mittente(getNomeAzenziaImmobiliare(mittente))
+                        .mittente(getNomeAzenziaImmobiliare())
                         .contenuto(request.getContenuto())
                         .destinatario(destinatario)
                         .build();
@@ -65,8 +66,12 @@ public class NotificaService {
         return ResponseEntity.ok("numero di notifiche inviate: " + count);
     }
 
-    //TODO Da implementare
-    private String getNomeAzenziaImmobiliare(String mittente){return "mittente@agenzia.com";}
+    private String getNomeAzenziaImmobiliare(){
+        AgenziaImmobiliare agenzia =agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent())
+                .orElseThrow(() -> new UnauthorizedException("Permesso negato.\n L'utente non è un dipendente di un'agenzia immobiliare"));
+
+        return "promozioni@"+agenzia.getDominio()+".dietiEstate.it";
+    }
 
     private List<User> getDestinatariNotifica(@NotBlank String areaDiInteresse, String tipoDiContrattoDiInteresse, String tipologiaDiImmobileDiInteresse){
 
