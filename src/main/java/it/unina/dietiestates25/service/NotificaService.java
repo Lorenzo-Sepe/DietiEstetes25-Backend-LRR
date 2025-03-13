@@ -35,6 +35,7 @@ public class NotificaService {
 
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
 
+        //TODO Da implementare
         String mittente = "Qui Raimondo scoprirà cme ottenere il mittente";
 
         int count = 0;
