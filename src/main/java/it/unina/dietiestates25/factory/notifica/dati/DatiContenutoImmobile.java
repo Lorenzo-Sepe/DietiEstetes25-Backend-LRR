@@ -20,7 +20,7 @@ public class DatiContenutoImmobile implements DatiContenutoNotifica {
         return DatiContenutoImmobile.builder()
                 .indirizzoImmobile(costruisciIndirizzoImmobile(annuncio))
                 .prezzo(ottieniPrezzoImmobile(annuncio))
-                .nomeDestinatario(utente.getUsername())
+                .nomeDestinatario(utente.getNomeVisualizzato())
                 .tipoContratto(annuncio.getContratto().getTipoContratto())
                 .tipoImmobile(annuncio.getImmobile().getTipologiaImmobile().toString())
                 .urlImmagineImmobile(annuncio.getImmobile().getImmagini().getFirst().getUrl())
