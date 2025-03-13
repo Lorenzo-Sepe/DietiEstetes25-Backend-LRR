@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RicercaAnnunciEffettuataRepository extends JpaRepository<RicercaAnnunciEffettuata, Integer>, JpaSpecificationExecutor<RicercaAnnunciEffettuata> {
@@ -33,4 +34,7 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
     List<User> findUtentiByLocalita(@Param("localita") String localita);
 
     List<RicercaAnnunciEffettuata> findByUtente(User user);
+
+    Optional<RicercaAnnunciEffettuata> findFirstByUtenteOrderByDataRicercaDesc(User user);
+
 }

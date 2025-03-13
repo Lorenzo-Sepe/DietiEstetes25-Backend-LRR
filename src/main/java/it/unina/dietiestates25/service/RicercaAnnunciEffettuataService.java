@@ -19,8 +19,6 @@ public class RicercaAnnunciEffettuataService {
     private RicercaAnnunciEffettuataRepository repository;
 
     public void salvaRicercaAnnunciEffettuata(FiltroAnnuncio filtro) {
-        //TODO controllare se si deve o no salvare l'annuncio
-
         User user= UserContex.getUserCurrent();
         RicercaAnnunciEffettuata ricerca= RicercaAnnunciEffettuata.builder().utente(user).build();
         List <String> localita= getLocalita(filtro);
@@ -39,9 +37,49 @@ public class RicercaAnnunciEffettuataService {
         ricerca.setTipologiaImmobile(filtro.getTipologiaImmobile());
         ricerca.setTipologiaContratto(filtro.getTipologiaContratto());
 
+        if(checkIsSameRicerca(filtro)){
+            int idUltimaRicerca= repository.findFirstByUtenteOrderByDataRicercaDesc(user).get().getId();
+            ricerca.setId(idUltimaRicerca);
+        }
         repository.save(ricerca);
     }
 
+   private boolean checkIsSameRicerca(FiltroAnnuncio filtro) {
+    // Ottiene l'utente corrente
+    User user = UserContex.getUserCurrent();
+
+    // Recupera l'ultima ricerca effettuata dall'utente
+    RicercaAnnunciEffettuata ricerca = repository.findFirstByUtenteOrderByDataRicercaDesc(user).orElse(null);
+
+    // Se non esiste alcuna ricerca precedente, restituisce false
+    if (ricerca == null) {
+        return false;
+    }
+
+    // Confronta la tipologia di immobile
+    if (ricerca.getTipologiaImmobile() != filtro.getTipologiaImmobile()) {
+        return false;
+    }
+
+    // Confronta il tipo di contratto
+    if (ricerca.getTipologiaContratto() != filtro.getTipologiaContratto()) {
+        return false;
+    }
+
+    // Confronta le località
+    List<String> localita = getLocalita(filtro);
+    if (localita.size() != ricerca.getLocalita().size()) {
+        return false;
+    }
+    for (String loc : localita) {
+        if (!ricerca.getLocalita().contains(loc)) {
+            return false;
+        }
+    }
+
+    // Se tutte le condizioni sono soddisfatte, restituisce true
+    return true;
+}
     private List<String> getLocalita(FiltroAnnuncio filtro) {
         if (filtro.getProvincia()!=null && filtro.getProvincia().isBlank()){
             return List.of(filtro.getProvincia());
