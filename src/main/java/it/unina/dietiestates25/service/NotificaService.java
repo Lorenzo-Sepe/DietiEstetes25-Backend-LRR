@@ -3,11 +3,10 @@ package it.unina.dietiestates25.service;
 import it.unina.dietiestates25.dto.request.FiltroNotificaRequest;
 import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
-import it.unina.dietiestates25.entity.CategoriaNotifica;
-import it.unina.dietiestates25.entity.Notifica;
-import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.factory.GeneratoreContenutoFactory;
+import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoControproposta;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
 import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
@@ -158,7 +157,13 @@ public class NotificaService {
     }
 
 
-    public <T extends DatiContenutoNotifica> void inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario, T dati) {
+    public void inviaNotificaControproposta(User destinatario, Proposta proposta, DatiImpiegato datiImpiegato) {
+        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, datiImpiegato);
+        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, destinatario, dati);
+    }
+
+
+    private <T extends DatiContenutoNotifica> void inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario, T dati) {
         // Ottieni il generatore di contenuto tipizzato in base al tipo di notifica
         GeneratoreContenutoNotifica<T> generatore = GeneratoreContenutoFactory.getGeneratore(tipoNotifica);
         // Genera il contenuto HTML

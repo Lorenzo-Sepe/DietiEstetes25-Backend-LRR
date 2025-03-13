@@ -2,8 +2,7 @@ package it.unina.dietiestates25.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.validation.constraints.*;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,4 +38,8 @@ public class AnnuncioImmobiliare {
 
     @OneToMany(mappedBy = "annuncio", fetch = FetchType.EAGER)
     private List<Proposta> proposte;
+
+    public String getUrl() {
+        return "/annunci/" + id;
+    }
 }
