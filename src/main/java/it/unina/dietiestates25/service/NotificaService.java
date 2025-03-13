@@ -74,7 +74,7 @@ public class NotificaService {
     }
 
     private List<User> getDestinatariNotifica(@NotBlank String areaDiInteresse, String tipoDiContrattoDiInteresse, String tipologiaDiImmobileDiInteresse){
-
+//TODO Implementare la ricerca degli utenti in base ai filtri
         User utente = entityManager.getReference(User.class, 1);
         User utente2 = entityManager.getReference(User.class, 2);
 
