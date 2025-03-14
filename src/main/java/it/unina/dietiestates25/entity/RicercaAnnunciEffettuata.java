@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,4 +32,5 @@ public class RicercaAnnunciEffettuata extends CreationUpdate {
     private List<String> localita;
     private BigDecimal prezzoMin;
     private BigDecimal prezzoMax;
+    private LocalDateTime dataRicerca;
 }

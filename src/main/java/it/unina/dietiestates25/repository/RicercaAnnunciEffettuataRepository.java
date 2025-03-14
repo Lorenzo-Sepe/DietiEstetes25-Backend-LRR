@@ -22,8 +22,6 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
 
     List<RicercaAnnunciEffettuata> findByUtente(User user);
 
-    Optional<RicercaAnnunciEffettuata> findFirstByUtenteOrderByDataRicercaDesc(User user);
-
 
     @Query("SELECT r.utente FROM RicercaAnnunciEffettuata r " +
             "WHERE (:prezzoMin IS NULL OR r.prezzoMin >= :prezzoMin) " +
@@ -38,5 +36,7 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
                                      @Param("tipologiaContratto") TipoContratto tipologiaContratto,
                                      @Param("tipologiaImmobile") TipologiaImmobile tipologiaImmobile,
                                      @Param("dataSettimana") LocalDateTime dataSettimana);
+
+    Optional<RicercaAnnunciEffettuata> findFirstByUtenteOrderByUpdatedAtDesc(User user);
 
 }

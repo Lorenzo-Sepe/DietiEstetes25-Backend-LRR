@@ -49,6 +49,8 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
+    @GetMapping("/annuncioImmobiliare/{id}")
+
     //TODO AGGIUNGERE UNA DTO RESPONSE
     @GetMapping("/annuncioImmobiliare/storicoRicerche")
     @PreAuthorize("hasAuthority('MEMBER')")

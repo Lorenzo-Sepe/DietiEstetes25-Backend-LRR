@@ -38,7 +38,7 @@ public class RicercaAnnunciEffettuataService {
         ricerca.setTipologiaContratto(filtro.getTipologiaContratto());
 
         if(checkIsSameRicerca(filtro)){
-            int idUltimaRicerca= repository.findFirstByUtenteOrderByDataRicercaDesc(user).get().getId();
+            int idUltimaRicerca= repository.findFirstByUtenteOrderByUpdatedAtDesc(user).get().getId();
             ricerca.setId(idUltimaRicerca);
         }
         repository.save(ricerca);
@@ -49,7 +49,7 @@ public class RicercaAnnunciEffettuataService {
     User user = UserContex.getUserCurrent();
 
     // Recupera l'ultima ricerca effettuata dall'utente
-    RicercaAnnunciEffettuata ricerca = repository.findFirstByUtenteOrderByDataRicercaDesc(user).orElse(null);
+    RicercaAnnunciEffettuata ricerca = repository.findFirstByUtenteOrderByUpdatedAtDesc(user).orElse(null);
 
     // Se non esiste alcuna ricerca precedente, restituisce false
     if (ricerca == null) {
