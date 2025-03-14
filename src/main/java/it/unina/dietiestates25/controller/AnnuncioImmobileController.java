@@ -45,7 +45,7 @@ public class AnnuncioImmobileController {
     @PostMapping("/annuncioImmobiliare/cerca")
     @PreAuthorize("hasAuthority('MEMBER')")
     public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutentificazinr(@RequestBody FiltroAnnuncio filtro) {
-        ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro );
+        ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro);
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
