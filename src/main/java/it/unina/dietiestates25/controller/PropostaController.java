@@ -19,9 +19,8 @@ import java.util.List;
 public class PropostaController {
     final PropostaService propostaService;
 
-    @GetMapping("/pb/proposte")
+    @GetMapping("/pb/proposte/")
     public ResponseEntity<List<PropostaResponse>> getProposte(int idAnnuncio, PageableProposte pagebleRequest){
-
         return ResponseEntity.ok(propostaService.getProposte(idAnnuncio, pagebleRequest));
     }
 
