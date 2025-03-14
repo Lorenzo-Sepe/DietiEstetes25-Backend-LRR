@@ -1,12 +1,12 @@
 package it.unina.dietiestates25.entity;
 
+import it.unina.dietiestates25.entity.common.CreationUpdate;
 import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-public class RicercaAnnunciEffettuata {
+public class RicercaAnnunciEffettuata extends CreationUpdate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -31,5 +31,4 @@ public class RicercaAnnunciEffettuata {
     private List<String> localita;
     private BigDecimal prezzoMin;
     private BigDecimal prezzoMax;
-    private LocalDateTime dataRicerca;
 }

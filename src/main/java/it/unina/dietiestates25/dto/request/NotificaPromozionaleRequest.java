@@ -13,6 +13,7 @@ public class NotificaPromozionaleRequest {
     @NotBlank
     private String contenuto;
 
+    //TODO INCAPSULARE IN UN ALTRA CLASSE
     @NotBlank
     private String areaDiInteresse;
 

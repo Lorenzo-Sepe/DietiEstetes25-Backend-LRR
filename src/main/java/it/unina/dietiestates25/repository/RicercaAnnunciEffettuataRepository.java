@@ -31,7 +31,7 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
             "AND (:luogo IS NULL OR :luogo MEMBER OF r.localita) " +
             "AND (:tipologiaContratto IS NULL OR r.tipologiaContratto = :tipologiaContratto) " +
             "AND (:tipologiaImmobile IS NULL OR r.tipologiaImmobile = :tipologiaImmobile) " +
-            "AND r.dataRicerca >= :dataSettimana")
+            "AND r.updatedAt >= :dataSettimana")
     List<User> trovaUtentiPerCriteri(@Param("prezzoMin") BigDecimal prezzoMin,
                                      @Param("prezzoMax") BigDecimal prezzoMax,
                                      @Param("luogo") String luogo,

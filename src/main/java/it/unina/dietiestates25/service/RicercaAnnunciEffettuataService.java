@@ -24,7 +24,6 @@ public class RicercaAnnunciEffettuataService {
         RicercaAnnunciEffettuata ricerca= RicercaAnnunciEffettuata.builder().utente(user).build();
         List <String> localita= getLocalita(filtro);
         ricerca.setLocalita(localita);
-        ricerca.setDataRicerca(LocalDateTime.now());
         if(filtro.getPrezzoMin() ==null  || filtro.getPrezzoMin()<0)
             ricerca.setPrezzoMin(null);
         else
@@ -82,7 +81,7 @@ public class RicercaAnnunciEffettuataService {
     return true;
 }
     private List<String> getLocalita(FiltroAnnuncio filtro) {
-        if (filtro.getProvincia()!=null && filtro.getProvincia().isBlank()){
+        if (filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
             return List.of(filtro.getProvincia());
         }
 
