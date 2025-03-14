@@ -31,5 +31,6 @@ public class RicercaAnnunciEffettuata extends CreationUpdate {
     private List<String> localita;
     private BigDecimal prezzoMin;
     private BigDecimal prezzoMax;
+    @Column(columnDefinition = "TEXT", length = 65535)
     private String filtoUsatoJson;
 }
