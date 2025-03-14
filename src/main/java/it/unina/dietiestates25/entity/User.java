@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-
 import java.util.List;
 
 @Entity
@@ -21,6 +20,9 @@ public class User extends CreationUpdate implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private int id;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private  List<CategoriaNotifica> categorieDisattivate;
 
     @Column(nullable = true)
     private String UrlFotoProfilo;

@@ -37,16 +37,9 @@ import java.util.List;
 
     //----------------------------------GET-----------------------------------------------------------------------
 
-        public List<PropostaResponse> getProposte(int idAnnuncio, PageableProposte pageableRequest){
-
-            AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(idAnnuncio).get();
-
-            Pageable pageable = getPageable(pageableRequest);
-
-            List<Proposta> proposte = propostaRepository.findByAnnuncio(annuncio,pageable);
-
+        public List<PropostaResponse> getProposte(int idAnnuncio){
+            List<Proposta> proposte = propostaRepository.findByAnnuncio_Id(idAnnuncio);
             return getListProposteResponse(proposte);
-
         }
 
         private Pageable getPageable(PageableProposte request){
@@ -86,8 +79,13 @@ import java.util.List;
         }
 
         private DatiUserPropostaResponse getDatiUserPropostaResponse(Proposta proposta){
-
+            String email;
+            if(proposta.getUser()==null){
+                email=null;
+            }
+            email=proposta.getUser().getEmail();
             DatiUserPropostaResponse datiUser = DatiUserPropostaResponse.builder()
+                    .email(email)
                     .nome(proposta.getNome())
                     .cognome(proposta.getCognome())
                     .contatto(getContattoResponse(proposta.getContatto()))

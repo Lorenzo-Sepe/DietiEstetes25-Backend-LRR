@@ -7,16 +7,13 @@ import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.exception.UnauthorizedException;
 import it.unina.dietiestates25.factory.GeneratoreContenutoFactory;
-import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoControproposta;
-import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoImmobile;
-import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
+import it.unina.dietiestates25.factory.notifica.dati.*;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.CategoriaNotificaRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
 import it.unina.dietiestates25.utils.UserContex;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,8 +31,6 @@ import java.util.List;
 public class NotificaService {
 
     private final NotificaRepository notificaRepository;
-
-    private final EntityManager entityManager;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
@@ -47,26 +42,18 @@ public class NotificaService {
         int count = 0;
 
         List<User> destinatari = getDestinatariNotifica(request);
-
+        String mittente = getNomeAzenziaImmobiliare();
         for(User destinatario : destinatari){
 
-            try{
+                try{
+                    boolean inviato = inviaNotifica(CategoriaNotificaName.PROMOZIONI,destinatario,mittente,DatiContenutoNotificaPromozioni.fromRequest(request));
 
-                Notifica notifica = Notifica.builder().contenuto(request.getContenuto())
-                        .dataCreazione(LocalDateTime.now())
-                        .mittente(getNomeAzenziaImmobiliare())
-                        .contenuto(request.getContenuto())
-                        .categoria(recuperaCategoria(CategoriaNotificaName.PROMOZIONI))
-                        .destinatario(destinatario)
-                        .build();
+                    if(inviato)count++;
 
-                notificaRepository.save(notifica);
+                }catch(Exception e){
 
-                count++;
+                }
 
-            }catch(Exception e){
-
-            }
         }
 
         return ResponseEntity.ok("numero di notifiche inviate: " + count);
@@ -170,39 +157,44 @@ public class NotificaService {
 
     public void inviaNotificaControproposta( Proposta proposta) {
         DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
-        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, proposta.getUser(), dati);
+        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, proposta.getUser(),"info@dieti.estate.it", dati);
     }
     public void inviaNotificaAccettazione( Proposta proposta) {
-        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
-        inviaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA, proposta.getUser(), dati);
+        DatiContenutoPropostaAccettata dati = DatiContenutoPropostaAccettata.fromProposta(proposta, getDatiImpiegato(proposta));
+        inviaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA, proposta.getUser(), "info@dieti.estate.it",dati);
     }
     public void inviaNotificaRifiuto(Proposta proposta) {
-        DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
-        inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), dati);
+        DatiContenutoPropostaRifiutata dati = DatiContenutoPropostaRifiutata.fromProposta(proposta);
+        inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), "info@dieti.estate.it",dati);
     }
     public void InviaNotificcaNuovoAnnuncio(User destinatario, AnnuncioImmobiliare annuncio) {
         DatiContenutoImmobile dati = DatiContenutoImmobile.fromAnnuncio(annuncio, destinatario);
-        inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE, destinatario, dati);
+        inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE, destinatario, "info@dieti.estate.it",dati);
     }
 
-    private <T extends DatiContenutoNotifica> void inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario, T dati) {
+    private <T extends DatiContenutoNotifica> boolean inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario,String mittente, T dati) {
+        CategoriaNotifica categoria = recuperaCategoria(tipoNotifica);
+        if(destinatario.getCategorieDisattivate().contains(categoria)){
+            return false;
+        }
+
         // Ottieni il generatore di contenuto tipizzato in base al tipo di notifica
         GeneratoreContenutoNotifica<T> generatore = GeneratoreContenutoFactory.getGeneratore(tipoNotifica);
         // Genera il contenuto HTML
         String contenutoHtml = generatore.generaContenuto(dati);
 
-        CategoriaNotifica categoria = recuperaCategoria(tipoNotifica);
         // Creazione della notifica utilizzando il builder
         Notifica notifica = Notifica.builder()
                 .contenuto(contenutoHtml)
                 .dataCreazione(LocalDateTime.now())
-                .mittente("Sistema") // oppure il mittente dinamico
+                .mittente(mittente) // oppure il mittente dinamico
                 .categoria(categoria)
                 .destinatario(destinatario)
                 .build();
 
         // Salva la notifica nel database
         notificaRepository.save(notifica);
+        return true;
     }
 
     private CategoriaNotifica recuperaCategoria(CategoriaNotificaName tipoNotifica) {

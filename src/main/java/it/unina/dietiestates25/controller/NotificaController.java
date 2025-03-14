@@ -24,7 +24,7 @@ public class NotificaController {
             summary = "Invia Notifica Promozionale",
             description = "Metodo per creare un nuovo notifica promozionale e inviarla a chi è interessato",
             tags = {"Notifiche"})
-    @PreAuthorize("hasAnyAuthority('MEMBER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> inviaNotificaPromozionale(@RequestBody @Valid NotificaPromozionaleRequest request){
 
         return notificaService.inviaNotificaPromozionale(request);
