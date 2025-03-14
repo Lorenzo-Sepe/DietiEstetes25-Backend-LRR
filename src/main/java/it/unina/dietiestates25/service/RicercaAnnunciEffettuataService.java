@@ -4,9 +4,12 @@ import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
+import it.unina.dietiestates25.utils.SerializzazioneUtils;
 import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,6 +40,8 @@ public class RicercaAnnunciEffettuataService {
         ricerca.setTipologiaImmobile(filtro.getTipologiaImmobile());
         ricerca.setTipologiaContratto(filtro.getTipologiaContratto());
 
+        ricerca.setFiltoUsatoJson(SerializzazioneUtils.serializzaFiltroAnnuncio(filtro));
+        
         if(checkIsSameRicerca(filtro)){
             int idUltimaRicerca= repository.findFirstByUtenteOrderByUpdatedAtDesc(user).get().getId();
             ricerca.setId(idUltimaRicerca);
@@ -109,5 +114,12 @@ public class RicercaAnnunciEffettuataService {
     }
 
 
+    public FiltroAnnuncio getFiltroRicerca(int id) {
+        RicercaAnnunciEffettuata ricerca = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", id));
+        if(ricerca.getUtente().getId() !=UserContex.getUserCurrent().getId()){
+            throw new AccessDeniedException("Non puoi visualizzare la ricerca di un altro utente");
+        }
+        return SerializzazioneUtils.deserializzaFiltroAnnuncio(ricerca.getFiltoUsatoJson());
 
+    }
 }

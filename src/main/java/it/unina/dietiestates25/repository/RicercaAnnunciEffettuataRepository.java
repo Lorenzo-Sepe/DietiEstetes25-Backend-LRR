@@ -37,6 +37,11 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
                                      @Param("tipologiaImmobile") TipologiaImmobile tipologiaImmobile,
                                      @Param("dataSettimana") LocalDateTime dataSettimana);
 
+
+
     Optional<RicercaAnnunciEffettuata> findFirstByUtenteOrderByUpdatedAtDesc(User user);
+
+
+
 
 }
