@@ -18,7 +18,8 @@ public class Notifica {
     @EqualsAndHashCode.Include
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
+    @Lob
     private String contenuto;
 
     @Column(nullable = false)
