@@ -11,6 +11,7 @@ import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoControproposta
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoImmobile;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
+import it.unina.dietiestates25.repository.CategoriaNotificaRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
@@ -38,6 +39,7 @@ public class NotificaService {
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
+    private final CategoriaNotificaRepository categoriaNotificaRepository;
 
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
 
@@ -54,6 +56,7 @@ public class NotificaService {
                         .dataCreazione(LocalDateTime.now())
                         .mittente(getNomeAzenziaImmobiliare())
                         .contenuto(request.getContenuto())
+                        .categoria(recuperaCategoria(CategoriaNotificaName.PROMOZIONI))
                         .destinatario(destinatario)
                         .build();
 
@@ -188,20 +191,22 @@ public class NotificaService {
         // Genera il contenuto HTML
         String contenutoHtml = generatore.generaContenuto(dati);
 
+        CategoriaNotifica categoria = recuperaCategoria(tipoNotifica);
         // Creazione della notifica utilizzando il builder
         Notifica notifica = Notifica.builder()
                 .contenuto(contenutoHtml)
                 .dataCreazione(LocalDateTime.now())
                 .mittente("Sistema") // oppure il mittente dinamico
-                // ATTENZIONE: il campo categoria nella classe Notifica è mappato come entità.
-                //TODO
-                // Occorrerebbe convertire il TipoNotifica in CategoriaNotifica oppure gestirlo opportunamente.
-                .categoria(null)
+                .categoria(categoria)
                 .destinatario(destinatario)
                 .build();
 
         // Salva la notifica nel database
         notificaRepository.save(notifica);
+    }
+
+    private CategoriaNotifica recuperaCategoria(CategoriaNotificaName tipoNotifica) {
+        return categoriaNotificaRepository.findByCategoriaName(tipoNotifica).orElseThrow(() ->new IllegalArgumentException("Tipo di notifica non riconosciuto: " + tipoNotifica));
     }
 
     public String setTrueVisualizzazioneNotifica(int idNotifica){
