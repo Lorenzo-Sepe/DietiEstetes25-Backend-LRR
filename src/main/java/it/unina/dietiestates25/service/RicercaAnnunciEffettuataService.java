@@ -46,7 +46,11 @@ public class RicercaAnnunciEffettuataService {
             int idUltimaRicerca= repository.findFirstByUtenteOrderByUpdatedAtDesc(user).get().getId();
             ricerca.setId(idUltimaRicerca);
         }
+        try {
         repository.save(ricerca);
+        }catch (Exception e) {
+            //non fare nulla non serve che blocchi la ricerca}
+        }
     }
 
    private boolean checkIsSameRicerca(FiltroAnnuncio filtro) {
