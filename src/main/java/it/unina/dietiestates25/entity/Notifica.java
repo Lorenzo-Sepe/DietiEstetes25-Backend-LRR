@@ -19,7 +19,6 @@ public class Notifica {
     private int id;
 
     @Column(nullable = false,columnDefinition = "TEXT")
-    @Lob
     private String contenuto;
 
     @Column(nullable = false)
