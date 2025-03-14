@@ -20,6 +20,6 @@ public class CategoriaNotifica extends CreationUpdate {
     private int id;
 
     @Enumerated(EnumType.STRING)
-  //  @Column(nullable = false)
+    @Column(nullable = false)
     private CategoriaNotificaName categoriaName;
 }
