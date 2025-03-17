@@ -1,6 +1,6 @@
 package it.unina.dietiestates25.controller;
 
-import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
+import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
@@ -40,7 +40,7 @@ public class ControllerTESTRAI {
     }
 
     @PostMapping("pb/test/getUtentiInteressati")
-    public List<User> getUtentiInteressati(@RequestBody NotificaPromozionaleRequest request) {
+    public List<User> getUtentiInteressati(@RequestBody CriteriDiRicercaUtenti request) {
         return ricercaAnnunciEffettuataService.UtentiInteressati(request);
     }
 }

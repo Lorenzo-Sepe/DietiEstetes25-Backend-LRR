@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.service;
 
+import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
 import it.unina.dietiestates25.dto.request.FiltroNotificaRequest;
 import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
@@ -41,7 +42,7 @@ public class NotificaService {
 
         int count = 0;
 
-        List<User> destinatari = getDestinatariNotifica(request);
+        List<User> destinatari = getDestinatariNotifica(request.getCriteridiRicerca());
         String mittente = getNomeAzenziaImmobiliare();
         for(User destinatario : destinatari){
 
@@ -59,7 +60,21 @@ public class NotificaService {
         return ResponseEntity.ok("numero di notifiche inviate: " + count);
     }
 
-    private List<User> getDestinatariNotifica(NotificaPromozionaleRequest request) {
+    public void inviaNotificaPerNuovoAnnuncioImmobiliare(AnnuncioImmobiliare annuncio) {
+       CriteriDiRicercaUtenti criteri=CriteriDiRicercaUtenti.map(annuncio);
+        List<User> destinatari = getDestinatariNotifica(criteri);
+        for(User destinatario : destinatari){
+            DatiContenutoImmobile dati = DatiContenutoImmobile.fromAnnuncio(annuncio, destinatario);
+           try {
+               inviaNotifica(CategoriaNotificaName.PROMOZIONI,destinatario,"DietiEstate",dati);
+           }catch (Exception e){
+               //non fare nulla
+           }
+        }
+
+    }
+
+    private List<User> getDestinatariNotifica(CriteriDiRicercaUtenti request) {
         return  ricercaAnnunciEffettuataService.UtentiInteressati(request);
     }
 

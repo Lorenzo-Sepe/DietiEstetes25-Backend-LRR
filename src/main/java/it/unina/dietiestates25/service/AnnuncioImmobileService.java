@@ -35,6 +35,7 @@ public class AnnuncioImmobileService {
     private final ImageUploaderService imageUploaderService;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
     private final NearbyPlacesChecker nearbyPlacesChecker ;
+    private final NotificaService notificaService;
 
     //-------------------------------------------------------CREA ANNUNCIO-------------------------------------------------------
 
@@ -58,7 +59,11 @@ public class AnnuncioImmobileService {
                 .build();
 
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
-
+        try{
+            notificaService.inviaNotificaPerNuovoAnnuncioImmobiliare(annuncioImmobiliare);
+        }catch (Exception e){
+            //do Nothing
+        }
         updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
 

@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
+import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
-import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
@@ -110,7 +110,8 @@ public class RicercaAnnunciEffettuataService {
         return repository.findByUtente(user);
     }
 
-    public List<User>UtentiInteressati(NotificaPromozionaleRequest request){
+
+    public List<User>UtentiInteressati(CriteriDiRicercaUtenti request){
         if(request.getIntervallogiorniStoricoRicerca()<0)
             request.setIntervallogiorniStoricoRicerca(7);
 
