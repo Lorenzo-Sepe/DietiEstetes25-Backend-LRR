@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DatiUserPropostaResponse {
-
+    String email;
     String nome;
     String cognome;
     ContattoResponse contatto;

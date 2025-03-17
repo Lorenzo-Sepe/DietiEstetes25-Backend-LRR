@@ -1,24 +1,34 @@
 package it.unina.dietiestates25.service;
 
+import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
+import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.entity.enumeration.AuthorityName;
+import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
 public class UserService {
+
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final PasswordService passwordService;
     private final ImageUploaderService imageUploaderService;
+    final private CategoriaNotificaService categoriaService;
+
 
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
@@ -60,7 +70,6 @@ public class UserService {
         return idUser;
     }
 
-
     private String generaEmailDipendente(String nome, String cognome, String aliasAgenzia) {
         convalidaParametri(nome, cognome, aliasAgenzia);
         String emailBase = generaEmailBase(nome, cognome, aliasAgenzia);
@@ -101,5 +110,34 @@ public class UserService {
         return email;
     }
 
+    public String modificaSottoscrizioni(CategoriaNotificaRequest request) {
 
+        User user = UserContex.getUserCurrent();
+
+        List<CategoriaNotifica> categorieDisattivate = getCategorieDisattivate(request);
+
+        user.setCategorieDisattivate(categorieDisattivate);
+
+        userRepository.save(user);
+
+        return "Sottoscrizione modificata con successo";
+    }
+
+    private List<CategoriaNotifica> getCategorieDisattivate(CategoriaNotificaRequest request) {
+
+        List<CategoriaNotifica> categorieDisattivate = new ArrayList<>();
+
+        if(!request.isAttivoPromozioni())
+            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROMOZIONI));
+        if(!request.isAttivoCategoriaPropostaRifitata())
+            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA));
+        if(!request.isAttivoCategoriaPropostaAccettata())
+            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA));
+        if(!request.isAttivoCategoriaControproposta())
+            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.CONTROPROPOSTA));
+        if(!request.isAttivoCategoriaOpportunitaImmobile())
+            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE));
+
+        return categorieDisattivate;
+    }
 }
