@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
@@ -23,6 +24,10 @@ public class AnnuncioImmobileController {
     private final AnnuncioImmobileService annuncioImmobileService;
 
     @PostMapping("/annuncioImmobiliare")
+    @Operation(
+            summary = "AGGIUNGI UN ANNUNCIO IMMOBILIARE",
+            description = "Metodo per aggiungere un nuovo agente immobiliare nel database",
+            tags = {"Annuncio Immobiliare"})
     @PreAuthorize("hasAnyAuthority('AGENT')")
     ResponseEntity<String> creaAnnuncioImmobiliare(@ModelAttribute AnnuncioImmobiliareRequest request){
 
