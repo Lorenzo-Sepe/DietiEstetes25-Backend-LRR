@@ -40,7 +40,7 @@ public class CriteriDiRicercaUtenti {
         BigDecimal budgetMin = null;
         BigDecimal budgetMax = null;
         if (prezzo != null) {
-            budgetMin = BigDecimal.valueOf(prezzo * 0.9);
+            budgetMin = BigDecimal.valueOf(0);
             budgetMax = BigDecimal.valueOf(prezzo * 1.1);
         }
         return CriteriDiRicercaUtenti.builder()

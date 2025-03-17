@@ -66,7 +66,7 @@ public class NotificaService {
         for(User destinatario : destinatari){
             DatiContenutoImmobile dati = DatiContenutoImmobile.fromAnnuncio(annuncio, destinatario);
            try {
-               inviaNotifica(CategoriaNotificaName.PROMOZIONI,destinatario,"DietiEstate",dati);
+               inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE,destinatario,"DietiEstate",dati);
            }catch (Exception e){
                //non fare nulla
            }
@@ -181,10 +181,6 @@ public class NotificaService {
     public void inviaNotificaRifiuto(Proposta proposta) {
         DatiContenutoPropostaRifiutata dati = DatiContenutoPropostaRifiutata.fromProposta(proposta);
         inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), "info@dieti.estate.it",dati);
-    }
-    public void InviaNotificcaNuovoAnnuncio(User destinatario, AnnuncioImmobiliare annuncio) {
-        DatiContenutoImmobile dati = DatiContenutoImmobile.fromAnnuncio(annuncio, destinatario);
-        inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE, destinatario, "info@dieti.estate.it",dati);
     }
 
     private <T extends DatiContenutoNotifica> boolean inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario,String mittente, T dati) {
