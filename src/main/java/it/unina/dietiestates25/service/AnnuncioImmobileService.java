@@ -59,13 +59,17 @@ public class AnnuncioImmobileService {
                 .build();
 
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
+
+        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
+        annuncioImmobiliareRepository.save(annuncioImmobiliare);
+
         try{
+
             notificaService.inviaNotificaPerNuovoAnnuncioImmobiliare(annuncioImmobiliare);
+
         }catch (Exception e){
             //do Nothing
         }
-        updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
-        annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
         return "Annuncio creato con successo";
     }
