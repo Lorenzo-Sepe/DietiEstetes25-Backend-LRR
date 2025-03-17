@@ -7,7 +7,9 @@ import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.service.JwtService;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
+import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +44,13 @@ public class ControllerTESTRAI {
     @PostMapping("pb/test/getUtentiInteressati")
     public List<User> getUtentiInteressati(@RequestBody CriteriDiRicercaUtenti request) {
         return ricercaAnnunciEffettuataService.UtentiInteressati(request);
+    }
+    //test che dato il token di autenticazione ti restituisce user
+    @GetMapping("test/getUser")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN', 'MEMBER')")
+    public User getUser() {
+        User user= UserContex.getUserCurrent();
+        user.setPassword(null);
+        return user;
     }
 }
