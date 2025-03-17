@@ -18,10 +18,12 @@ import java.util.List;
 public class PropostaController {
     final PropostaService propostaService;
 
+
     @GetMapping("/pb/proposte")
     public ResponseEntity<List<PropostaResponse>> getProposte(@RequestParam int idAnnuncio){
 
         return ResponseEntity.ok(propostaService.getProposte(idAnnuncio));
+
     }
 
     @PostMapping("/proposta")

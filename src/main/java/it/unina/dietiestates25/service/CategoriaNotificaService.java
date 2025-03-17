@@ -13,6 +13,7 @@ public class CategoriaNotificaService {
     private  final CategoriaNotificaRepository categoriaRepository;
 
     public CategoriaNotifica getCategoriaNotifica(CategoriaNotificaName name) {
+
         return categoriaRepository.findByCategoriaName(name).get();
     }
 }

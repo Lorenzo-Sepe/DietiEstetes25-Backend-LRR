@@ -21,11 +21,14 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class UserService {
+
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final PasswordService passwordService;
     private final ImageUploaderService imageUploaderService;
+    final private CategoriaNotificaService categoriaService;
+
 
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
@@ -67,7 +70,6 @@ public class UserService {
         return idUser;
     }
 
-
     private String generaEmailDipendente(String nome, String cognome, String aliasAgenzia) {
         convalidaParametri(nome, cognome, aliasAgenzia);
         String emailBase = generaEmailBase(nome, cognome, aliasAgenzia);
@@ -108,10 +110,23 @@ public class UserService {
         return email;
     }
 
-    final private CategoriaNotificaService categoriaService;
-    public void modificaSottoscrizioni(CategoriaNotificaRequest request) {
+    public String modificaSottoscrizioni(CategoriaNotificaRequest request) {
+
         User user = UserContex.getUserCurrent();
+
+        List<CategoriaNotifica> categorieDisattivate = getCategorieDisattivate(request);
+
+        user.setCategorieDisattivate(categorieDisattivate);
+
+        userRepository.save(user);
+
+        return "Sottoscrizione modificata con successo";
+    }
+
+    private List<CategoriaNotifica> getCategorieDisattivate(CategoriaNotificaRequest request) {
+
         List<CategoriaNotifica> categorieDisattivate = new ArrayList<>();
+
         if(!request.isAttivoPromozioni())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROMOZIONI));
         if(!request.isAttivoCategoriaPropostaRifitata())
@@ -122,8 +137,7 @@ public class UserService {
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.CONTROPROPOSTA));
         if(!request.isAttivoCategoriaOpportunitaImmobile())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE));
-        user.setCategorieDisattivate(categorieDisattivate);
 
-        userRepository.save(user);
+        return categorieDisattivate;
     }
 }
