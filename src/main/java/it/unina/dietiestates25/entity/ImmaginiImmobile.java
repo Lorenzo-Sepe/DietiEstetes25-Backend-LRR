@@ -24,4 +24,16 @@ public class ImmaginiImmobile {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "immobile_id")
     private Immobile immobile;
+
+    public String getUrl(){
+
+        if(url == null){
+
+            return "";
+
+        }else{
+
+            return url;
+        }
+    }
 }
