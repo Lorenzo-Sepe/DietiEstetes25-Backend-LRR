@@ -491,6 +491,36 @@ public class AnnuncioImmobileService {
         return agenteCreatoreAnnuncio;
     }
 
+    //------------------------------------------------------GET NUMERO DI ANNUNCI------------------------------------------------------
+
+    public long getNumeroAnnunci(FiltroAnnuncio filtro){
+
+        long numeroDiAnnunci;
+
+        AuthorityName ruoloUserCurrent = UserContex.getRoleCurrent();
+
+        if(ruoloUserCurrent == null || ruoloUserCurrent == AuthorityName.MEMBER){
+
+            Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
+
+            numeroDiAnnunci = annuncioImmobiliareRepository.count(spec);
+
+        }else if(ruoloUserCurrent == AuthorityName.AGENT){
+
+            numeroDiAnnunci = annuncioImmobiliareRepository.countByAgente(UserContex.getUserCurrent());
+
+        }else{
+
+            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent()).get();
+
+            Set<User> dipendentiAgenziaImmobiliare = agenziaImmobiliare.getDipendenti();
+
+            numeroDiAnnunci = annuncioImmobiliareRepository.countByAgenteIn(dipendentiAgenziaImmobiliare);
+        }
+
+        return numeroDiAnnunci;
+    }
+
     //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
 
     public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {

@@ -40,10 +40,22 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
-    @PostMapping("/annuncioImmobiliare/cercaByStaff")
-    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnuniByStaff(@RequestBody FiltroAnnuncio filtro){
+    @PostMapping ("/pb/annuncioImmobiliare/numero")
+    public ResponseEntity<Long> getNumeroAnnunci(@RequestBody FiltroAnnuncio filtro){
 
-        return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
+        return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(filtro));
+    }
+
+    @GetMapping("/annuncioImmobiliare/cercaByStaff")
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnuniByStaff(){
+
+        return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(null));
+    }
+
+    @GetMapping("/annuncioImmobiliare/numeroByStaff")
+    public ResponseEntity<Long> getNumeroAnnunciByStaff(){
+
+        return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(null));
     }
 
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
