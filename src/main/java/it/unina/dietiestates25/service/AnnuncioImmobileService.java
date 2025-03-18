@@ -250,7 +250,7 @@ public class AnnuncioImmobileService {
         for(AnnuncioImmobiliare annuncio : annunci){
 
             ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
-            //List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
+            List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
             ContrattoResponse contrattoResponse = getContrattoResponse(annuncio.getContratto());
             UserResponse agenteCreatoreAnnuncio = getAgenteCreatoreAnnuncio(annuncio.getAgente());
 
@@ -259,7 +259,7 @@ public class AnnuncioImmobileService {
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
                     .immobile(immobileResponse)
-                    //.proposte(proposteResponse)
+                    .proposte(proposteResponse)
                     .agente(agenteCreatoreAnnuncio)
                     .contratto(contrattoResponse)
                     .build();
@@ -390,23 +390,20 @@ public class AnnuncioImmobileService {
         return immaginiImmobileResponse;
     }
 
-    //TODO questa parte di codice andrebbe eliminata perché c'è una get proposte da chiamare a parte
-    /*
+    //TODO durante la creazione della tabella ho scoperto che mi serveno insieme agli annunci quindi lo lascerei
     private List<PropostaResponse> getListPropostaResponse(List<Proposta> proposte){
 
         List<PropostaResponse> proposteRespose = new ArrayList<>();
 
         for(Proposta proposta : proposte){
 
-            UserResponse userResponse = getUserProponente(proposta);
-            ContattoResponse contattoResponse = getContattoResponse(proposta);
+            DatiUserPropostaResponse datiProponente = getDatiProponente(proposta);
 
             PropostaResponse propostaResponse = PropostaResponse.builder()
                     .prezzoProposta(proposta.getPrezzoProposta())
                     .controproposta(proposta.getPrezzoProposta())
                     .stato(proposta.getStato().toString())
-                    .utente(userResponse)
-                    .contatto(contattoResponse)
+                    .datiProponente(datiProponente)
                     .build();
 
             proposteRespose.add(propostaResponse);
@@ -415,12 +412,14 @@ public class AnnuncioImmobileService {
         return proposteRespose;
     }
 
-    private UserResponse getUserProponente(Proposta proposta){
+    private DatiUserPropostaResponse getDatiProponente(Proposta proposta){
 
-        UserResponse userProponente = UserResponse.builder()
-                .email(proposta.getUser().getEmail())
-                .username(proposta.getUser().getUsername())
-                .urlFotoProfilo(proposta.getUser().getUrlFotoProfilo())
+        ContattoResponse contattoResponse = getContattoResponse(proposta);
+
+        DatiUserPropostaResponse userProponente = DatiUserPropostaResponse.builder()
+                .nome(proposta.getNome())
+                .cognome(proposta.getCognome())
+                .contatto(contattoResponse)
                 .build();
 
         return userProponente;
@@ -434,7 +433,7 @@ public class AnnuncioImmobileService {
                 .build();
 
         return contattoResponse;
-    }*/
+    }
 
     private ContrattoResponse getContrattoResponse(Contratto contratto){
 
