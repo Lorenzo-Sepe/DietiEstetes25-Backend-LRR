@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.controller;
 
 import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
@@ -27,7 +28,7 @@ public class ControllerTESTRAI {
 
 
     //getToken for testing member
-    @GetMapping("pb/test/getToken")
+    @GetMapping("/pb/test/getToken")
     public Object getToken(@RequestParam int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato", "id", id));
@@ -74,6 +75,12 @@ public class ControllerTESTRAI {
         messaggio+="\nEmail: " + user.getEmail();
         messaggio += "\nNuova password: " + newPassword;
         return messaggio;
+    }
+
+    //test dto get
+    @PostMapping("pb/test/annuncioImmobiliare")
+    public AnnuncioImmobiliareRequest getDtoCreazioneAnnuncio(@ModelAttribute AnnuncioImmobiliareRequest request) {
+        return request;
     }
 
 
