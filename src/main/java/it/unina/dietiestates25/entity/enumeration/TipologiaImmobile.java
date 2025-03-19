@@ -4,5 +4,6 @@ public enum TipologiaImmobile {
     TERRENO,
     APPARTAMENTO,
     UFFICIO,
-    POSTOAUTO
+    POSTOAUTO,
+    ALTRO
 }
