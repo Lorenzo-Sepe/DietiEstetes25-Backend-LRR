@@ -270,7 +270,7 @@ public class AnnuncioImmobileService {
         return annunciResponse;
     }
 
-    private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo,FiltroAnnuncio filtro){
+    private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo, FiltroAnnuncio filtro){
 
         List<AnnuncioImmobiliare> annunci;
 
@@ -288,7 +288,8 @@ public class AnnuncioImmobileService {
 
         } else {
 
-            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent()).get();
+            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent())
+                    .orElseThrow(() -> new AccessDeniedException("Utente non appartenente a nessuna agenzia immobiliare"));
 
             Set<User> dipendentiAgenziaImmobiliare = agenziaImmobiliare.getDipendenti();
 
@@ -304,7 +305,8 @@ public class AnnuncioImmobileService {
             filtro.setLonCentro(null);
             filtro.setRaggioKm(null);
         }
-        Specification<AnnuncioImmobiliare> specfication = Specification
+
+        return Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
                 .and(AnnuncioImmobiliareSpecification.conTipologiaImmobile(filtro.getTipologiaImmobile()))
                 .and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
@@ -312,8 +314,6 @@ public class AnnuncioImmobileService {
                 .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
                 .and(AnnuncioImmobiliareSpecification.conProvincia(filtro.getProvincia()))
                 .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
-
-        return specfication;
     }
 
     private ImmobileResponse getImmobileResponse(Immobile immobile){
@@ -322,7 +322,7 @@ public class AnnuncioImmobileService {
         CaratteristicheAggiuntiveResponse caratteristicheAggiuntiveResponse = getCaratteristicheAggiuntiveResponse(immobile.getCaratteristicheAggiuntive());
         List<ImmaginiImmobileResponse> immaginiImmobileResponse = getListImmaginiImmobiliResponse(immobile.getImmagini());
 
-        ImmobileResponse immobileResponse = ImmobileResponse.builder()
+        return ImmobileResponse.builder()
                 .tipologiaImmobile(immobile.getTipologiaImmobile().toString())
                 .metriQuadri(immobile.getMetriQuadri())
                 .classeEnergetica(immobile.getClasseEnergetica().toString())
@@ -333,13 +333,11 @@ public class AnnuncioImmobileService {
                 .caratteristicheAggiuntive(caratteristicheAggiuntiveResponse)
                 .immagini(immaginiImmobileResponse)
                 .build();
-
-        return immobileResponse;
     }
 
     private IndirizzoResponse getIndirizzoResponse(Indirizzo indirizzoImmobile){
 
-        IndirizzoResponse indirizzoResponse = IndirizzoResponse.builder()
+        return IndirizzoResponse.builder()
                 .via(indirizzoImmobile.getVia())
                 .numeroCivico(indirizzoImmobile.getNumeroCivico())
                 .citta(indirizzoImmobile.getCitta())
@@ -350,13 +348,11 @@ public class AnnuncioImmobileService {
                 .latitudine(indirizzoImmobile.getLatitudine())
                 .vicinoA(indirizzoImmobile.getLuoghiVicini())
                 .build();
-
-        return indirizzoResponse;
     }
 
     private CaratteristicheAggiuntiveResponse getCaratteristicheAggiuntiveResponse(CaratteristicheAggiuntive caratteristicheAggiuntive){
 
-        CaratteristicheAggiuntiveResponse caratteristicheAggiuntiveResponse = CaratteristicheAggiuntiveResponse.builder()
+        return CaratteristicheAggiuntiveResponse.builder()
                 .balconi(caratteristicheAggiuntive.isBalconi())
                 .garage(caratteristicheAggiuntive.isGarage())
                 .postiAuto(caratteristicheAggiuntive.isPostiAuto())
@@ -369,8 +365,6 @@ public class AnnuncioImmobileService {
                 .cantina(caratteristicheAggiuntive.isCantina())
                 .soffitta(caratteristicheAggiuntive.isSoffitta())
                 .build();
-
-        return caratteristicheAggiuntiveResponse;
     }
 
     private List<ImmaginiImmobileResponse> getListImmaginiImmobiliResponse(List<ImmaginiImmobile> immaginiImmobile){
@@ -416,23 +410,19 @@ public class AnnuncioImmobileService {
 
         ContattoResponse contattoResponse = getContattoResponse(proposta);
 
-        DatiUserPropostaResponse userProponente = DatiUserPropostaResponse.builder()
+        return DatiUserPropostaResponse.builder()
                 .nome(proposta.getNome())
                 .cognome(proposta.getCognome())
                 .contatto(contattoResponse)
                 .build();
-
-        return userProponente;
     }
 
     private ContattoResponse getContattoResponse(Proposta proposta){
 
-        ContattoResponse contattoResponse = ContattoResponse.builder()
+        return ContattoResponse.builder()
                 .tipo(proposta.getContatto().getTipo())
                 .valore(proposta.getContatto().getValore())
                 .build();
-
-        return contattoResponse;
     }
 
     private ContrattoResponse getContrattoResponse(Contratto contratto){
@@ -459,14 +449,12 @@ public class AnnuncioImmobileService {
 
     private ContrattoAffittoResponse getContrattoAffitto(ContrattoAffitto contratto){
 
-        ContrattoAffittoResponse contrattoAffittoResponse = ContrattoAffittoResponse.builder()
+        return ContrattoAffittoResponse.builder()
                 .caparra(contratto.getCaparra())
                 .prezzoAffitto(contratto.getPrezzoAffitto())
                 .tempoMinimo( contratto.getTempoMinimo())
                 .tempoMassimo(contratto.getTempoMassimo())
                 .build();
-
-        return contrattoAffittoResponse;
     }
 
     private ContrattoVenditaResponse getContrattoVendita(ContrattoVendita contratto){
@@ -726,5 +714,11 @@ public class AnnuncioImmobileService {
         User agenteAnnuncio = annuncio.getAgente();
         AgenziaImmobiliare agenziaAssociataAnnuncio = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(agenteAnnuncio).orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare associata all'annuncio","id",annuncio.getId()));
         return agenziaAssociataAnnuncio.equals(agenziaDelUtenteCorrente);
+    }
+
+    //TODO da implementare dopo il refactoring delle dto
+    public AnnuncioImmobiliareResponse getAnnuncioImmobiliare(int id) {
+        return null
+
     }
 }
