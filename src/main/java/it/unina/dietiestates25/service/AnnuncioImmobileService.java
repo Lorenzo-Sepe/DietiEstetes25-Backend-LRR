@@ -394,6 +394,7 @@ public class AnnuncioImmobileService {
             DatiUserPropostaResponse datiProponente = getDatiProponente(proposta);
 
             PropostaResponse propostaResponse = PropostaResponse.builder()
+                    .idProposta(proposta.getId())
                     .prezzoProposta(proposta.getPrezzoProposta())
                     .controproposta(proposta.getControproposta())
                     .stato(proposta.getStato().toString())
@@ -718,7 +719,7 @@ public class AnnuncioImmobileService {
 
     //TODO da implementare dopo il refactoring delle dto
     public AnnuncioImmobiliareResponse getAnnuncioImmobiliare(int id) {
-        return null
+        return null;
 
     }
 }

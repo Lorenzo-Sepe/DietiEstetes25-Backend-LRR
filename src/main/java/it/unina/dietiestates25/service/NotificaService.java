@@ -185,7 +185,7 @@ public class NotificaService {
 
     private <T extends DatiContenutoNotifica> boolean inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario,String mittente, T dati) {
         CategoriaNotifica categoria = recuperaCategoria(tipoNotifica);
-        if(destinatario.getCategorieDisattivate().contains(categoria)){
+        if(destinatario == null || destinatario.getCategorieDisattivate().contains(categoria)){
             return false;
         }
 
