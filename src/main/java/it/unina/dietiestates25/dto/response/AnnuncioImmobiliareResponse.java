@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.dto.response;
 
+import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.Contratto;
 import lombok.*;
 
@@ -19,5 +20,7 @@ public class AnnuncioImmobiliareResponse {
     private ImmobileResponse immobile;
     private ContrattoResponse contratto;
     private List<PropostaResponse> proposte;
+
+
 }
 

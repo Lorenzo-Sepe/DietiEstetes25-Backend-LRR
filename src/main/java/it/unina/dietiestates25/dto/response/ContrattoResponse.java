@@ -12,8 +12,8 @@ import lombok.Setter;
 public class ContrattoResponse {
 
     String tipoContratto;
-
     ContrattoVenditaResponse contrattoVenditaResponse;
-
     ContrattoAffittoResponse contrattoAffittoResponse;
+
+
 }
