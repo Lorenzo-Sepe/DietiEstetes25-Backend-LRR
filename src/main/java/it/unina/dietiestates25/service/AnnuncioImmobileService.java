@@ -401,7 +401,7 @@ public class AnnuncioImmobileService {
 
             PropostaResponse propostaResponse = PropostaResponse.builder()
                     .prezzoProposta(proposta.getPrezzoProposta())
-                    .controproposta(proposta.getPrezzoProposta())
+                    .controproposta(proposta.getControproposta())
                     .stato(proposta.getStato().toString())
                     .datiProponente(datiProponente)
                     .build();
