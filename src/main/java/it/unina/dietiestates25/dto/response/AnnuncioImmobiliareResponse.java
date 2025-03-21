@@ -16,11 +16,10 @@ public class AnnuncioImmobiliareResponse {
     private int id;
     private String titolo;
     private String descrizione;
-    private UserResponse agente;
+    private DipendenteResponse agente;
     private ImmobileResponse immobile;
     private ContrattoResponse contratto;
     private List<PropostaResponse> proposte;
-
 
 }
 

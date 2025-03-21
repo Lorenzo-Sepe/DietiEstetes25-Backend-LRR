@@ -2,6 +2,7 @@ package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
@@ -139,5 +140,10 @@ public class UserService {
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE));
 
         return categorieDisattivate;
+    }
+
+    public DipendenteResponse getDipendente(int idDipendente) {
+        DatiImpiegato dipendente = datiImpiegatoRepository.findByUser_Id(idDipendente).orElseThrow();
+        return DipendenteResponse.fromEntityToDto(dipendente);
     }
 }

@@ -1,13 +1,13 @@
 package it.unina.dietiestates25.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
+import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +17,21 @@ public class UserController {
 
     //Modifica Sottoscrizioni
     @PatchMapping("/utente/sottoscrizioni")
+    @Operation(summary = "Modifica le sottoscrizioni di un utente",
+            description = "Modifica le sottoscrizioni di un utente",
+            tags = {"Utente"}
+    )
     public ResponseEntity<String> modificaSottoscrizioni(@RequestBody CategoriaNotificaRequest request) {
 
         return ResponseEntity.ok(userService.modificaSottoscrizioni(request));
+    }
+
+    @GetMapping("/pb/dipendente/{idDipendente}")
+    @Operation(summary = "Recupera le informazioni di un dipendente",
+            description = "Recupera le informazioni di un dipendente",
+            tags = {"Utente"}
+    )
+    public ResponseEntity<DipendenteResponse> getDipendente(@PathVariable int idDipendente) {
+        return ResponseEntity.ok(userService.getDipendente(idDipendente));
     }
 }

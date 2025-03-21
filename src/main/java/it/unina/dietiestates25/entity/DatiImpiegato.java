@@ -23,7 +23,7 @@ package it.unina.dietiestates25.entity;
         @Column(nullable = false, length = 100)
         private String cognome;
 
-        @ManyToOne(optional = false, fetch = FetchType.LAZY)
+        @OneToOne(optional = false, fetch = FetchType.LAZY)
         private User user;
 
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

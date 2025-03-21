@@ -10,6 +10,8 @@ import it.unina.dietiestates25.entity.enumeration.*;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
+import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
+import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.service.specification.AnnuncioImmobiliareSpecification;
 import it.unina.dietiestates25.utils.NearbyPlacesChecker;
 import it.unina.dietiestates25.utils.UserContex;
@@ -36,6 +38,8 @@ public class AnnuncioImmobileService {
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
     private final NearbyPlacesChecker nearbyPlacesChecker ;
     private final NotificaService notificaService;
+    private final UserRepository userRepository;
+    private final DatiImpiegatoRepository datiImpiegatoRepository;
 
     //-------------------------------------------------------CREA ANNUNCIO-------------------------------------------------------
 
@@ -252,7 +256,9 @@ public class AnnuncioImmobileService {
             ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
             List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
             ContrattoResponse contrattoResponse = getContrattoResponse(annuncio.getContratto());
-            UserResponse agenteCreatoreAnnuncio = getAgenteCreatoreAnnuncio(annuncio.getAgente());
+            DatiImpiegato datiImpiegato = datiImpiegatoRepository.findDatiImpiegatoByUser(annuncio.getAgente())
+                    .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato", "user", annuncio.getAgente().getId()));
+            DipendenteResponse agenteCreatoreAnnuncio = DipendenteResponse.fromEntityToDto(datiImpiegato);
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
                     .id(annuncio.getId())
@@ -719,6 +725,15 @@ public class AnnuncioImmobileService {
 
     //TODO da implementare dopo il refactoring delle dto
     public AnnuncioImmobiliareResponse getAnnuncioImmobiliare(int id) {
+        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
+
+       User agente = userRepository.findById(annuncio.getAgente().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", annuncio.getAgente().getId()));
+
+       DatiImpiegato datiImpiegato = datiImpiegatoRepository.findByUser_Id(agente.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("DatiImpiegato", "id", agente.getId()));
+
         return null;
 
     }

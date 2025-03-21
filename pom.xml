@@ -32,7 +32,7 @@
         <springdoc>2.5.0</springdoc>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>Backend-DietiEstates25</sonar.projectKey>
-        <sonar.login>${env.SONAR_TOKEN}</sonar.login>
+        <sonar.login>sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2</sonar.login>
         <!--Token Sonar Lorenzo : sqp_76778a425ec2fd3723af8d72872f88e226cd7ba2-->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>

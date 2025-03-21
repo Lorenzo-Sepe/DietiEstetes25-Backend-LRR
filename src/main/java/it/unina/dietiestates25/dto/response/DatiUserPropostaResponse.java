@@ -10,6 +10,4 @@ public class DatiUserPropostaResponse {
     String nome;
     String cognome;
     ContattoResponse contatto;
-
-
 }
