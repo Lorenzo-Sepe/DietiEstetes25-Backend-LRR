@@ -23,10 +23,10 @@ package it.unina.dietiestates25.entity;
         @Column(nullable = false, length = 100)
         private String cognome;
 
-        @OneToOne(optional = false, fetch = FetchType.LAZY)
+        @OneToOne(optional = false, fetch = FetchType.EAGER)
         private User user;
 
-        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
         @JoinColumn(name = "dati_impiegato_id")
         private List<Contatto> contatti;
     }
