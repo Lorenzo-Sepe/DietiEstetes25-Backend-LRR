@@ -261,7 +261,7 @@ public class AnnuncioImmobileService {
             DipendenteResponse agenteCreatoreAnnuncio = DipendenteResponse.fromEntityToDto(datiImpiegato);
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
-                    .id(annuncio.getId())
+                    //.id(annuncio.getId())
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
                     .immobile(immobileResponse)
@@ -400,7 +400,7 @@ public class AnnuncioImmobileService {
             DatiUserPropostaResponse datiProponente = getDatiProponente(proposta);
 
             PropostaResponse propostaResponse = PropostaResponse.builder()
-                    .idProposta(proposta.getId())
+
                     .prezzoProposta(proposta.getPrezzoProposta())
                     .controproposta(proposta.getControproposta())
                     .stato(proposta.getStato().toString())
@@ -728,13 +728,21 @@ public class AnnuncioImmobileService {
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
 
-       User agente = userRepository.findById(annuncio.getAgente().getId())
+        User agente = userRepository.findById(annuncio.getAgente().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", annuncio.getAgente().getId()));
 
-       DatiImpiegato datiImpiegato = datiImpiegatoRepository.findByUser_Id(agente.getId())
+        DatiImpiegato datiImpiegato = datiImpiegatoRepository.findByUser_Id(agente.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("DatiImpiegato", "id", agente.getId()));
 
-        return null;
+        ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
 
+        return AnnuncioImmobiliareResponse.builder()
+                .immobile(immobileResponse)
+                .titolo(annuncio.getTitolo())
+                .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
+                .contratto(ContrattoResponse.fromEntityToDto(annuncio.getContratto()))
+                .descrizione(annuncio.getDescrizione())
+                .proposte(PropostaResponse.fromEntityToDto(annuncio.getProposte()))
+                .build();
     }
 }
