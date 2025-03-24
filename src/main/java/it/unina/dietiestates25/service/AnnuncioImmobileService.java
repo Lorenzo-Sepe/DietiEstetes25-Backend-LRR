@@ -17,6 +17,7 @@ import it.unina.dietiestates25.utils.NearbyPlacesChecker;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnnuncioImmobileService {
 
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
@@ -47,11 +49,8 @@ public class AnnuncioImmobileService {
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
 
         User agenteImmobliare = UserContex.getUserCurrent();
-
-        Immobile immobile = getImmobileByRequest(request.getImmobile());
-
-        Contratto contratto = getContrattoFromRequest(request.getContratto());
-
+        Immobile immobile = createImmobileByRequest(request.getImmobile());
+        Contratto contratto = createContrattoFromRequest(request.getContratto());
         AnnuncioImmobiliare annuncioImmobiliare = AnnuncioImmobiliare.builder()
                 .immobile(immobile)
                 .contratto(contratto)
@@ -73,12 +72,13 @@ public class AnnuncioImmobileService {
 
         }catch (Exception e){
             //do Nothing
+            log.error("Errore nell'invio della notifica per il nuovo annuncio immobiliare");
         }
 
         return "Annuncio creato con successo";
     }
 
-    private Immobile getImmobileByRequest(ImmobileRequest request){
+    private Immobile createImmobileByRequest(ImmobileRequest request){
 
         Immobile immobile = Immobile.builder()
                 .tipologiaImmobile(getEnumTipologiaImmobileFromString(request.getTipologiaImmobile()))
@@ -87,8 +87,8 @@ public class AnnuncioImmobileService {
                 .numeroServizi(request.getNumeroServizi())
                 .numeroStanze(request.getNumeroStanze())
                 .numeroDiPiani(request.getNumeroDiPiani())
-                .indirizzo(getIndirizzoFromRequest(request.getIndirizzo()))
-                .caratteristicheAggiuntive(getCaratteristicheAggiuntiveFromRequest(request.getCaratteristicheAggiuntive()))
+                .indirizzo(createIndirizzoFromRequest(request.getIndirizzo()))
+                .caratteristicheAggiuntive(createCaratteristicheAggiuntiveFromRequest(request.getCaratteristicheAggiuntive()))
                 .build();
 
         //immobile.setImmagini(getListaImmaginiFromRequest(request.getImmagini(),immobile));
@@ -118,9 +118,8 @@ public class AnnuncioImmobileService {
         }
     }
 
-    private Indirizzo getIndirizzoFromRequest(IndirizzoRequest request){
-
-        Indirizzo indirizzo = Indirizzo.builder()
+    private Indirizzo createIndirizzoFromRequest(IndirizzoRequest request){
+        return Indirizzo.builder()
                 .nazione(request.getNazione())
                 .cap(request.getCap())
                 .citta(request.getCitta())
@@ -131,18 +130,14 @@ public class AnnuncioImmobileService {
                 .latitudine(request.getLatitudine())
                 .luoghiVicini(getPostiVicino(request.getLatitudine(),request.getLongitudine()))
                 .build();
-
-        return indirizzo;
     }
 
     private Set<VicinoA> getPostiVicino(double latitudine, double longitudine){
 
-        Set<VicinoA> postiVicini = nearbyPlacesChecker.getPuntiInteresseVicini(latitudine,longitudine);
-
-        return postiVicini;
+        return nearbyPlacesChecker.getPuntiInteresseVicini(latitudine,longitudine);
     }
 
-    private CaratteristicheAggiuntive getCaratteristicheAggiuntiveFromRequest(CaratteristicheAggiuntiveRequest request){
+    private CaratteristicheAggiuntive createCaratteristicheAggiuntiveFromRequest(CaratteristicheAggiuntiveRequest request){
 
         CaratteristicheAggiuntive caratteristicheAggiuntive = CaratteristicheAggiuntive.builder()
                 .ascensore(request.isAscensore())
@@ -161,7 +156,7 @@ public class AnnuncioImmobileService {
         return caratteristicheAggiuntive;
     }
 
-    private Contratto getContrattoFromRequest(ContrattoRequest request){
+    private Contratto createContrattoFromRequest(ContrattoRequest request){
 
         Contratto contratto;
 
@@ -242,6 +237,28 @@ public class AnnuncioImmobileService {
     }
 
     //-------------------------------------------------------GET ANNUNCI-------------------------------------------------------
+
+    public AnnuncioImmobiliareResponse getAnnuncioImmobiliare(int id) {
+        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
+
+        User agente = userRepository.findById(annuncio.getAgente().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", annuncio.getAgente().getId()));
+
+        DatiImpiegato datiImpiegato = datiImpiegatoRepository.findByUser_Id(agente.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("DatiImpiegato", "id", agente.getId()));
+
+        ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
+
+        return AnnuncioImmobiliareResponse.builder()
+                .immobile(immobileResponse)
+                .titolo(annuncio.getTitolo())
+                .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
+                .contratto(ContrattoResponse.fromEntityToDto(annuncio.getContratto()))
+                .descrizione(annuncio.getDescrizione())
+                .proposte(PropostaResponse.fromEntityToDto(annuncio.getProposte()))
+                .build();
+    }
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
 
@@ -439,11 +456,10 @@ public class AnnuncioImmobileService {
         if(contratto instanceof ContrattoAffitto){
 
             ContrattoAffittoResponse contrattoAffittoResponse = getContrattoAffitto((ContrattoAffitto)contratto);
-
             contrattoResponse.setContrattoAffittoResponse(contrattoAffittoResponse);
             contrattoResponse.setTipoContratto("AFFITTO");
 
-        }else if(contratto instanceof ContrattoVendita){
+        }else if(contratto instanceof ContrattoVendita contrattoVendita){
 
             ContrattoVenditaResponse contrattoVenditaResponse = getContrattoVendita((ContrattoVendita) contratto);
 
@@ -466,23 +482,19 @@ public class AnnuncioImmobileService {
 
     private ContrattoVenditaResponse getContrattoVendita(ContrattoVendita contratto){
 
-        ContrattoVenditaResponse contrattoVenditaResponse = ContrattoVenditaResponse.builder()
+        return ContrattoVenditaResponse.builder()
                 .mutuoEstinto(contratto.isMutuoEstinto())
                 .prezzoVendita(contratto.getPrezzoVendita())
                 .build();
-
-        return contrattoVenditaResponse;
     }
 
     private UserResponse getAgenteCreatoreAnnuncio(User agente){
 
-        UserResponse agenteCreatoreAnnuncio = UserResponse.builder()
+        return UserResponse.builder()
                 .email(agente.getEmail())
                 .username(agente.getUsername())
                 .urlFotoProfilo(agente.getUrlFotoProfilo())
                 .build();
-
-        return agenteCreatoreAnnuncio;
     }
 
     //------------------------------------------------------GET NUMERO DI ANNUNCI------------------------------------------------------
@@ -505,7 +517,8 @@ public class AnnuncioImmobileService {
 
         }else{
 
-            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent()).get();
+            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent())
+                    .orElseThrow(() -> new AccessDeniedException("Utente non appartenente a nessuna agenzia immobiliare"));
 
             Set<User> dipendentiAgenziaImmobiliare = agenziaImmobiliare.getDipendenti();
 
@@ -517,6 +530,7 @@ public class AnnuncioImmobileService {
 
     //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
 
+    @Transactional
     public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
 
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
@@ -537,6 +551,7 @@ public class AnnuncioImmobileService {
 
     }
 
+
     private void updateImmobile(ImmobileRequest request,Immobile immobile){
 
         immobile.setTipologiaImmobile(getEnumTipologiaImmobileFromString(request.getTipologiaImmobile()));
@@ -548,6 +563,7 @@ public class AnnuncioImmobileService {
         updateIndirizzo(request.getIndirizzo(),immobile.getIndirizzo());
         updateCaratteristicheAggiuntive(request.getCaratteristicheAggiuntive(),immobile.getCaratteristicheAggiuntive());
     }
+
 
     private void updateIndirizzo(IndirizzoRequest request,Indirizzo indirizzo){
 
@@ -683,11 +699,10 @@ public class AnnuncioImmobileService {
 
 
     public String cancellaAnnuncioImmobiliare(int id) {
-
-        verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
+        verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
 
         annuncioImmobiliareRepository.deleteById(id);
-
         return "Annuncio cancellato";
     }
 
@@ -700,7 +715,6 @@ public class AnnuncioImmobileService {
             throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio");
         }else if(UserContex.getRoleCurrent() == AuthorityName.ADMIN && !isAdminDellaAgenzia(annuncio)) {
             throw new AccessDeniedException("Questo annuncio è di un altra Agenzia Immobiliare\nNon hai il permesso di modificare questo annuncio");
-
         }
         if (UserContex.getRoleCurrent() == AuthorityName.AGENT && !isProprietarioAnnuncio(annuncio)) {
             throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio\n puoi modificar solo i tuoi Annunci immobiliari");
@@ -723,26 +737,6 @@ public class AnnuncioImmobileService {
         return agenziaAssociataAnnuncio.equals(agenziaDelUtenteCorrente);
     }
 
-    //TODO da implementare dopo il refactoring delle dto
-    public AnnuncioImmobiliareResponse getAnnuncioImmobiliare(int id) {
-        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
 
-        User agente = userRepository.findById(annuncio.getAgente().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", annuncio.getAgente().getId()));
 
-        DatiImpiegato datiImpiegato = datiImpiegatoRepository.findByUser_Id(agente.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("DatiImpiegato", "id", agente.getId()));
-
-        ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
-
-        return AnnuncioImmobiliareResponse.builder()
-                .immobile(immobileResponse)
-                .titolo(annuncio.getTitolo())
-                .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
-                .contratto(ContrattoResponse.fromEntityToDto(annuncio.getContratto()))
-                .descrizione(annuncio.getDescrizione())
-                .proposte(PropostaResponse.fromEntityToDto(annuncio.getProposte()))
-                .build();
-    }
 }
