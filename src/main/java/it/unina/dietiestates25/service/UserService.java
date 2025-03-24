@@ -4,12 +4,14 @@ import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
+import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.repository.AuthorityRepository;
+import it.unina.dietiestates25.repository.CategoriaNotificaRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.UserContex;
@@ -145,5 +147,62 @@ public class UserService {
     public DipendenteResponse getDipendente(int idDipendente) {
         DatiImpiegato dipendente = datiImpiegatoRepository.findByUser_Id(idDipendente).orElseThrow();
         return DipendenteResponse.fromEntityToDto(dipendente);
+    }
+
+    public List<SottoscrizioneNotificaResponse> getSottoscrizioni(){
+
+        User userCurrentContex = UserContex.getUserCurrent();
+
+        User userCurrent = userRepository.findByEmail(userCurrentContex.getEmail()).orElseThrow();
+
+        List<CategoriaNotifica>  categorieDisattivate = userCurrent.getCategorieDisattivate();
+
+        return getSottoScrizioniResponse(categorieDisattivate);
+    }
+
+    private List<SottoscrizioneNotificaResponse> getSottoScrizioniResponse(List<CategoriaNotifica> categorieDisattivate){
+
+        List<SottoscrizioneNotificaResponse> sottoscrizioni = new ArrayList<>();
+
+        for(CategoriaNotificaName categoria : CategoriaNotificaName.values()){
+
+            CategoriaNotifica categoriaNotifica = categoriaService.getCategoriaNotifica(categoria);
+
+            if(contieneCategoria(categoria,categorieDisattivate)){
+
+                SottoscrizioneNotificaResponse sottoscrizioneNotificaResponse = SottoscrizioneNotificaResponse.builder()
+                        .nomeCategoria(categoriaNotifica.getCategoriaName().toString())
+                        .descrizione(categoriaNotifica.getDescrizione())
+                        .attivo(false)
+                        .idCategoria(categoriaNotifica.getId())
+                        .build();
+                sottoscrizioni.add(sottoscrizioneNotificaResponse);
+
+            }else{
+
+                SottoscrizioneNotificaResponse sottoscrizioneNotificaResponse = SottoscrizioneNotificaResponse.builder()
+                        .nomeCategoria(categoriaNotifica.getCategoriaName().toString())
+                        .descrizione(categoriaNotifica.getDescrizione())
+                        .attivo(true)
+                        .idCategoria(categoriaNotifica.getId())
+                        .build();
+                sottoscrizioni.add(sottoscrizioneNotificaResponse);
+            }
+        }
+
+        return sottoscrizioni;
+    }
+
+    private boolean contieneCategoria(CategoriaNotificaName categoria,List<CategoriaNotifica> categorie) {
+
+        for(CategoriaNotifica c : categorie){
+
+            if(c.getCategoriaName() == categoria){
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

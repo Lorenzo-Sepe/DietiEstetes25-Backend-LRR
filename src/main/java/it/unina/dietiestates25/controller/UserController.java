@@ -3,11 +3,14 @@ package it.unina.dietiestates25.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
+import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
 import it.unina.dietiestates25.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +36,15 @@ public class UserController {
     )
     public ResponseEntity<DipendenteResponse> getDipendente(@PathVariable int idDipendente) {
         return ResponseEntity.ok(userService.getDipendente(idDipendente));
+    }
+
+    @GetMapping("/sottoscrizioni")
+    @Operation(summary = "Recupera le sottoscrizioni dell'utente",
+            description = "Recupera le sottoscrizione dell' utente",
+            tags = {"Utente"}
+    )
+    public ResponseEntity<List<SottoscrizioneNotificaResponse>> getSottoscrizioni(){
+
+        return ResponseEntity.ok(userService.getSottoscrizioni());
     }
 }

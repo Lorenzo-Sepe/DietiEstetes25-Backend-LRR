@@ -22,4 +22,6 @@ public class CategoriaNotifica extends CreationUpdate {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CategoriaNotificaName categoriaName;
+
+    private String descrizione;
 }

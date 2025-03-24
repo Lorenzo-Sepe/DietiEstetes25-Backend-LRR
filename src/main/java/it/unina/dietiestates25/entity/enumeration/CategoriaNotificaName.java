@@ -8,5 +8,10 @@ public enum CategoriaNotificaName {
     PROPOSTA_RIFIUTATA,
     CONTROPROPOSTA,
     OPPORTUNITA_IMMOBILE,
-    PROMOZIONI
+    PROMOZIONI;
+
+    @Override
+    public String toString() {
+        return name();  // Restituisce solo il nome dell'enum (ad esempio "PROPOSTA_ACCETTATA")
+    }
 }
