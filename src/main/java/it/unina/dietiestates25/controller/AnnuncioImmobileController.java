@@ -131,7 +131,7 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.modificaAnnuncioImmobiliare(id, request));
     }
 
-    @GetMapping("/annuncioImmobiliare/{id}")
+    @GetMapping("/pb/annuncioImmobiliare/{id}")
     @Operation(
             summary = "OTTIENI ANNUNCIO IMMOBILIARE DA ID",
             description = "Metodo per ottenere un annuncio immobiliare dal database",

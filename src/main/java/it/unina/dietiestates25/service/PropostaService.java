@@ -39,7 +39,8 @@ import java.util.List;
 
         public List<PropostaResponse> getProposte(int idAnnuncio){
             List<Proposta> proposte = propostaRepository.findByAnnuncio_Id(idAnnuncio);
-            return getListProposteResponse(proposte);
+            //return getListProposteResponse(proposte);
+            return PropostaResponse.fromEntityToDto(proposte);
         }
 
         private Pageable getPageable(PageableProposte request){
@@ -65,7 +66,7 @@ import java.util.List;
             for(Proposta proposta : proposte){
 
                 PropostaResponse propostaResponse = PropostaResponse.builder()
-                        .idProposta(proposta.getId())
+                        //.idProposta(proposta.getId())
                         .stato(proposta.getStato().toString())
                         .prezzoProposta(proposta.getPrezzoProposta())
                         .controproposta(proposta.getControproposta())
