@@ -12,7 +12,8 @@ public enum ClasseEnergetica {
     D("D"),
     E("E"),
     F("F"),
-    G("G");
+    G("G"),
+    Non_Specificata("Non specificata");
 
     private final String label;
 
