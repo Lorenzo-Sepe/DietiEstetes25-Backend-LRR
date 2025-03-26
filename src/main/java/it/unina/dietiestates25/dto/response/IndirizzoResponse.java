@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.dto.response;
 
+import it.unina.dietiestates25.entity.Indirizzo;
 import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import lombok.*;
 
@@ -20,4 +21,19 @@ public class IndirizzoResponse {
     private Double latitudine;
     private Double longitudine;
     private Set<VicinoA> vicinoA;
+
+    public static IndirizzoResponse fromEntityToDto(Indirizzo indirizzoImmobile){
+
+        return IndirizzoResponse.builder()
+                .via(indirizzoImmobile.getVia())
+                .numeroCivico(indirizzoImmobile.getNumeroCivico())
+                .citta(indirizzoImmobile.getCitta())
+                .cap(indirizzoImmobile.getCap())
+                .provincia(indirizzoImmobile.getCap())
+                .nazione(indirizzoImmobile.getNazione())
+                .longitudine(indirizzoImmobile.getLongitudine())
+                .latitudine(indirizzoImmobile.getLatitudine())
+                .vicinoA(indirizzoImmobile.getLuoghiVicini())
+                .build();
+    }
 }
