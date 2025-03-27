@@ -85,8 +85,6 @@ public class NotificaService {
         return "promozioni@"+agenzia.getDominio()+".dietiEstate.it";
     }
 
-
-
     public Integer getNumeroAllNotifiche(){
 
         User userCurrent = UserContex.getUserCurrent();
@@ -133,6 +131,7 @@ public class NotificaService {
             notificaResponse.setMittente(notifica.getMittente());
             notificaResponse.setDataDiCreazione(notifica.getDataCreazione());
             notificaResponse.setLetta(notifica.isLetta());
+            notificaResponse.setIdCategoria(notifica.getCategoria().getId());
             notificheResponse.add(notificaResponse);
         }
 
@@ -174,10 +173,12 @@ public class NotificaService {
         DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
         inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, proposta.getUser(),"info@dieti.estate.it", dati);
     }
+
     public void inviaNotificaAccettazione( Proposta proposta) {
         DatiContenutoPropostaAccettata dati = DatiContenutoPropostaAccettata.fromProposta(proposta, getDatiImpiegato(proposta));
         inviaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA, proposta.getUser(), "info@dieti.estate.it",dati);
     }
+
     public void inviaNotificaRifiuto(Proposta proposta) {
         DatiContenutoPropostaRifiutata dati = DatiContenutoPropostaRifiutata.fromProposta(proposta);
         inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), "info@dieti.estate.it",dati);

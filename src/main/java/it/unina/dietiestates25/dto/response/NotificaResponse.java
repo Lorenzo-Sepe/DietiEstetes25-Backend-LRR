@@ -16,4 +16,6 @@ public class NotificaResponse {
     private String mittente;
 
     private boolean isLetta;
+
+    int idCategoria;
 }
