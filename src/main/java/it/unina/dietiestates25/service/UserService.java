@@ -1,6 +1,7 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
+import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
@@ -204,5 +205,35 @@ public class UserService {
         }
 
         return false;
+    }
+
+    public String modificaSottoscrizioni(List<CategoriaNotificaRequest2> request){
+
+        User user = UserContex.getUserCurrent();
+
+        List<CategoriaNotifica> categorieDisattivate = getCategorieDisattivate(request);
+
+        user.setCategorieDisattivate(categorieDisattivate);
+
+        userRepository.save(user);
+
+        return "Sottoscrizione modificata con successo";
+    }
+
+    private List<CategoriaNotifica> getCategorieDisattivate(List<CategoriaNotificaRequest2> request){
+
+        List<CategoriaNotifica> categorieDisattivate = new ArrayList<>();
+
+        for(CategoriaNotificaRequest2 categoriaRequest : request){
+
+            if(!categoriaRequest.isAttivo()){
+
+                CategoriaNotifica categoriaNotifica = categoriaService.getCategoriaNotifica(categoriaRequest.getIdCategoria());
+                categorieDisattivate.add(categoriaNotifica);
+
+            }
+        }
+
+        return categorieDisattivate;
     }
 }

@@ -16,4 +16,10 @@ public class CategoriaNotificaService {
 
         return categoriaRepository.findByCategoriaName(name).get();
     }
+
+    public CategoriaNotifica getCategoriaNotifica(int id){
+
+        return categoriaRepository.findById(id).get();
+    }
+
 }
