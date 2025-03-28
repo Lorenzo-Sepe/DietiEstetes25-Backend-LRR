@@ -40,7 +40,7 @@ import java.util.List;
         public List<PropostaResponse> getProposte(int idAnnuncio){
             List<Proposta> proposte = propostaRepository.findByAnnuncio_Id(idAnnuncio);
             //return getListProposteResponse(proposte);
-            return PropostaResponse.fromEntityToDto(proposte);
+            return PropostaResponse.fromListEntityToDto(proposte);
         }
 
         private Pageable getPageable(PageableProposte request){
@@ -66,7 +66,7 @@ import java.util.List;
             for(Proposta proposta : proposte){
 
                 PropostaResponse propostaResponse = PropostaResponse.builder()
-                        //.idProposta(proposta.getId())
+                        .idProposta(proposta.getId())
                         .stato(proposta.getStato().toString())
                         .prezzoProposta(proposta.getPrezzoProposta())
                         .controproposta(proposta.getControproposta())
@@ -132,7 +132,7 @@ import java.util.List;
             }
         }
 
-        public void inserisciPropostaManuale(PropostaRequest request) {
+        public PropostaResponse inserisciPropostaManuale(PropostaRequest request) {
             AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(request.getAnnuncioId())
                     .orElseThrow(() -> new BadRequestException("Non esiste un annuncio con id " + request.getAnnuncioId()));
             Contatto contatto = Contatto.builder()
@@ -148,7 +148,8 @@ import java.util.List;
                     .prezzoProposta(request.getPrezzo())
                     .build();
             try {
-                propostaRepository.save(proposta);
+                return PropostaResponse.fromEntityToDto(propostaRepository.save(proposta));
+
             } catch (Exception e) {
                 throw new InternalServerErrorException("Non è stato possibile inviare la proposta: ");
             }

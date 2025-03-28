@@ -42,8 +42,8 @@ public class PropostaController {
             summary = "INSERISCI UNA PROPOSTA MANUALE",
             description = "Metodo per inserire manualmente una proposta di acquisto o affitto di un immobile",
             tags = {"Proposta"})
-    public void inserisciPropostaManuale(@RequestBody PropostaRequest request) {
-        propostaService.inserisciPropostaManuale(request);
+    public PropostaResponse inserisciPropostaManuale(@RequestBody PropostaRequest request) {
+        return propostaService.inserisciPropostaManuale(request);
     }
 
     @PostMapping("/proposta/{id}/controproposta")
