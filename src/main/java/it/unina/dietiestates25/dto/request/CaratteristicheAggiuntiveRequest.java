@@ -18,4 +18,5 @@ public class CaratteristicheAggiuntiveRequest {
     private boolean pannelliSolari = false;
     private boolean cantina = false;
     private boolean soffitta = false;
+    private String descrizioneAggiuntiva="";
 }
