@@ -16,4 +16,11 @@ public interface GeneratoreContenutoNotifica<T extends DatiContenutoNotifica> {
      * Restituisce il tipo di notifica gestito da questo generatore.
      */
     CategoriaNotificaName getTipoNotifica();
+
+    /**
+     * Genera l'oggetto della notifica usando i dati specifici
+     * @param dati DTO contenente i dati necessari
+     * @return Stringa con oggetto della notifica
+     */
+    String generaOggetto(T dati);
 }

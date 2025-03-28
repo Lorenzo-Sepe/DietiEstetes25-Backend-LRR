@@ -9,11 +9,15 @@ public class NotificaResponse {
 
     int id;
 
+    private String oggetto;
+
     private String contenuto;
 
     private LocalDateTime dataDiCreazione;
 
     private String mittente;
+
+
 
     private boolean isLetta;
 

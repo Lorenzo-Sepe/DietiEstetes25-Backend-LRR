@@ -124,8 +124,8 @@ public class NotificaService {
         List<NotificaResponse> notificheResponse = new ArrayList<>();
 
         for(Notifica notifica : notifiche){
-
             NotificaResponse notificaResponse = new NotificaResponse();
+            notificaResponse.setOggetto(notifica.getOggetto());
             notificaResponse.setId(notifica.getId());
             notificaResponse.setContenuto(notifica.getContenuto());
             notificaResponse.setMittente(notifica.getMittente());
@@ -195,8 +195,10 @@ public class NotificaService {
         // Genera il contenuto HTML
         String contenutoHtml = generatore.generaContenuto(dati);
 
+
         // Creazione della notifica utilizzando il builder
         Notifica notifica = Notifica.builder()
+                .oggetto(generatore.generaOggetto(dati))
                 .contenuto(contenutoHtml)
                 .dataCreazione(LocalDateTime.now())
                 .mittente(mittente) // oppure il mittente dinamico

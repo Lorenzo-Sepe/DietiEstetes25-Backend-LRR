@@ -63,4 +63,10 @@ public class GeneratoreContenutoPropostaAccettata implements GeneratoreContenuto
     public CategoriaNotificaName getTipoNotifica() {
         return CategoriaNotificaName.PROPOSTA_ACCETTATA;
     }
+
+    @Override
+    public String generaOggetto(DatiContenutoPropostaAccettata dati) {
+        return "La tua proposta per '" + dati.getTitoloAnnuncio() + "' è stata accettata!";
+    }
+
 }

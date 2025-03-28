@@ -65,7 +65,13 @@ public class GeneratoreContenutoPropostaRifiutata implements GeneratoreContenuto
     public CategoriaNotificaName getTipoNotifica() {
         return CategoriaNotificaName.PROPOSTA_RIFIUTATA;
     }
+
+    @Override
+    public String generaOggetto(DatiContenutoPropostaRifiutata dati) {
+        return "La tua proposta per '" + dati.getTitoloAnnuncio() + "' è stata Rifiutata!";
+    }
 }
+
 
 
 

@@ -66,4 +66,9 @@ public class GeneratoreContenutoImmobile implements GeneratoreContenutoNotifica<
     public CategoriaNotificaName getTipoNotifica() {
         return CategoriaNotificaName.OPPORTUNITA_IMMOBILE;
     }
+
+    @Override
+    public String generaOggetto(DatiContenutoImmobile dati) {
+        return "Nuova Opportunità: a " + dati.getIndirizzoImmobile() + " per €" + dati.getPrezzo();
+    }
 }

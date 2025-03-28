@@ -14,4 +14,9 @@ public class GeneratoreContenutoPromozioni implements GeneratoreContenutoNotific
     public CategoriaNotificaName getTipoNotifica() {
         return CategoriaNotificaName.PROMOZIONI;
     }
+
+    @Override
+    public String generaOggetto(DatiContenutoNotificaPromozioni dati) {
+        return dati.getOggetto();
+    }
 }

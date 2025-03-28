@@ -9,5 +9,8 @@ public class NotificaPromozionaleRequest {
     @NotBlank
     private String contenuto;
 
+    @NotBlank
+    private String oggetto;
+
     CriteriDiRicercaUtenti criteridiRicerca;
 }

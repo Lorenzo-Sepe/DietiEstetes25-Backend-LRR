@@ -62,4 +62,10 @@ public class GeneratoreContenutoControproposta implements GeneratoreContenutoNot
     public CategoriaNotificaName getTipoNotifica() {
         return CategoriaNotificaName.CONTROPROPOSTA;
     }
+
+    @Override
+    public String generaOggetto(DatiContenutoControproposta dati) {
+        return "Hai ricevuto una controproposta per '" + dati.getTitoloAnnuncio() + "'!";
+    }
+
 }

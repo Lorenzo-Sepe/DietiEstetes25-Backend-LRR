@@ -8,9 +8,11 @@ import lombok.Data;
 @Builder
 public class DatiContenutoNotificaPromozioni implements DatiContenutoNotifica {
     private String contenuto;
+    private String oggetto;
 
     public static DatiContenutoNotifica fromRequest(NotificaPromozionaleRequest request) {
         return DatiContenutoNotificaPromozioni.builder()
+                .oggetto(request.getOggetto())
                 .contenuto(request.getContenuto())
                 .build();
     }
