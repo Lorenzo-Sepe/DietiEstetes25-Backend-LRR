@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class AnnuncioImmobiliareResponse {
 
+    private int id;
     private String titolo;
     private String descrizione;
     private DipendenteResponse agente;

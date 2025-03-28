@@ -257,7 +257,7 @@ public class AnnuncioImmobileService {
                 .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
                 .contratto(ContrattoResponse.fromEntityToDto(annuncio.getContratto()))
                 .descrizione(annuncio.getDescrizione())
-                .proposte(PropostaResponse.fromEntityToDto(annuncio.getProposte()))
+                .proposte(PropostaResponse.fromListEntityToDto(annuncio.getProposte()))
                 .build();
     }
 
@@ -279,7 +279,7 @@ public class AnnuncioImmobileService {
             DipendenteResponse agenteCreatoreAnnuncio = DipendenteResponse.fromEntityToDto(datiImpiegato);
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
-                    //.id(annuncio.getId())
+                    .id(annuncio.getId())
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
                     .immobile(immobileResponse)
@@ -420,6 +420,7 @@ public class AnnuncioImmobileService {
 
             PropostaResponse propostaResponse = PropostaResponse.builder()
 
+                    .idProposta(proposta.getId())
                     .prezzoProposta(proposta.getPrezzoProposta())
                     .controproposta(proposta.getControproposta())
                     .stato(proposta.getStato().toString())
