@@ -1,6 +1,5 @@
 package it.unina.dietiestates25.dto.response;
 
-import it.unina.dietiestates25.dto.response.DatiUserPropostaResponse;
 import it.unina.dietiestates25.entity.Proposta;
 import lombok.*;
 
@@ -13,18 +12,20 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PropostaResponse {
-    //private int idProposta;
+
+    private int idProposta;
     private double prezzoProposta;
     private Double controproposta;
     private String stato;
     private DatiUserPropostaResponse datiProponente;
 
-    public static List<PropostaResponse> fromEntityToDto(List<Proposta> proposte){
+    public static List<PropostaResponse> fromListEntityToDto(List<Proposta> proposte){
 
         List<PropostaResponse> proposteResponse = new ArrayList<>();
 
         for(Proposta proposta : proposte){
             PropostaResponse propostaResponse = PropostaResponse.builder()
+                    .idProposta(proposta.getId())
                     .prezzoProposta(proposta.getPrezzoProposta())
                     .controproposta(proposta.getControproposta())
                     .stato(proposta.getStato().toString())
@@ -34,5 +35,18 @@ public class PropostaResponse {
         }
 
         return proposteResponse;
+    }
+
+    public static PropostaResponse fromEntityToDto(Proposta proposta){
+
+            PropostaResponse propostaResponse = PropostaResponse.builder()
+                    .idProposta(proposta.getId())
+                    .prezzoProposta(proposta.getPrezzoProposta())
+                    .controproposta(proposta.getControproposta())
+                    .stato(proposta.getStato().toString())
+                    .datiProponente(DatiUserPropostaResponse.fromEntityToDto(proposta))
+                    .build();
+
+        return propostaResponse;
     }
 }
