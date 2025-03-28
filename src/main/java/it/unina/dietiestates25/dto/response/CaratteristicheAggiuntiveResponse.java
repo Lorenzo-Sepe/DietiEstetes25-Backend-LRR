@@ -20,6 +20,7 @@ public class CaratteristicheAggiuntiveResponse {
     private boolean pannelliSolari;
     private boolean cantina;
     private boolean soffitta;
+    private String descrizioneAggiuntiva;
 
     public static CaratteristicheAggiuntiveResponse fromEntityToDto(CaratteristicheAggiuntive caratteristicheAggiuntive) {
         return CaratteristicheAggiuntiveResponse.builder()
@@ -34,6 +35,7 @@ public class CaratteristicheAggiuntiveResponse {
                 .pannelliSolari(caratteristicheAggiuntive.isPannelliSolari())
                 .cantina(caratteristicheAggiuntive.isCantina())
                 .soffitta(caratteristicheAggiuntive.isSoffitta())
+                .descrizioneAggiuntiva(caratteristicheAggiuntive.getDescrizioneAggiuntiva())
                 .build();
     }
 }

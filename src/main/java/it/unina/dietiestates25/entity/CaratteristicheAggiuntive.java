@@ -50,4 +50,9 @@ public class CaratteristicheAggiuntive {
 
     @Builder.Default
     private boolean soffitta = false;
+
+    @Builder.Default
+    @Column(columnDefinition = "TEXT")
+    private String descrizioneAggiuntiva ="";
+
 }

@@ -151,6 +151,7 @@ public class AnnuncioImmobileService {
                 .riscaldamentoCentralizzato(request.isRiscaldamentoCentralizzato())
                 .soffitta(request.isSoffitta())
                 .postiAuto(request.isPostiAuto())
+                .descrizioneAggiuntiva(request.getDescrizioneAggiuntiva())
                 .build();
 
         return caratteristicheAggiuntive;
@@ -387,6 +388,7 @@ public class AnnuncioImmobileService {
                 .pannelliSolari(caratteristicheAggiuntive.isPannelliSolari())
                 .cantina(caratteristicheAggiuntive.isCantina())
                 .soffitta(caratteristicheAggiuntive.isSoffitta())
+                .descrizioneAggiuntiva(caratteristicheAggiuntive.getDescrizioneAggiuntiva())
                 .build();
     }
 
