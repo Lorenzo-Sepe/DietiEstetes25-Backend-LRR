@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import it.unina.dietiestates25.dto.request.SignInRequest;
 import it.unina.dietiestates25.dto.request.SignUpRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
@@ -10,29 +11,29 @@ import it.unina.dietiestates25.exception.BadCredentialsException;
 import it.unina.dietiestates25.exception.ConflictException;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.exception.UnauthorizedException;
-import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
-import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
-    private static final SecureRandom RANDOM = new SecureRandom();
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
     private final JwtService jwtService;
-    private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
-    private final DatiImpiegatoRepository datiImpiegatoRepository;
+
+
 
     public String signup(SignUpRequest request){
         if(userRepository.existsByUsernameOrEmail(request.username(), request.email()))
@@ -93,7 +94,7 @@ public class AuthService {
 
     public String changePassword(String oldPassword, String newPassword, String confirmPassword) {
 
-        User user = userRepository.findById(UserContex.getUserCurrent().getId())
+        User user = userRepository.findById(Objects.requireNonNull(UserContex.getUserCurrent()).getId())
                 .orElseThrow(() -> new UnauthorizedException("Utente non trovato. Assicurati di essere autenticato correttamente."));
 
         if(!newPassword.equals(confirmPassword))
@@ -108,4 +109,20 @@ public class AuthService {
 
         return Msg.PASSWORD_CHANGED;
     }
+
+    public JwtAuthenticationResponse loginIdProv(String accessToken) {
+        DecodedJWT token = jwtService.decodeJWT(accessToken);
+        String email = token.getClaim("email").asString();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        return JwtAuthenticationResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .authority(user.getAuthority().getAuthorityName().name())
+                .token(accessToken)
+                .build();
+    }
+
 }

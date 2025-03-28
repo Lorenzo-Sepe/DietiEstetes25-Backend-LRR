@@ -97,6 +97,7 @@ application:
       base-url: https://api.geoapify.com/v2/places?categories={categoria}&filter=circle:{longitudine},{latitudine},500&apiKey={apiKey}
     jwt:
       secret-key: ${JWT_SECRET_KEY}
+      auth0-domain: ${AUTH0_DOMAIN}
       # 12 ORE in millisecondi
       expiration: 86400000
 

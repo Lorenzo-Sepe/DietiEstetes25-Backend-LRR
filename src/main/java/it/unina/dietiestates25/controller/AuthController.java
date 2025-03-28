@@ -8,6 +8,7 @@ import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
 
     @Operation(
             summary = "ADD A NEW USER",
@@ -33,6 +35,15 @@ public class AuthController {
     @PostMapping("/pb/auth/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody @Valid SignInRequest request){
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @Operation(
+            summary = "LOGIN IDENTITY PROVVIDER",
+            description = "Method to sign in the user that exists the database to the application",
+            tags = {"Auth"})
+    @PostMapping("/pb/auth/signinIdProv")
+    public ResponseEntity<JwtAuthenticationResponse> signinIdProv(@RequestBody String accessToken){
+        return ResponseEntity.ok(authService.loginIdProv(accessToken));
     }
 
     @Operation(
