@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
+import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
 import it.unina.dietiestates25.service.AgenziaImmobiliareService;
 import it.unina.dietiestates25.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -56,4 +57,15 @@ public class AgenziaImmobiliareController {
     public ResponseEntity<List<AgenziaImmobiliareResponse>> getAgenzie(@ModelAttribute Pageable pageable) {
         return ResponseEntity.ok(agenziaImmobiliareService.getAgenzie());
     }
+
+    @GetMapping("/pb/agenzia/email")
+    @Operation(
+            summary = "OTTIENI AGENZIA PER EMAIL",
+            description = "Metodo per ottenere un'agenzia immobiliare in base all'email",
+            tags = {"Agenzia"})
+    public ResponseEntity<DatiAgenziaImmobiliareResponse> getAgenziaByEmail(@RequestParam String email) {
+            return ResponseEntity.ok(agenziaImmobiliareService.getAgenziaByEmailImpiegato(email));
+
+    }
+
 }

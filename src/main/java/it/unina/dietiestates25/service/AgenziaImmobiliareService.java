@@ -4,9 +4,11 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliare
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
+import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
 import it.unina.dietiestates25.entity.AgenziaImmobiliare;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
@@ -88,5 +90,11 @@ public class AgenziaImmobiliareService {
         String response = String.format("Dipendente aggiunto con successo. Le credenziali del dipendete sono:%n%s%n%s", email, password);
         System.out.println(response);
         return response;
+    }
+
+    public DatiAgenziaImmobiliareResponse getAgenziaByEmailImpiegato(String email) {
+        AgenziaImmobiliare agenzia =agenziaImmobiliareRepository.findByDipendenteEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
+             return DatiAgenziaImmobiliareResponse.fromEntityToDto(agenzia);
     }
 }
