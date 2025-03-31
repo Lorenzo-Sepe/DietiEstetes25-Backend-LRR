@@ -37,13 +37,7 @@ public class ControllerTESTRAI {
         String authority = user.getAuthority().getAuthorityName().name();
         String jwt = jwtService.generateToken(user);
 
-     return     JwtAuthenticationResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .authority(authority)
-                .token(jwt)
-                .build();
+     return     JwtAuthenticationResponse.fromEntityToDto(user,jwt);
     }
 
     @PostMapping("pb/test/getUtentiInteressati")
