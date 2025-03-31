@@ -116,12 +116,11 @@ public class AuthService {
     @Transactional
     public String registerIdProv(String accessToken) {
         DecodedJWT token = jwtService.decodeJWT(accessToken);
-        if(userRepository.existsByUsernameOrEmail(token.getClaim("nickname").asString(), token.getClaim("email").asString()))
+        if(userRepository.existsByEmail( token.getClaim("email").asString()))
             throw new ConflictException(Msg.USER_ALREADY_PRESENT);
         Authority authority = authorityRepository.findByDefaultAuthorityTrue()
                 .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
         User user = User.builder()
-                .username(token.getClaim("nickname").asString())
                 .email(token.getClaim("email").asString())
                 .nomeVisualizzato(token.getClaim("name").asString())
                 //.password(passwordEncoder.encode())
