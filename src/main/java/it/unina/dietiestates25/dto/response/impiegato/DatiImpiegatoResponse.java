@@ -14,6 +14,7 @@ public class DatiImpiegatoResponse {
     private String nome;
     private String cognome;
     private List<Contatto> contatti;
+    private String ruolo;
 
     public static DatiImpiegatoResponse fromEntityToDto(DatiImpiegato entity){
         return DatiImpiegatoResponse.builder()
@@ -21,6 +22,7 @@ public class DatiImpiegatoResponse {
                 .nome(entity.getNome())
                 .cognome(entity.getCognome())
                 .contatti(entity.getContatti())
+                .ruolo(entity.getUser().getAuthority().getAuthorityName().toString())
                 .build();
     }
 }
