@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface DatiImpiegatoRepository extends JpaRepository<DatiImpiegato, Integer> {
     Optional<DatiImpiegato> findByUser_Id(int id);
 
+    Optional<DatiImpiegato> findByUser_Email(String email);
+
     Optional<DatiImpiegato> findDatiImpiegatoByUser(User agente);
 }

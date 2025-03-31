@@ -57,17 +57,17 @@ public class AuthController {
             description = "Metodo per cambiare la password dell'utente",
             tags = {"Auth"})
     @PatchMapping("/auth/change_password")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER', 'AGENT')")
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'MEMBER', 'AGENT')")
     public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request){
         return ResponseEntity.ok(authService.changePassword(request.getOldPassword(), request.getNewPassword(),request.getConfirmPassword()));
     }
 
     @Operation(
             summary = "MODIFY USER AUTHORITY",
-            description = "Method to modify the authority of the user in the database. Only the admin can do it",
+            description = "Method to modify the authority of the user in the database. Only the Manager can do it",
             tags = {"Auth"})
     @PatchMapping("/auth/modify_user_authority") // modify user authority
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<String> modifyUserAuthority(@RequestParam int id, @RequestParam String auth){
         return ResponseEntity.ok(authService.modifyUserAuthority(id, auth));
     }

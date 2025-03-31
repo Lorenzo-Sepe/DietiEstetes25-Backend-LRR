@@ -5,7 +5,7 @@ import lombok.ToString;
 @ToString
 public enum AuthorityName {
 
-    ADMIN, //modifica annunci, crea agenti, crea admin
+    MANAGER, //modifica annunci, crea agenti, crea manger
     MEMBER, // utente senza ruoli speciali
     AGENT // crea annunci, modifica annunci
 }

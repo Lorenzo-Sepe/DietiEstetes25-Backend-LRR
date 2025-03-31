@@ -5,9 +5,9 @@ import it.unina.dietiestates25.entity.AgenziaImmobiliare;
 import it.unina.dietiestates25.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,5 +25,9 @@ public interface AgenziaImmobiliareRepository extends JpaRepository<AgenziaImmob
     List<AgenziaImmobiliareResponse> getAllAgenzieImmobiliari();
 
     Optional<AgenziaImmobiliare> findAgenziaImmobiliareByDipendentiContains(User Dipendente);
+
+
+    @Query("SELECT a FROM AgenziaImmobiliare a JOIN a.dipendenti d WHERE d.email = :email")
+    Optional<AgenziaImmobiliare> findByDipendenteEmail(@Param("email") String email);
 
 }

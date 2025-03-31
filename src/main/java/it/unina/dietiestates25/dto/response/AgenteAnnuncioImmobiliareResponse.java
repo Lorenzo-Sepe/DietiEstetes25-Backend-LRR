@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UserResponse {
+public class AgenteAnnuncioImmobiliareResponse {
 
     String email;
 
@@ -16,8 +16,8 @@ public class UserResponse {
 
     String urlFotoProfilo;
 
-    public UserResponse fromEntityToDto(User user){
-        return UserResponse.builder()
+    public AgenteAnnuncioImmobiliareResponse fromEntityToDto(User user){
+        return AgenteAnnuncioImmobiliareResponse.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .urlFotoProfilo(user.getUrlFotoProfilo())

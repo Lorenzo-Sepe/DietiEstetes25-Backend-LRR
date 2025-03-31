@@ -5,6 +5,7 @@ import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
+import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,5 +59,24 @@ public class UserController {
     public ResponseEntity<List<SottoscrizioneNotificaResponse>> getSottoscrizioni(){
 
         return ResponseEntity.ok(userService.getSottoscrizioni());
+    }
+
+    
+    @GetMapping("/pb/impiegato/email")
+    @Operation(
+            summary = "OTTIENI I DATI DI UN AGENTE DEL SITO PER EMAIL",
+            description = "Metodo per ottenere i dati di un agente in base all'email",
+            tags = {"Impiegato"})
+    public ResponseEntity<DatiImpiegatoResponse> getAgenziaByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getDatiDipendente(email));
+
+    }
+
+    @GetMapping("/user")
+    @Operation(
+            summary = "OTTIENI I DATI DEL TUO ACCOUNT"
+    )
+    public ResponseEntity<String> getUser() {
+        return null;
     }
 }

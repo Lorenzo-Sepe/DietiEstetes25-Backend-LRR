@@ -6,13 +6,14 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
+import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.entity.enumeration.AuthorityName;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AuthorityRepository;
-import it.unina.dietiestates25.repository.CategoriaNotificaRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.UserContex;
@@ -37,7 +38,7 @@ public class UserService {
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
         String password = passwordService.generaPasswordDipendente();
-        AuthorityName authorityName = request.getRuolo().equals("ADMIN") ? AuthorityName.ADMIN : AuthorityName.AGENT;
+        AuthorityName authorityName = request.getRuolo().equals("MANAGER") ? AuthorityName.MANAGER : AuthorityName.AGENT;
 
         //Agente Nome C.
         String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";        User user = User.builder()
@@ -235,5 +236,12 @@ public class UserService {
         }
 
         return categorieDisattivate;
+    }
+
+    public DatiImpiegatoResponse getDatiDipendente(String email) {
+        DatiImpiegato datiImpiegato =datiImpiegatoRepository.findByUser_Email(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato","email",email));
+
+        return DatiImpiegatoResponse.fromEntityToDto(datiImpiegato);
     }
 }

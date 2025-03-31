@@ -37,13 +37,7 @@ public class ControllerTESTRAI {
         String authority = user.getAuthority().getAuthorityName().name();
         String jwt = jwtService.generateToken(user);
 
-     return     JwtAuthenticationResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .authority(authority)
-                .token(jwt)
-                .build();
+     return     JwtAuthenticationResponse.fromEntityToDto(user,jwt);
     }
 
     @PostMapping("pb/test/getUtentiInteressati")
@@ -52,7 +46,7 @@ public class ControllerTESTRAI {
     }
     //test che dato il token di autenticazione ti restituisce user
     @GetMapping("test/getUser")
-    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN', 'MEMBER')")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'MANAGER', 'MEMBER')")
     public User getUser() {
         User user= UserContex.getUserCurrent();
         user.setPassword(null);

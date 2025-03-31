@@ -63,13 +63,7 @@ public class AuthService {
         String authority = user.getAuthority().getAuthorityName().name();
         String jwt = jwtService.generateToken(user);
 
-        return JwtAuthenticationResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .authority(authority)
-                .token(jwt)
-                .build();
+        return JwtAuthenticationResponse.fromEntityToDto(user,jwt);
     }
 
 
@@ -117,13 +111,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        return JwtAuthenticationResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .authority(user.getAuthority().getAuthorityName().name())
-                .token(accessToken)
-                .build();
+        return JwtAuthenticationResponse.fromEntityToDto(user,accessToken);
     }
 
     @Transactional
