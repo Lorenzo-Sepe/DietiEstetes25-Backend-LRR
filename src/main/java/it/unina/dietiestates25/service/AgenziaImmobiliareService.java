@@ -48,7 +48,7 @@ public class AgenziaImmobiliareService {
         return DipendenteRequest.builder()
                 .nome(request.getNomeFondatore())
                 .cognome(request.getCognomeFondatore())
-                .ruolo("ADMIN")
+                .ruolo("MANAGER")
                 .build();
     }
 

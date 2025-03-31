@@ -38,7 +38,7 @@ public class UserService {
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
         String password = passwordService.generaPasswordDipendente();
-        AuthorityName authorityName = request.getRuolo().equals("ADMIN") ? AuthorityName.ADMIN : AuthorityName.AGENT;
+        AuthorityName authorityName = request.getRuolo().equals("MANAGER") ? AuthorityName.MANAGER : AuthorityName.AGENT;
 
         //Agente Nome C.
         String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";        User user = User.builder()

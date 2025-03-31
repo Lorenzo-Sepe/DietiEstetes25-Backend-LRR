@@ -114,7 +114,7 @@ public class AnnuncioImmobileController {
             summary = "CANCELLA ANNUNCIO IMMOBILIARE",
             description = "Metodo per cancellare un annuncio immobiliare dal database",
             tags = {"Annuncio Immobiliare"})
-    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'MANAGER')")
     public ResponseEntity<String> cancellaAnnuncioImmobiliare(@PathVariable int id) {
 
         return ResponseEntity.ok(annuncioImmobileService.cancellaAnnuncioImmobiliare(id));
@@ -125,7 +125,7 @@ public class AnnuncioImmobileController {
             summary = "MODIFICA ANNUNCIO IMMOBILIARE",
             description = "Metodo per modificare un annuncio immobiliare nel database",
             tags = {"Annuncio Immobiliare"})
-    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'MANAGER')")
     public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id, @ModelAttribute AnnuncioImmobiliareRequest request) {
 
         return ResponseEntity.ok(annuncioImmobileService.modificaAnnuncioImmobiliare(id, request));

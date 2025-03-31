@@ -46,7 +46,7 @@ public class ControllerTESTRAI {
     }
     //test che dato il token di autenticazione ti restituisce user
     @GetMapping("test/getUser")
-    @PreAuthorize("hasAnyAuthority('AGENT', 'ADMIN', 'MEMBER')")
+    @PreAuthorize("hasAnyAuthority('AGENT', 'MANAGER', 'MEMBER')")
     public User getUser() {
         User user= UserContex.getUserCurrent();
         user.setPassword(null);

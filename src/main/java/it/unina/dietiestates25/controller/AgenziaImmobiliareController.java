@@ -38,7 +38,7 @@ public class AgenziaImmobiliareController {
     }
 
     @PostMapping("/agenzia/dipendete")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(
             summary = "AGGIUNGI UN NUOVO AGENTE",
             description = "Metodo per aggiungere un nuovo agente immobiliare nel database",

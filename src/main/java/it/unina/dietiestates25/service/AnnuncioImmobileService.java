@@ -716,7 +716,7 @@ public class AnnuncioImmobileService {
     private void verificaPermessoModificaAnnuncio(AnnuncioImmobiliare annuncio) {
         if(UserContex.getRoleCurrent() == AuthorityName.MEMBER) {
             throw new AccessDeniedException("Non hai il permesso di modificare questo annuncio");
-        }else if(UserContex.getRoleCurrent() == AuthorityName.ADMIN && !isAdminDellaAgenzia(annuncio)) {
+        }else if(UserContex.getRoleCurrent() == AuthorityName.MANAGER && !isManagerDellaAgenzia(annuncio)) {
             throw new AccessDeniedException("Questo annuncio è di un altra Agenzia Immobiliare\nNon hai il permesso di modificare questo annuncio");
         }
         if (UserContex.getRoleCurrent() == AuthorityName.AGENT && !isProprietarioAnnuncio(annuncio)) {
@@ -731,7 +731,7 @@ public class AnnuncioImmobileService {
     }
 
     // Verifica se l'utente corrente è il capo dell'agenzia
-    private boolean isAdminDellaAgenzia(AnnuncioImmobiliare annuncio) {
+    private boolean isManagerDellaAgenzia(AnnuncioImmobiliare annuncio) {
         User utenteCorrente = UserContex.getUserCurrent();
         AgenziaImmobiliare agenziaDelUtenteCorrente= agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(utenteCorrente)
                 .orElseThrow(() -> new AccessDeniedException("Non sei un dipendente di nessuna agenzia immobiliare"));
