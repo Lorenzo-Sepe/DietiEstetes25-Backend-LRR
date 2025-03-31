@@ -30,9 +30,6 @@ public class User extends CreationUpdate implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    private String username;
-
     @Column()
     private String nomeVisualizzato;
 
@@ -66,5 +63,7 @@ public class User extends CreationUpdate implements UserDetails {
         return true;
     }
 
-
+    public String getUsername(){
+        return email;
+    }
 }

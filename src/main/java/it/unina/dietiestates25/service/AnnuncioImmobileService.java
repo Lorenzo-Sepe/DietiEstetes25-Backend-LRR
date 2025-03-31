@@ -495,7 +495,6 @@ public class AnnuncioImmobileService {
 
         return AgenteAnnuncioImmobiliareResponse.builder()
                 .email(agente.getEmail())
-                .username(agente.getUsername())
                 .urlFotoProfilo(agente.getUrlFotoProfilo())
                 .build();
     }

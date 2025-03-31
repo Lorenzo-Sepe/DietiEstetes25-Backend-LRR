@@ -9,7 +9,6 @@ public class Msg {
 
     // -------------------- USER
     public static final String USER_ALREADY_PRESENT = "Email o nome utente già presenti";
-    public static final String USERNAME_ALREADY_PRESENT = "Nome utente già in uso";
     public static final String EMAIL_ALREADY_PRESENT = "Email già in uso";
     public static final String PASSWORD_CHANGED ="Password cambiata con successo"; ;
 

@@ -1,6 +1,5 @@
 package it.unina.dietiestates25.service;
 
-import com.auth0.jwk.InvalidPublicKeyException;
 import com.auth0.jwk.JwkException;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.JwkProviderBuilder;
@@ -40,7 +39,7 @@ public class JwtService {
     @Value("${application.security.jwt.auth0-domain}")
     private String auth0Domain;
 
-    public String extractUserName(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -49,8 +48,8 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String email = extractEmail(token);
+        return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {

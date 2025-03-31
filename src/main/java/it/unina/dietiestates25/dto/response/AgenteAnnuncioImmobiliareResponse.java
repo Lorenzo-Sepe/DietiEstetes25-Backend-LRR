@@ -12,14 +12,12 @@ public class AgenteAnnuncioImmobiliareResponse {
 
     String email;
 
-    String username;
 
     String urlFotoProfilo;
 
     public AgenteAnnuncioImmobiliareResponse fromEntityToDto(User user){
         return AgenteAnnuncioImmobiliareResponse.builder()
                 .email(user.getEmail())
-                .username(user.getUsername())
                 .urlFotoProfilo(user.getUrlFotoProfilo())
                 .build();
     }

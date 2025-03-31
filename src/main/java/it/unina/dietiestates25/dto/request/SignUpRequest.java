@@ -7,10 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record SignUpRequest(
 
-        @NotBlank(message = "Il nome utente non può essere nullo o vuoto")
-        @Size(max = 20, min = 3, message = "Il nome utente deve essere compreso tra 3 e 20 caratteri")
-        String username,
-
         @NotBlank(message = "L'email non può essere nulla o vuota")
         @Email(message = "Formato email non valido")
         String email,

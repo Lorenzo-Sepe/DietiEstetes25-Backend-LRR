@@ -46,16 +46,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("Authorization header: {}", authHeader != null ? "present" : "absent");
         
         final String jwt;
-        final String username;
+        final String email;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
-        username = jwtService.extractUserName(jwt);
-        if (!username.isEmpty()
+        email = jwtService.extractEmail(jwt);
+        if (!email.isEmpty()
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

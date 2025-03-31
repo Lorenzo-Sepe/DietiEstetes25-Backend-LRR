@@ -36,12 +36,11 @@ public class AuthService {
 
 
     public String signup(SignUpRequest request){
-        if(userRepository.existsByUsernameOrEmail(request.username(), request.email()))
+        if(userRepository.existsByEmail(request.email()))
             throw new ConflictException(Msg.USER_ALREADY_PRESENT);
         Authority authority = authorityRepository.findByDefaultAuthorityTrue()
                 .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
         User user = User.builder()
-                .username(request.username())
                 .email(request.email().toLowerCase())
                 .nomeVisualizzato(request.nomeVisulizzato())
                 .password(passwordEncoder.encode(request.password()))
@@ -53,8 +52,8 @@ public class AuthService {
 
     @Transactional
     public JwtAuthenticationResponse login(SignInRequest request) {
-        User user = userRepository. findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail().toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", request.usernameOrEmail()));
+        User user = userRepository.findByEmail(request.Email().toLowerCase())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.Email()));
 
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
             throw new BadCredentialsException("Bad credentials");
