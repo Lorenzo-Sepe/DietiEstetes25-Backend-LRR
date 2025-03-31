@@ -31,7 +31,7 @@ public class AgenziaImmobiliareService {
 
     @Transactional
     public String createAgenzia(AgenziaImmobiliareRequest request) {
-        DipendenteRequest dipendenteRequest = createDipendenteRequest(request);
+        DipendenteRequest dipendenteRequest = CreaFondatoreAgenzia(request);
         NewDipendeteResponse fondatoreResponse = userService.addDipendete(dipendenteRequest, request.getDominio());
 
         AgenziaImmobiliare agenziaImmobiliare = buildAgenziaImmobiliare(request, fondatoreResponse);
@@ -44,7 +44,7 @@ public class AgenziaImmobiliareService {
         return response;
     }
 
-    private DipendenteRequest createDipendenteRequest(AgenziaImmobiliareRequest request) {
+    private DipendenteRequest CreaFondatoreAgenzia(AgenziaImmobiliareRequest request) {
         return DipendenteRequest.builder()
                 .nome(request.getNomeFondatore())
                 .cognome(request.getCognomeFondatore())
