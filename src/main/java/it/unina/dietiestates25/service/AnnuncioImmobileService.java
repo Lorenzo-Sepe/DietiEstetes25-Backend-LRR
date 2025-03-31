@@ -491,9 +491,9 @@ public class AnnuncioImmobileService {
                 .build();
     }
 
-    private UserResponse getAgenteCreatoreAnnuncio(User agente){
+    private AgenteAnnuncioImmobiliareResponse getAgenteCreatoreAnnuncio(User agente){
 
-        return UserResponse.builder()
+        return AgenteAnnuncioImmobiliareResponse.builder()
                 .email(agente.getEmail())
                 .username(agente.getUsername())
                 .urlFotoProfilo(agente.getUrlFotoProfilo())

@@ -71,4 +71,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getDatiDipendente(email));
 
     }
+
+    @GetMapping("/user")
+    @Operation(
+            summary = "OTTIENI I DATI DEL TUO ACCOUNT"
+    )
+    public ResponseEntity<String> getUser() {
+        return null;
+    }
 }
