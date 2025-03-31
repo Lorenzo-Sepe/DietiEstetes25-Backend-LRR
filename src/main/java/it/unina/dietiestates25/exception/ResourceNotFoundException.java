@@ -10,7 +10,7 @@ public class ResourceNotFoundException extends RuntimeException{
     private final transient Object value;
 
     public ResourceNotFoundException(String resourceName, String fieldName, Object value) {
-        super(String.format("%s not found with %s: %s", resourceName, fieldName, value));
+        super(String.format("%s non trovato con il seguente %s: %s", resourceName, fieldName, value));
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.value = value;

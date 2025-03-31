@@ -90,11 +90,11 @@ public class JwtService {
             JwkProvider provider = new JwkProviderBuilder(auth0Domain)
                     .cached(10, 24, TimeUnit.HOURS)
                     .build();
-            log.debug("Access Token: " + accessToken);
+
             accessToken=accessToken.replace("\"","" );
             accessToken=accessToken.trim();
             DecodedJWT jwt = JWT.decode(accessToken);
-            log.debug("Access Token: " + accessToken);
+            log.debug("Token decodificato: {}", jwt);
             RSAPublicKey publicKey = (RSAPublicKey) provider.get(jwt.getKeyId()).getPublicKey();
             // Verifica la firma del token
             Algorithm algorithm = Algorithm.RSA256(publicKey, null);

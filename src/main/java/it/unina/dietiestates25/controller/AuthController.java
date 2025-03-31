@@ -28,6 +28,11 @@ public class AuthController {
         return ResponseEntity.ok(authService.signup(request));
     }
 
+    @PostMapping("/pb/auth/registerIdProv")
+    public ResponseEntity<String> registerIdProv(@RequestBody String accessToken){
+        return ResponseEntity.ok(authService.registerIdProv(accessToken));
+    }
+
     @Operation(
             summary = "LOGIN",
             description = "Method to sign in the user that exists the database to the application",
@@ -45,6 +50,7 @@ public class AuthController {
     public ResponseEntity<JwtAuthenticationResponse> signinIdProv(@RequestBody String accessToken){
         return ResponseEntity.ok(authService.loginIdProv(accessToken));
     }
+
 
     @Operation(
             summary = "Cambia password",
@@ -65,5 +71,10 @@ public class AuthController {
     public ResponseEntity<String> modifyUserAuthority(@RequestParam int id, @RequestParam String auth){
         return ResponseEntity.ok(authService.modifyUserAuthority(id, auth));
     }
+
+
+
+
+
 
 }
