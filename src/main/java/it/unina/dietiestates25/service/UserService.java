@@ -6,7 +6,7 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
-import it.unina.dietiestates25.dto.response.UserPrivateInfoReponse;
+import it.unina.dietiestates25.dto.response.UserPrivateInfoResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
@@ -245,10 +245,10 @@ public class UserService {
         return DatiImpiegatoResponse.fromEntityToDto(datiImpiegato);
     }
 
-    public UserPrivateInfoReponse getInfoUtente() {
+    public UserPrivateInfoResponse getInfoUtente() {
         User user = UserContex.getUserCurrent();
         user = userRepository.findByEmail(user.getEmail()).orElseThrow();
-        return UserPrivateInfoReponse.fromEntityToDto(user);
+        return UserPrivateInfoResponse.fromEntityToDto(user);
     }
 
 

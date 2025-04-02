@@ -61,7 +61,7 @@ import java.util.List;
 
         private List<PropostaResponse> getListProposteResponse(List<Proposta> proposte){
 
-            List<PropostaResponse> proposteReponse = new ArrayList<>();
+            List<PropostaResponse> proposteResponse = new ArrayList<>();
 
             for(Proposta proposta : proposte){
 
@@ -73,10 +73,10 @@ import java.util.List;
                         .datiProponente(getDatiUserPropostaResponse(proposta))
                         .build();
 
-                proposteReponse.add(propostaResponse);
+                proposteResponse.add(propostaResponse);
             }
 
-            return proposteReponse;
+            return proposteResponse;
         }
 
         private DatiUserPropostaResponse getDatiUserPropostaResponse(Proposta proposta){

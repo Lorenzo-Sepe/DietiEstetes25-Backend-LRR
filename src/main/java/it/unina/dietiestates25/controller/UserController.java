@@ -5,7 +5,7 @@ import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
-import it.unina.dietiestates25.dto.response.UserPrivateInfoReponse;
+import it.unina.dietiestates25.dto.response.UserPrivateInfoResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +77,7 @@ public class UserController {
     @Operation(
             summary = "OTTIENI I DATI DEL TUO ACCOUNT"
     )
-    public ResponseEntity<UserPrivateInfoReponse> getUser() {
+    public ResponseEntity<UserPrivateInfoResponse> getUser() {
         return ResponseEntity.ok(userService.getInfoUtente());
     }
 }
