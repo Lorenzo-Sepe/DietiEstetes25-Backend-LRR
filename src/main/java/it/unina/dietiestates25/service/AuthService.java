@@ -43,7 +43,7 @@ public class AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
         User user = User.builder()
                 .email(request.email().toLowerCase())
-                .nomeVisualizzato(request.nomeVisulizzato())
+                .nomeVisualizzato(request.nomeVisualizzato())
                 .password(passwordEncoder.encode(request.password()))
                 .authority(authority)
                 .build();
