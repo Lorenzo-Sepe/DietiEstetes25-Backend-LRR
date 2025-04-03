@@ -28,5 +28,8 @@ public class FiltroAnnuncio {
     private Boolean garage;
     private Boolean pannelliSolari;
 
+    //Dati staff
+    private String agenteCreatoreAnnuncio;
+
 }
 
