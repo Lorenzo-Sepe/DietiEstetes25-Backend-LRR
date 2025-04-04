@@ -15,7 +15,7 @@ public class DatiAgenziaImmobiliareResponse {
     private String ragioneSociale;
     private String partitaIva;
     private String fondatore;
-    private Set<String> dipendenti;
+    private Set<String> emailDipendenti;
 
     public static DatiAgenziaImmobiliareResponse fromEntityToDto(AgenziaImmobiliare entity) {
         return DatiAgenziaImmobiliareResponse.builder()
@@ -23,7 +23,7 @@ public class DatiAgenziaImmobiliareResponse {
                 .ragioneSociale(entity.getRagioneSociale())
                 .partitaIva(entity.getPartitaIva())
                 .fondatore(entity.getFondatore().getEmail())
-                .dipendenti(entity.getDipendenti().stream()
+                .emailDipendenti(entity.getDipendenti().stream()
                         .map(User::getEmail) // Mappa ogni User alla sua email
                         .collect(Collectors.toSet())) // Colleziona in un Set
                 .build();

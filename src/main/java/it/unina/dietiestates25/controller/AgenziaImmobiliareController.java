@@ -60,7 +60,7 @@ public class AgenziaImmobiliareController {
 
     @GetMapping("/pb/agenzia/email")
     @Operation(
-            summary = "OTTIENI AGENZIA PER EMAIL",
+            summary = "OTTIENI AGENZIA IMMOBIlIARE ASSOCIATA A UN DIPENDENTE TRAMITE EMAIL",
             description = "Metodo per ottenere un'agenzia immobiliare in base all'email",
             tags = {"Agenzia"})
     public ResponseEntity<DatiAgenziaImmobiliareResponse> getAgenziaByEmail(@RequestParam String email) {

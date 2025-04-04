@@ -5,7 +5,7 @@ import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
-import it.unina.dietiestates25.dto.response.UserPrivateInfoReponse;
+import it.unina.dietiestates25.dto.response.UserInfoReponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -73,11 +73,12 @@ public class UserController {
 
     }
 
-    @GetMapping("/user")
+    @GetMapping("/pb/user")
     @Operation(
-            summary = "OTTIENI I DATI DEL TUO ACCOUNT"
+            summary = "OTTIENI I DATI DEL  ACCOUNT"
     )
-    public ResponseEntity<UserPrivateInfoReponse> getUser() {
-        return ResponseEntity.ok(userService.getInfoUtente());
+    public ResponseEntity<UserInfoReponse> getInfoUser(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getInfoUtente(email));
     }
+
 }

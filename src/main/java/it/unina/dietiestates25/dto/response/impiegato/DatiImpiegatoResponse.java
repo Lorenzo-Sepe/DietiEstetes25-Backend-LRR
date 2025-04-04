@@ -22,7 +22,7 @@ public class DatiImpiegatoResponse {
                 .nome(entity.getNome())
                 .cognome(entity.getCognome())
                 .contatti(entity.getContatti())
-                .ruolo(entity.getUser().getAuthority().getAuthorityName().toString())
+                .ruolo(entity.getUser().getAuthority().getAuthorityName().name())
                 .build();
     }
 }

@@ -6,17 +6,18 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserPrivateInfoReponse {
+public class UserInfoReponse {
     private String UrlFotoProfilo;
     private String email;
     private String nomeVisualizzato;
     private String tipoAccount;
-    public static UserPrivateInfoReponse fromEntityToDto(User user) {
-        return UserPrivateInfoReponse.builder()
+
+    public static UserInfoReponse fromEntityToDto(User user) {
+        return UserInfoReponse.builder()
                 .UrlFotoProfilo(user.getUrlFotoProfilo())
                 .email(user.getEmail())
                 .nomeVisualizzato(user.getNomeVisualizzato())
-                .tipoAccount(user.getAuthority().getAuthorityName().toString())
+                .tipoAccount(user.getAuthority().getAuthorityName().name())
                 .build();
     }
 }

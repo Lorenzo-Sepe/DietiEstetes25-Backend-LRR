@@ -54,10 +54,10 @@ public class AuthService {
     @Transactional
     public JwtAuthenticationResponse login(SignInRequest request) {
         User user = userRepository.findByEmail(request.Email().toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.Email()));
+                .orElseThrow(() -> new ResourceNotFoundException("Account", "email", request.Email()));
 
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
-            throw new BadCredentialsException("Bad credentials");
+            throw new BadCredentialsException("Password Errata");
 
         String authority = user.getAuthority().getAuthorityName().name();
         String jwt = jwtService.generateToken(user);
