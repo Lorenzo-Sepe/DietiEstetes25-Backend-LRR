@@ -13,7 +13,7 @@ public record SignUpRequest(
 
         @NotBlank(message = "Il nome visualizzato non può essere nullo o vuoto")
         @Size(max = 20, min = 3, message = "Il nome visualizzato deve essere compreso tra 3 e 20 caratteri")
-        String nomeVisulizzato,
+        String nomeVisualizzato,
 
         @NotBlank(message = "La password non può essere nulla o vuota")
         @Size(min = 8, max = 16, message = "La password deve essere compresa tra 8 e 16 caratteri")

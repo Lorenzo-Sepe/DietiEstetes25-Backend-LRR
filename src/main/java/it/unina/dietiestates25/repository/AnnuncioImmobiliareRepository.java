@@ -15,7 +15,11 @@ public interface AnnuncioImmobiliareRepository extends JpaRepository<AnnuncioImm
 
     List<AnnuncioImmobiliare> findByAgente(User agente, Pageable pageable);
 
+    List<AnnuncioImmobiliare> findByAgente(User agente);
+
     List<AnnuncioImmobiliare> findByAgenteIn(Collection<User> agentes, Pageable pageable);
+
+    List<AnnuncioImmobiliare> findByAgenteIn(Collection<User> agentes);
 
     long countByAgente(User agente);
 
