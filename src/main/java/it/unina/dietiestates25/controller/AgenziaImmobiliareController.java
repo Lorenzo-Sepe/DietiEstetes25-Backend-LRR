@@ -31,7 +31,7 @@ public class AgenziaImmobiliareController {
             summary = "INSERISCI LA TUA AGENZIA IMMOBILIARE",
             description = "Metodo per aggiungere una nuova agenzia immobiliare nel database",
             tags = {"Agenzia"})
-    public ResponseEntity<String> createAgenzia(@ModelAttribute AgenziaImmobiliareRequest request) {
+    public ResponseEntity<String> createAgenzia(@RequestBody AgenziaImmobiliareRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(agenziaImmobiliareService.createAgenzia(request));
