@@ -17,8 +17,10 @@ import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class UserService {
 
     private final AuthorityRepository authorityRepository;
@@ -33,7 +36,7 @@ public class UserService {
     private final DatiImpiegatoRepository datiImpiegatoRepository;
     private final PasswordService passwordService;
     private final ImageUploaderService imageUploaderService;
-    final private CategoriaNotificaService categoriaService;
+    private final CategoriaNotificaService categoriaService;
 
 
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
@@ -42,7 +45,9 @@ public class UserService {
         AuthorityName authorityName = request.getRuolo().equals("MANAGER") ? AuthorityName.MANAGER : AuthorityName.AGENT;
 
         //Agente Nome C.
-        String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";        User user = User.builder()
+        String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";
+
+        User user = User.builder()
                 .email(email)
                 .nomeVisualizzato(nomeVisualizzato)
                 .authority(authorityRepository.findByAuthorityName(authorityName).orElseThrow())
@@ -54,7 +59,7 @@ public class UserService {
                 .cognome(request.getCognome())
                 .user(user)
                 .build();
-        Integer idUser = salvaImpiegato(user, datiImpiegato);
+        int idUser = salvaImpiegato(user, datiImpiegato);
         user.setId(idUser);
         try {
             String urlFotoProfilo = null;
@@ -64,7 +69,7 @@ public class UserService {
             user.setUrlFotoProfilo(urlFotoProfilo);
             userRepository.save(user);
         }catch (Exception e){
- System.out.println("Non è stata salvata la foto profilo al dipendete : "+user);        }
+            log.debug("Non è stata salvata la foto profilo al dipendete : {}", user);        }
 
         return NewDipendeteResponse.builder().user(user).password(password).build();
     }
@@ -121,6 +126,7 @@ public class UserService {
 
         List<CategoriaNotifica> categorieDisattivate = getCategorieDisattivate(request);
 
+        assert user != null;
         user.setCategorieDisattivate(categorieDisattivate);
 
         userRepository.save(user);
@@ -155,11 +161,14 @@ public class UserService {
 
         User userCurrentContex = UserContex.getUserCurrent();
 
-        User userCurrent = userRepository.findByEmail(userCurrentContex.getEmail()).orElseThrow();
+        User userCurrent = userRepository.findByEmail(userCurrentContex.getEmail())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Utente", "email", userCurrentContex.getEmail())
+                );
 
         List<CategoriaNotifica>  categorieDisattivate = userCurrent.getCategorieDisattivate();
 
-        return getSottoScrizioniResponse(categorieDisattivate);
+        return SottoscrizioneNotificaResponse.fromEntityToDto(categorieDisattivate);
     }
 
     private List<SottoscrizioneNotificaResponse> getSottoScrizioniResponse(List<CategoriaNotifica> categorieDisattivate){

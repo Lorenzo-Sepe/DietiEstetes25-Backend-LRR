@@ -19,12 +19,16 @@ public class Msg {
     public static final String AUTHORITY_CHANGED = "Autorizzazione aggiornata con successo";
     public static final String INVALID_AUTHORITY = "Nome autorizzazione non valido";
 
-    public static final String MAIL_SIGNUP_SUBJECT = "DietiEstates25: email di verifica";
+    public static final String MAIL_SIGNUP_SUBJECT = "DietiEstates25: email di verifica Creazione Agenzia";
 
     // l'endpoint presente nell'email va copiato e messo su postman con metodo PATCH.
     // Se lanciato direttamente dall'email, ovvero da browser,
     // la chiamata fallisce in quando il browser permette solo chiamate GET
-    public static final String MAIL_SIGNUP_BODY = "Clicca qui per confermare la tua email : http://localhost:8081/api/pb/auth/confirm/";
+    public static final String MAIL_SIGNUP_BODY = """
+        Le credenziali per accedere sono:
+        Email: %s
+        Password: %s
+        """;
 
     public static final String ACCESS_DENIED = "NON SEI AUTORIZZATO A ESEGUIRE QUESTA AZIONE";
 
@@ -41,8 +45,8 @@ public class Msg {
     public static final String FILE_ERROR_UPLOAD = "Caricamento file fallito";
     public static final String FILE_ERROR_DELETE = "Eliminazione file fallita";
 
-    // -------------------- TAG
-    public static final String TAG_ALREADY_PRESENT = "Tag già presente";
+    // -------------------- AGENZIA IMMOBILIARE
+    public static final String AGENCY_CREATION_SUCCESS = "Agenzia creata con successo";
 
     // -------------------- POST
     public static final String POST_TITLE_IN_USE = "Titolo del post già in uso";

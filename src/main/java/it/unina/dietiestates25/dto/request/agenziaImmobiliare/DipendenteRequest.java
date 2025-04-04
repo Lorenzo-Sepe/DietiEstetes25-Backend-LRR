@@ -25,4 +25,12 @@ package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
         @Pattern(regexp = "MANAGER|AGENT", message = "Il ruolo deve essere 'MANAGER' o 'AGENT'")
         @Schema(allowableValues = {"MANAGER", "AGENT"}, description = "Il ruolo deve essere 'MANAGER' o 'AGENT'")
         private String ruolo;
+
+        public static DipendenteRequest creaFondatoreAgenzia(AgenziaImmobiliareRequest request) {
+            return DipendenteRequest.builder()
+                    .nome(request.getNomeFondatore())
+                    .cognome(request.getCognomeFondatore())
+                    .ruolo("MANAGER")
+                    .build();
+        }
     }

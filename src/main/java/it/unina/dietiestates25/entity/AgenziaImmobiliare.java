@@ -22,12 +22,13 @@ public class AgenziaImmobiliare {
     @Column(nullable = false, length = 100)
     private String nomeAzienda;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 80, unique = true)
     private String ragioneSociale;
 
     @Column(nullable = false, length = 20, unique = true)
     private String dominio;
 
+    @Column(nullable = false, length = 20, unique = true)
     private String partitaIva;
 
     @OneToOne(cascade = CascadeType.ALL)

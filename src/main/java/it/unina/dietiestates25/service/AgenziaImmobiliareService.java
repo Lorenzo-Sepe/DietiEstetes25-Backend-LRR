@@ -13,46 +13,53 @@ import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.utils.GenericMail;
+import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AgenziaImmobiliareService {
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
-    private final AuthorityRepository authorityRepository;
-    private  final DatiImpiegatoRepository datiImpiegatoRepository;
-    private final UserRepository userRepository;
     private final  UserService userService;
+    private final EmailService emailService;
 
     @Transactional
     public String createAgenzia(AgenziaImmobiliareRequest request) {
-        DipendenteRequest dipendenteRequest = CreaFondatoreAgenzia(request);
+        DipendenteRequest dipendenteRequest = DipendenteRequest.creaFondatoreAgenzia(request);
         NewDipendeteResponse fondatoreResponse = userService.addDipendete(dipendenteRequest, request.getDominio());
 
         AgenziaImmobiliare agenziaImmobiliare = buildAgenziaImmobiliare(request, fondatoreResponse);
         agenziaImmobiliare.addDipendente(fondatoreResponse.getUser());
         saveAgenzia(agenziaImmobiliare);
-
-
-        String response = String.format("Agenzia creata con successo. Le credenziali del fondatore sono:%n%s%n%s", fondatoreResponse.getUser().getEmail(), fondatoreResponse.getPassword());
-        System.out.println(response);
+        GenericMail mail = new GenericMail(
+            Msg.MAIL_SIGNUP_SUBJECT,
+            String.format(Msg.MAIL_SIGNUP_BODY, fondatoreResponse.getUser().getEmail(), fondatoreResponse.getPassword()),
+            request.getEmailFondatore()
+        );
+        emailService.sendVerificationMail(mail);
+        String response = Msg.AGENCY_CREATION_SUCCESS;
+        log.info(response);
         return response;
     }
 
-    private DipendenteRequest CreaFondatoreAgenzia(AgenziaImmobiliareRequest request) {
-        return DipendenteRequest.builder()
-                .nome(request.getNomeFondatore())
-                .cognome(request.getCognomeFondatore())
-                .ruolo("MANAGER")
-                .build();
-    }
-
     private AgenziaImmobiliare buildAgenziaImmobiliare(AgenziaImmobiliareRequest request, NewDipendeteResponse fondatoreResponse) {
+        if (agenziaImmobiliareRepository.existsByDominio(request.getDominio())) {
+            throw new IllegalArgumentException("Il dominio selezionato non e' disponibile");
+        }
+        if (agenziaImmobiliareRepository.existsByRagioneSociale(request.getRagioneSociale())) {
+            throw new IllegalArgumentException("La ragione sociale selezionata non e' disponibile");
+        }
+        if (agenziaImmobiliareRepository.existsByPartitaIva(request.getPartitaIva())) {
+            throw new IllegalArgumentException("La partita IVA inserita non e' disponibile");
+        }
         return AgenziaImmobiliare.builder()
                 .nomeAzienda(request.getNomeAgenzia())
                 .partitaIva(request.getPartitaIva())
@@ -88,7 +95,7 @@ public class AgenziaImmobiliareService {
         String email = newDipendeteResponse.getUser().getEmail();
         String password = newDipendeteResponse.getPassword();
         String response = String.format("Dipendente aggiunto con successo. Le credenziali del dipendete sono:%n%s%n%s", email, password);
-        System.out.println(response);
+        log.info(response);
         return response;
     }
 

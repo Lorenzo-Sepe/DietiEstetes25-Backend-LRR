@@ -23,7 +23,6 @@ import java.util.List;
 @Validated
 public class AgenziaImmobiliareController {
     private final AgenziaImmobiliareService agenziaImmobiliareService;
-    private final AuthService authService;
 
     // Registra una nuova agenzia immobiliare
     @PostMapping("/pb/agenzia/" )
@@ -32,9 +31,7 @@ public class AgenziaImmobiliareController {
             description = "Metodo per aggiungere una nuova agenzia immobiliare nel database",
             tags = {"Agenzia"})
     public ResponseEntity<String> createAgenzia(@RequestBody AgenziaImmobiliareRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(agenziaImmobiliareService.createAgenzia(request));
+        return new ResponseEntity<>(agenziaImmobiliareService.createAgenzia(request),HttpStatus.CREATED);
     }
 
     @PostMapping("/agenzia/dipendete")

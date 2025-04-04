@@ -30,4 +30,9 @@ public interface AgenziaImmobiliareRepository extends JpaRepository<AgenziaImmob
     @Query("SELECT a FROM AgenziaImmobiliare a JOIN a.dipendenti d WHERE d.email = :email")
     Optional<AgenziaImmobiliare> findByDipendenteEmail(@Param("email") String email);
 
+    boolean existsByDominio(String dominio);
+
+    boolean existsByRagioneSociale(String ragioneSociale);
+
+    boolean existsByPartitaIva(String partitaIva);
 }
