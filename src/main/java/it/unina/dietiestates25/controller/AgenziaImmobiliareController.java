@@ -7,6 +7,7 @@ import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
 import it.unina.dietiestates25.service.AgenziaImmobiliareService;
 import it.unina.dietiestates25.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,18 +31,17 @@ public class AgenziaImmobiliareController {
             summary = "INSERISCI LA TUA AGENZIA IMMOBILIARE",
             description = "Metodo per aggiungere una nuova agenzia immobiliare nel database",
             tags = {"Agenzia"})
-    public ResponseEntity<String> createAgenzia(@RequestBody AgenziaImmobiliareRequest request) {
+    public ResponseEntity<String> createAgenzia(@RequestBody @Valid AgenziaImmobiliareRequest request) {
         return new ResponseEntity<>(agenziaImmobiliareService.createAgenzia(request),HttpStatus.CREATED);
     }
 
-    @PostMapping("/agenzia/dipendete")
+    @PostMapping("/agenzia/dipendente")
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(
             summary = "AGGIUNGI UN NUOVO AGENTE",
             description = "Metodo per aggiungere un nuovo agente immobiliare nel database",
             tags = {"Agenzia"})
-    public ResponseEntity<String> createAgente(@ModelAttribute DipendenteRequest request) {
-
+    public ResponseEntity<String> createAgente(@RequestBody @Valid DipendenteRequest request) {
         return new ResponseEntity<>(agenziaImmobiliareService.aggiungiDipendete(request), HttpStatus.CREATED);
     }
 

@@ -36,8 +36,8 @@ spring:
         # none: da usare in ambiente di produzione: non viene riportata alcuna modifica al db
         # update: aggiorna il db con le tabelle/colonne nuove; non elimina colonne che non hanno piu' corrispondenza con l'entita'
     properties:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
     open-in-view: false
