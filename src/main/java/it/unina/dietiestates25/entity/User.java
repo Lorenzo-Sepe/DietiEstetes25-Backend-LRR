@@ -22,10 +22,10 @@ public class User extends CreationUpdate implements UserDetails {
     private int id;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private  List<CategoriaNotifica> categorieDisattivate;
+    private List<CategoriaNotifica> categorieDisattivate;
 
     @Column(nullable = true)
-    private String UrlFotoProfilo;
+    private String urlFotoProfilo;
 
     @Column(unique = true, nullable = false)
     private String email;

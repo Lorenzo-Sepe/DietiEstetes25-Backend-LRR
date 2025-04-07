@@ -17,7 +17,6 @@ import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
-import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +48,7 @@ public class UserService {
 
         User user = User.builder()
                 .email(email)
+                .urlFotoProfilo(imageUploaderService.getDefaultAvatar( request.getNome() ) )
                 .nomeVisualizzato(nomeVisualizzato)
                 .authority(authorityRepository.findByAuthorityName(authorityName).orElseThrow())
                 .password(passwordService.cifrarePassword(password))
@@ -61,17 +61,10 @@ public class UserService {
                 .build();
         int idUser = salvaImpiegato(user, datiImpiegato);
         user.setId(idUser);
-        try {
-            String urlFotoProfilo = null;
-            if(request.getFotoProfilo()!=null){
-                urlFotoProfilo= imageUploaderService.salvaFotoProfilo(request.getFotoProfilo(),idUser);
-            }
-            user.setUrlFotoProfilo(urlFotoProfilo);
-            userRepository.save(user);
-        }catch (Exception e){
-            log.debug("Non è stata salvata la foto profilo al dipendete : {}", user);        }
-
-        return NewDipendeteResponse.builder().user(user).password(password).build();
+        return NewDipendeteResponse.builder()
+                .user(user)
+                .password(password)
+                .build();
     }
 
     private Integer salvaImpiegato(User user, DatiImpiegato datiImpiegato) {

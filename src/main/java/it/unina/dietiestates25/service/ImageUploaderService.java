@@ -20,11 +20,33 @@ public class ImageUploaderService {
 
     private final ImageContainerUtil imageContainerUtil;
 
+    public  String getDefaultAvatar(String inputString) {
+        int width=400;
+        int height=400;
+        if (inputString == null || inputString.trim().isEmpty()) {
+            throw new IllegalArgumentException("Input string cannot be null or empty");
+        }
+
+        // Prendi la prima lettera maiuscola
+        char initial = Character.toUpperCase(inputString.trim().charAt(0));
+
+        // Funzione di hashing semplice per generare un numero da una stringa
+        int hash = 0;
+        for (char c : inputString.toCharArray()) {
+            hash = (hash << 5) - hash + c;
+            hash = hash & hash; // Mantieni il valore entro i limiti di un intero
+        }
+
+        int colorValue = Math.abs(hash) % 256;
+        String colorHex = String.format("%02x00%02x", colorValue, 255 - colorValue).toUpperCase();
+
+        return String.format("https://placehold.co/%dx%d/%s/FFFFFF?text=%c", width, height, colorHex, initial);
+    }
+
     public String salvaFotoProfilo(MultipartFile file, int userId) {
         String nomePath = "fotoprofilo" + userId;
         return imageContainerUtil.uploadImage(file, nomePath);
     }
-
 
    public List<String> salvaImmaginiAnnuncioToBlob(List<MultipartFile> files, int annuncioId,int valoreInizialeCounter) {
        AtomicInteger counter = new AtomicInteger(valoreInizialeCounter);

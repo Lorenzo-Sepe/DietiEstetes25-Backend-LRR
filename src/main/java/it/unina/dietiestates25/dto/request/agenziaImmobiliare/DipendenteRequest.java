@@ -11,9 +11,6 @@ package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
     public class DipendenteRequest {
-
-        MultipartFile fotoProfilo;
-
         @NotBlank
         private String nome;
 
