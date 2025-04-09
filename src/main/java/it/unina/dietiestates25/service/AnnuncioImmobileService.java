@@ -264,19 +264,15 @@ public class AnnuncioImmobileService {
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
 
         AuthorityName ruoloUserCurrent = UserContex.getRoleCurrent();
-
         List<AnnuncioImmobiliare> annunci = getAnnunciByRuolo(ruoloUserCurrent,filtro);
-
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
 
         for(AnnuncioImmobiliare annuncio : annunci){
-
             ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
             List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
             ContrattoResponse contrattoResponse = getContrattoResponse(annuncio.getContratto());
             DatiImpiegato datiImpiegato = datiImpiegatoRepository.findDatiImpiegatoByUser(annuncio.getAgente())
                     .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato", "user", annuncio.getAgente().getId()));
-            DipendenteResponse agenteCreatoreAnnuncio = DipendenteResponse.fromEntityToDto(datiImpiegato);
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
                     .id(annuncio.getId())
@@ -284,7 +280,7 @@ public class AnnuncioImmobileService {
                     .descrizione(annuncio.getDescrizione())
                     .immobile(immobileResponse)
                     .proposte(proposteResponse)
-                    .agente(agenteCreatoreAnnuncio)
+                    .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
                     .contratto(contrattoResponse)
                     .build();
 

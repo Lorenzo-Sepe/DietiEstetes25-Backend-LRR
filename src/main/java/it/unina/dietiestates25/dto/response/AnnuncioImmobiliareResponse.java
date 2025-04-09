@@ -2,7 +2,6 @@ package it.unina.dietiestates25.dto.response;
 
 
 import lombok.*;
-import it.unina.dietiestates25.entity.Immobile;
 
 import java.util.List;
 

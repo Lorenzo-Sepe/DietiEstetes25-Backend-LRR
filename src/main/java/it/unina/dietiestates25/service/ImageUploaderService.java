@@ -20,28 +20,65 @@ public class ImageUploaderService {
 
     private final ImageContainerUtil imageContainerUtil;
 
-    public  String getDefaultAvatar(String inputString) {
-        int width=400;
-        int height=400;
+    public String getDefaultAvatar(String inputString) {
+        int width = 400;
+        int height = 400;
+
         if (inputString == null || inputString.trim().isEmpty()) {
             throw new IllegalArgumentException("Input string cannot be null or empty");
         }
 
-        // Prendi la prima lettera maiuscola
+        // Get the initial letter, uppercase
         char initial = Character.toUpperCase(inputString.trim().charAt(0));
 
-        // Funzione di hashing semplice per generare un numero da una stringa
+        // Simple hash function
         int hash = 0;
         for (char c : inputString.toCharArray()) {
             hash = (hash << 5) - hash + c;
-            hash = hash & hash; // Mantieni il valore entro i limiti di un intero
         }
 
-        int colorValue = Math.abs(hash) % 256;
-        String colorHex = String.format("%02x00%02x", colorValue, 255 - colorValue).toUpperCase();
+        // Convert hash to HSL values
+        float hue = (Math.abs(hash) % 360); // Hue: 0 - 359
+        float saturation = 0.6f;            // Saturation: 60%
+        float lightness = 0.6f;             // Lightness: 60%
+
+        // Convert HSL to RGB
+        int[] rgb = hslToRgb(hue, saturation, lightness);
+        String colorHex = String.format("%02X%02X%02X", rgb[0], rgb[1], rgb[2]);
 
         return String.format("https://placehold.co/%dx%d/%s/FFFFFF?text=%c", width, height, colorHex, initial);
     }
+
+    public int[] hslToRgb(float h, float s, float l) {
+        float c = (1 - Math.abs(2 * l - 1)) * s;
+        float x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        float m = l - c / 2;
+
+        float r = 0;
+        float g = 0;
+        float b = 0;
+
+        if (0 <= h && h < 60) {
+            r = c; g = x; b = 0;
+        } else if (60 <= h && h < 120) {
+            r = x; g = c; b = 0;
+        } else if (120 <= h && h < 180) {
+            r = 0; g = c; b = x;
+        } else if (180 <= h && h < 240) {
+            r = 0; g = x; b = c;
+        } else if (240 <= h && h < 300) {
+            r = x; g = 0; b = c;
+        } else if (300 <= h && h < 360) {
+            r = c; g = 0; b = x;
+        }
+
+        int red = Math.round((r + m) * 255);
+        int green = Math.round((g + m) * 255);
+        int blue = Math.round((b + m) * 255);
+
+        return new int[]{ red, green, blue };
+    }
+
 
     public String salvaFotoProfilo(MultipartFile file, int userId) {
         String nomePath = "fotoprofilo" + userId;

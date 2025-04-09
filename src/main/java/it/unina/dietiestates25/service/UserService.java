@@ -6,7 +6,7 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
-import it.unina.dietiestates25.dto.response.UserInfoReponse;
+import it.unina.dietiestates25.dto.response.UserInfoResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
@@ -45,10 +45,10 @@ public class UserService {
 
         //Agente Nome C.
         String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";
-
+        String fotoProfilo = imageUploaderService.getDefaultAvatar(nomeVisualizzato);
         User user = User.builder()
                 .email(email)
-                .urlFotoProfilo(imageUploaderService.getDefaultAvatar( request.getNome() ) )
+                .urlFotoProfilo(fotoProfilo)
                 .nomeVisualizzato(nomeVisualizzato)
                 .authority(authorityRepository.findByAuthorityName(authorityName).orElseThrow())
                 .password(passwordService.cifrarePassword(password))
@@ -247,9 +247,9 @@ public class UserService {
         return DatiImpiegatoResponse.fromEntityToDto(datiImpiegato);
     }
 
-    public UserInfoReponse getInfoUtente(String email) {
+    public UserInfoResponse getInfoUtente(String email) {
        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Utente","email",email));
-        return UserInfoReponse.fromEntityToDto(user);
+        return UserInfoResponse.fromEntityToDto(user);
     }
 
 
