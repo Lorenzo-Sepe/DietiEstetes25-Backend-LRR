@@ -258,6 +258,7 @@ public class AnnuncioImmobileService {
                 .contratto(ContrattoResponse.fromEntityToDto(annuncio.getContratto()))
                 .descrizione(annuncio.getDescrizione())
                 .proposte(PropostaResponse.fromListEntityToDto(annuncio.getProposte()))
+                .dataCreazione(annuncio.getDataPubblicazione())
                 .build();
     }
 
@@ -276,6 +277,7 @@ public class AnnuncioImmobileService {
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
                     .id(annuncio.getId())
+                    .dataCreazione(annuncio.getDataPubblicazione())
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
                     .immobile(immobileResponse)
@@ -335,7 +337,11 @@ public class AnnuncioImmobileService {
                 .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
                 .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
                 .and(AnnuncioImmobiliareSpecification.conProvincia(filtro.getProvincia()))
-                .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
+                .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerPrezzoAsc(filtro.isOrdinePrezzoAsc(),filtro.getTipologiaContratto().toString()))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerPrezzoDesc(filtro.isOrdinePrezzoDesc(),filtro.getTipologiaContratto().toString()))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerDataDesc(filtro.isOrdineDataDesc()))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerDataAsc(filtro.isOrdineDataAsc()));
     }
 
     private ImmobileResponse getImmobileResponse(Immobile immobile){

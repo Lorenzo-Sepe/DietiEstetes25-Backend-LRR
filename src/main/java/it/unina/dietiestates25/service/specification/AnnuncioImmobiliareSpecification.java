@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.service.specification;
 
+import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import jakarta.persistence.criteria.Expression;
@@ -122,22 +123,136 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
-    public static Specification<AnnuncioImmobiliare> conCaratteristicheAggiuntive(Boolean balconi, Boolean garage, Boolean pannelliSolari) {
+    public static Specification<AnnuncioImmobiliare> conCaratteristicheAggiuntive(FiltroAnnuncio filtro) {
         return (root, query, cb) -> {
             Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
             Join<Immobile, CaratteristicheAggiuntive> caratteristiche = immobile.join("caratteristicheAggiuntive");
 
             Predicate predicate = cb.conjunction();
-            if (balconi != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("balconi"), balconi));
+            if (filtro.getBalconi() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("balconi"), filtro.getBalconi()));
             }
-            if (garage != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("garage"), garage));
+            if (filtro.getGarage() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("garage"), filtro.getGarage()));
             }
-            if (pannelliSolari != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("pannelliSolari"), pannelliSolari));
+            if (filtro.getPostiAuto() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("postiAuto"), filtro.getPostiAuto()));
+            }
+            if (filtro.getGiardino() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("giardino"), filtro.getGiardino()));
+            }
+            if (filtro.getAscensore() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("ascensore"), filtro.getAscensore()));
+            }
+            if (filtro.getPortiere() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("portiere"), filtro.getPannelliSolari()));
+            }
+            if (filtro.getRiscaldamentoCentralizzato() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("riscaldamentoCentralizzato"), filtro.getRiscaldamentoCentralizzato()));
+            }
+            if (filtro.getClimatizzatori() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("climatizzatori"), filtro.getClimatizzatori()));
+            }
+            if (filtro.getPannelliSolari() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("pannelliSolari"), filtro.getPannelliSolari()));
+            }
+            if (filtro.getCantina() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("cantina"), filtro.getCantina()));
+            }
+            if (filtro.getSoffitta() != null) {
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("soffitta"), filtro.getSoffitta()));
             }
             return predicate;
+        };
+    }
+
+    public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoAsc(boolean ordinePerPrezzoAsc, String tipoContratto) {
+
+        return (root, query, cb) -> {
+
+            if(!ordinePerPrezzoAsc){
+
+                return null;
+            }
+
+            Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join("contratto");
+
+            if(tipoContratto.equals("AFFITTO")){
+
+                // downcast: specificare che vogliamo solo ContrattoAffitto
+                query.orderBy(cb.asc(
+                        cb.treat(contrattoJoin, ContrattoAffitto.class).get("prezzoAffitto")
+                ));
+
+            } else {
+
+                // downcast: specificare che vogliamo solo ContrattoVendita
+                query.orderBy(cb.asc(
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get("prezzoVendita")
+                ));
+            }
+
+            return cb.conjunction();
+        };
+    }
+
+    public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoDesc(boolean isOrdinePerPrezzoDesc, String tipoContratto) {
+
+        return (root, query, cb) -> {
+
+            if(!isOrdinePerPrezzoDesc){
+
+                return null;
+            }
+
+            Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join("contratto");
+
+            if(tipoContratto.equals("AFFITTO")){
+
+                // downcast: specificare che vogliamo solo ContrattoAffitto
+                query.orderBy(cb.desc(
+                        cb.treat(contrattoJoin, ContrattoAffitto.class).get("prezzoAffitto")
+                ));
+
+            } else {
+
+                // downcast: specificare che vogliamo solo ContrattoVendita
+                query.orderBy(cb.desc(
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get("prezzoVendita")
+                ));
+            }
+
+            return cb.conjunction();
+        };
+    }
+
+    public static Specification<AnnuncioImmobiliare> ordinaPerDataDesc(boolean isOrdinePerDataDesc) {
+
+        return (root, query, cb) -> {
+
+            if(!isOrdinePerDataDesc){
+
+                return null;
+            }
+
+            query.orderBy(cb.desc(root.get("dataPubblicazione")));
+
+            return cb.conjunction();
+        };
+    }
+
+    public static Specification<AnnuncioImmobiliare> ordinaPerDataAsc(boolean isOrdinePerDataAsc) {
+
+        return (root, query, cb) -> {
+
+            if(!isOrdinePerDataAsc){
+
+                return null;
+            }
+
+            query.orderBy(cb.asc(root.get("dataPubblicazione")));
+
+            return cb.conjunction();
         };
     }
 }
