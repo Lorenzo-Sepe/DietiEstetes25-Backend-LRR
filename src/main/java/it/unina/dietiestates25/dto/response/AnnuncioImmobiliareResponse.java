@@ -3,6 +3,7 @@ package it.unina.dietiestates25.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,7 @@ public class AnnuncioImmobiliareResponse {
     private ImmobileResponse immobile;
     private ContrattoResponse contratto;
     private List<PropostaResponse> proposte;
+    private LocalDateTime dataCreazione;
 
 
 }
