@@ -295,14 +295,21 @@ public class AnnuncioImmobileService {
     private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo, FiltroAnnuncio filtro){
 
         List<AnnuncioImmobiliare> annunci;
+        Pageable pageable = null;
 
-        Pageable pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
+        if(filtro.getNumeroPagina() != null && filtro.getNumeroDiElementiPerPagina() != null){
+            pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
+        }
 
         if(ruolo == null || ruolo == AuthorityName.MEMBER ){
 
             Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
 
-            annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
+            if(pageable != null){
+                annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
+            }else {
+                annunci = annuncioImmobiliareRepository.findAll(spec);
+            }
 
         } else if(ruolo == AuthorityName.AGENT){
 
@@ -324,11 +331,6 @@ public class AnnuncioImmobileService {
     }
 
     private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncio filtro){
-        if( filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
-            filtro.setLatCentro(null);
-            filtro.setLonCentro(null);
-            filtro.setRaggioKm(null);
-        }
 
         return Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
