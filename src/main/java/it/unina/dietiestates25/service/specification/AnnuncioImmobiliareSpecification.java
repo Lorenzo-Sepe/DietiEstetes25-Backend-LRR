@@ -83,7 +83,22 @@ public class AnnuncioImmobiliareSpecification {
                 return null;
             }
             Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
-            return cb.between(immobile.get("metriQuadri"), minMq, maxMq);
+
+            Expression<Integer> metriQuadri =  immobile.get("metriQuadri");
+            Predicate rangeMetriQuadri = null;
+
+            if (minMq != null && maxMq != null) {
+                // Per l'affitto
+                rangeMetriQuadri = cb.between(metriQuadri, minMq, maxMq);
+            } else if (minMq!= null) {
+                // Per l'affitto
+                rangeMetriQuadri = cb.greaterThanOrEqualTo(metriQuadri, minMq);
+            } else {
+                // Per l'affitto
+                rangeMetriQuadri = cb.lessThanOrEqualTo(metriQuadri, maxMq);
+            }
+
+            return rangeMetriQuadri;
         };
     }
 
