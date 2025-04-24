@@ -32,7 +32,7 @@ public class PropostaController {
             summary = "INVIA UNA PROPOSTA",
             description = "Metodo per inviare una proposta di acquisto o affitto di un immobile",
             tags = {"Proposta"})
-    public void inviaProposta(@ModelAttribute PropostaRequest request) {
+    public void inviaProposta(@RequestBody PropostaRequest request) {
         propostaService.inviaProposta(request);
     }
 
