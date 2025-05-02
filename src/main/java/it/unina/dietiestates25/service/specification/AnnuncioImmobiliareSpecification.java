@@ -28,6 +28,15 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
+    public static Specification<AnnuncioImmobiliare> conTipoContratto(String tipoContratto) {
+        return (root, query, cb) -> {
+            if (tipoContratto == null || tipoContratto.isEmpty()) {
+                return null;
+            }
+            Join<AnnuncioImmobiliare, Contratto> contratto = root.join("contratto");
+            return cb.equal(cb.lower(contratto.get("tipoContratto")), tipoContratto.toLowerCase());
+        };
+    }
     public static Specification<AnnuncioImmobiliare> conRangePrezzo(Double prezzoMin, Double prezzoMax) {
         return (root, query, cb) -> {
             if (prezzoMin == null && prezzoMax == null) {
@@ -140,4 +149,6 @@ public class AnnuncioImmobiliareSpecification {
             return predicate;
         };
     }
+
+
 }

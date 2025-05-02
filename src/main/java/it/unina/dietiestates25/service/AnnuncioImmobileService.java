@@ -257,6 +257,7 @@ public class AnnuncioImmobileService {
                 .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
                 .contratto(ContrattoResponse.fromEntityToDto(annuncio.getContratto()))
                 .descrizione(annuncio.getDescrizione())
+                .dataPubblicazione(annuncio.getDataPubblicazione().toString())
                 .proposte(PropostaResponse.fromListEntityToDto(annuncio.getProposte()))
                 .build();
     }
@@ -282,6 +283,7 @@ public class AnnuncioImmobileService {
                     .id(annuncio.getId())
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
+                    .dataPubblicazione(annuncio.getDataPubblicazione().toString())
                     .immobile(immobileResponse)
                     .proposte(proposteResponse)
                     .agente(agenteCreatoreAnnuncio)
@@ -335,6 +337,7 @@ public class AnnuncioImmobileService {
         return Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
                 .and(AnnuncioImmobiliareSpecification.conTipologiaImmobile(filtro.getTipologiaImmobile()))
+                .and(AnnuncioImmobiliareSpecification.conTipoContratto(filtro.getTipologiaContratto().toString()))
                 .and(AnnuncioImmobiliareSpecification.conRangePrezzo(filtro.getPrezzoMin(), filtro.getPrezzoMax()))
                 .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
                 .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))

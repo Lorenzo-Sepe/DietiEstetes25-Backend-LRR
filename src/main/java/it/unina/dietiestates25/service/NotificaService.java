@@ -201,7 +201,7 @@ public class NotificaService {
                 .oggetto(generatore.generaOggetto(dati))
                 .contenuto(contenutoHtml)
                 .dataCreazione(LocalDateTime.now())
-                .mittente(mittente) // oppure il mittente dinamico
+                .mittente(mittente) 
                 .categoria(categoria)
                 .destinatario(destinatario)
                 .build();
