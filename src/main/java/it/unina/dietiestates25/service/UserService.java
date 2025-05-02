@@ -6,7 +6,7 @@ import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
-import it.unina.dietiestates25.dto.response.UserInfoReponse;
+import it.unina.dietiestates25.dto.response.UserInfoResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.DatiImpiegato;
@@ -17,7 +17,6 @@ import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
-import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +45,10 @@ public class UserService {
 
         //Agente Nome C.
         String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";
-
+        String fotoProfilo = imageUploaderService.getDefaultAvatar(nomeVisualizzato);
         User user = User.builder()
                 .email(email)
+                .urlFotoProfilo(fotoProfilo)
                 .nomeVisualizzato(nomeVisualizzato)
                 .authority(authorityRepository.findByAuthorityName(authorityName).orElseThrow())
                 .password(passwordService.cifrarePassword(password))
@@ -61,17 +61,10 @@ public class UserService {
                 .build();
         int idUser = salvaImpiegato(user, datiImpiegato);
         user.setId(idUser);
-        try {
-            String urlFotoProfilo = null;
-            if(request.getFotoProfilo()!=null){
-                urlFotoProfilo= imageUploaderService.salvaFotoProfilo(request.getFotoProfilo(),idUser);
-            }
-            user.setUrlFotoProfilo(urlFotoProfilo);
-            userRepository.save(user);
-        }catch (Exception e){
-            log.debug("Non è stata salvata la foto profilo al dipendete : {}", user);        }
-
-        return NewDipendeteResponse.builder().user(user).password(password).build();
+        return NewDipendeteResponse.builder()
+                .user(user)
+                .password(password)
+                .build();
     }
 
     private Integer salvaImpiegato(User user, DatiImpiegato datiImpiegato) {
@@ -254,9 +247,9 @@ public class UserService {
         return DatiImpiegatoResponse.fromEntityToDto(datiImpiegato);
     }
 
-    public UserInfoReponse getInfoUtente(String email) {
+    public UserInfoResponse getInfoUtente(String email) {
        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Utente","email",email));
-        return UserInfoReponse.fromEntityToDto(user);
+        return UserInfoResponse.fromEntityToDto(user);
     }
 
 

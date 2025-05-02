@@ -259,34 +259,32 @@ public class AnnuncioImmobileService {
                 .descrizione(annuncio.getDescrizione())
                 .dataPubblicazione(annuncio.getDataPubblicazione().toString())
                 .proposte(PropostaResponse.fromListEntityToDto(annuncio.getProposte()))
+                .dataCreazione(annuncio.getDataPubblicazione())
                 .build();
     }
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
 
         AuthorityName ruoloUserCurrent = UserContex.getRoleCurrent();
-
         List<AnnuncioImmobiliare> annunci = getAnnunciByRuolo(ruoloUserCurrent,filtro);
-
         List<AnnuncioImmobiliareResponse> annunciResponse= new ArrayList<>();
 
         for(AnnuncioImmobiliare annuncio : annunci){
-
             ImmobileResponse immobileResponse = getImmobileResponse(annuncio.getImmobile());
             List<PropostaResponse> proposteResponse = getListPropostaResponse(annuncio.getProposte());
             ContrattoResponse contrattoResponse = getContrattoResponse(annuncio.getContratto());
             DatiImpiegato datiImpiegato = datiImpiegatoRepository.findDatiImpiegatoByUser(annuncio.getAgente())
                     .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato", "user", annuncio.getAgente().getId()));
-            DipendenteResponse agenteCreatoreAnnuncio = DipendenteResponse.fromEntityToDto(datiImpiegato);
 
             AnnuncioImmobiliareResponse annuncioResponse = AnnuncioImmobiliareResponse.builder()
                     .id(annuncio.getId())
+                    .dataCreazione(annuncio.getDataPubblicazione())
                     .titolo(annuncio.getTitolo())
                     .descrizione(annuncio.getDescrizione())
                     .dataPubblicazione(annuncio.getDataPubblicazione().toString())
                     .immobile(immobileResponse)
                     .proposte(proposteResponse)
-                    .agente(agenteCreatoreAnnuncio)
+                    .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
                     .contratto(contrattoResponse)
                     .build();
 
@@ -299,14 +297,21 @@ public class AnnuncioImmobileService {
     private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo, FiltroAnnuncio filtro){
 
         List<AnnuncioImmobiliare> annunci;
+        Pageable pageable = null;
 
-        Pageable pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
+        if(filtro.getNumeroPagina() != null && filtro.getNumeroDiElementiPerPagina() != null){
+            pageable = Pageable.ofSize(filtro.getNumeroDiElementiPerPagina()).withPage(filtro.getNumeroPagina()-1);
+        }
 
         if(ruolo == null || ruolo == AuthorityName.MEMBER ){
 
             Specification<AnnuncioImmobiliare> spec = getSpecificationQuery(filtro);
 
-            annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
+            if(pageable != null){
+                annunci = annuncioImmobiliareRepository.findAll(spec,pageable).getContent();
+            }else {
+                annunci = annuncioImmobiliareRepository.findAll(spec);
+            }
 
         } else if(ruolo == AuthorityName.AGENT){
 
@@ -328,11 +333,6 @@ public class AnnuncioImmobileService {
     }
 
     private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncio filtro){
-        if( filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
-            filtro.setLatCentro(null);
-            filtro.setLonCentro(null);
-            filtro.setRaggioKm(null);
-        }
 
         return Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
@@ -342,7 +342,11 @@ public class AnnuncioImmobileService {
                 .and(AnnuncioImmobiliareSpecification.conRangeMetriQuadri(filtro.getMetriQuadriMin(), filtro.getMetriQuadriMax()))
                 .and(AnnuncioImmobiliareSpecification.conLocalizzazione(filtro.getLatCentro(), filtro.getLonCentro(), filtro.getRaggioKm()))
                 .and(AnnuncioImmobiliareSpecification.conProvincia(filtro.getProvincia()))
-                .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro.getBalconi(), filtro.getGarage(), filtro.getPannelliSolari()));
+                .and(AnnuncioImmobiliareSpecification.conCaratteristicheAggiuntive(filtro))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerPrezzoAsc(filtro.isOrdinePrezzoAsc(),filtro.getTipologiaContratto().toString()))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerPrezzoDesc(filtro.isOrdinePrezzoDesc(),filtro.getTipologiaContratto().toString()))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerDataDesc(filtro.isOrdineDataDesc()))
+                .and(AnnuncioImmobiliareSpecification.ordinaPerDataAsc(filtro.isOrdineDataAsc()));
     }
 
     private ImmobileResponse getImmobileResponse(Immobile immobile){

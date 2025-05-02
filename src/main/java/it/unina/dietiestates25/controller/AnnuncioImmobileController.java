@@ -61,7 +61,7 @@ public class AnnuncioImmobileController {
             summary = "CERCA ANNUNCI IMMOBILIARI STAFF",
             description = "Metodo per ottenere la lista di annunci immobiliari dal database esclusivo per Impiegati",
             tags = {"Annuncio Immobiliare"})
-    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnuniByStaff(@RequestBody FiltroAnnuncio filtro){
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciByStaff(@RequestBody FiltroAnnuncio filtro){
 
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
