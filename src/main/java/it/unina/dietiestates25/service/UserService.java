@@ -161,7 +161,7 @@ public class UserService {
 
         List<CategoriaNotifica>  categorieDisattivate = userCurrent.getCategorieDisattivate();
 
-        return SottoscrizioneNotificaResponse.fromEntityToDto(categorieDisattivate);
+        return getSottoScrizioniResponse(categorieDisattivate);
     }
 
     private List<SottoscrizioneNotificaResponse> getSottoScrizioniResponse(List<CategoriaNotifica> categorieDisattivate){
