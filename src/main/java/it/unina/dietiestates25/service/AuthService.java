@@ -36,7 +36,7 @@ public class AuthService {
 
 
     @Transactional
-    public String signup(SignUpRequest request){
+    public JwtAuthenticationResponse signup(SignUpRequest request){
         if(userRepository.existsByEmail(request.email()))
             throw new ConflictException(Msg.USER_ALREADY_PRESENT);
         Authority authority = authorityRepository.findByDefaultAuthorityTrue()
@@ -48,7 +48,8 @@ public class AuthService {
                 .authority(authority)
                 .build();
         userRepository.save(user);
-        return Msg.USER_SIGNUP_FIRST_STEP;
+        String jwt = jwtService.generateToken(user);
+        return JwtAuthenticationResponse.fromEntityToDto(user,jwt);
     }
 
     @Transactional

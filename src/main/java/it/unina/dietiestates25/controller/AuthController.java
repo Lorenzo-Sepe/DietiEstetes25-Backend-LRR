@@ -23,7 +23,7 @@ public class AuthController {
             description = "Method to add a new user to the database with a sign in procedure and send an email to confirm the registration",
             tags = {"Auth"})
     @PostMapping("/pb/auth/signup")
-    public ResponseEntity<String> signup(@RequestBody @Valid SignUpRequest request){
+    public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody @Valid SignUpRequest request){
         return ResponseEntity.ok(authService.signup(request));
     }
 
