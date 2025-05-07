@@ -38,8 +38,6 @@ public class NotificaService {
     private final CategoriaNotificaRepository categoriaNotificaRepository;
 
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
-
-
         int count = 0;
 
         List<User> destinatari = getDestinatariNotifica(request.getCriteridiRicerca());
