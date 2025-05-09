@@ -19,7 +19,7 @@ public class NotificaController {
 
     private final NotificaService notificaService;
 
-    @PostMapping("/notifica/")
+    @PostMapping("/notifica")
     @Operation(
             summary = "Invia Notifica Promozionale",
             description = "Metodo per creare un nuovo notifica promozionale e inviarla a chi è interessato",
