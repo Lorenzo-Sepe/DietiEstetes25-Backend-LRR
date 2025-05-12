@@ -40,7 +40,7 @@ public class NotificaService {
     public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
         int count = 0;
 
-        List<User> destinatari = getDestinatariNotifica(request.getCriteridiRicerca());
+        List<User> destinatari = getDestinatariNotifica(request.getCriteriDiRicerca());
         String mittente = getNomeAzenziaImmobiliare();
         for(User destinatario : destinatari){
                 try{

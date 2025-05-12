@@ -22,7 +22,7 @@ public class CriteriDiRicercaUtenti {
     private TipologiaImmobile tipologiaDiImmobileDiInteresse;
     private BigDecimal budgetMin;
     private BigDecimal budgetMax;
-    private int IntervallogiorniStoricoRicerca;
+    private int intervalloGiorniStoricoRicerca;
 
 
     public static CriteriDiRicercaUtenti map(AnnuncioImmobiliare annuncio) {
@@ -49,7 +49,7 @@ public class CriteriDiRicercaUtenti {
                 .tipologiaDiImmobileDiInteresse(annuncio.getImmobile().getTipologiaImmobile())
                 .budgetMin(budgetMin)
                 .budgetMax(budgetMax)
-                .IntervallogiorniStoricoRicerca(30)
+                .intervalloGiorniStoricoRicerca(30)
                 .build();
     }
 }

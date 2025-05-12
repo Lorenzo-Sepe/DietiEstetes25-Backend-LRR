@@ -112,10 +112,10 @@ public class RicercaAnnunciEffettuataService {
 
 
     public List<User>UtentiInteressati(CriteriDiRicercaUtenti request){
-        if(request.getIntervallogiorniStoricoRicerca()<=0)
-            request.setIntervallogiorniStoricoRicerca(7);
+        if(request.getIntervalloGiorniStoricoRicerca()<=0)
+            request.setIntervalloGiorniStoricoRicerca(7);
 
-        return repository.trovaUtentiPerCriteri(request.getBudgetMin(), request.getBudgetMax(), request.getAreaDiInteresse(), request.getTipoDiContrattoDiInteresse(), request.getTipologiaDiImmobileDiInteresse(), LocalDateTime.now().minusDays(request.getIntervallogiorniStoricoRicerca()));
+        return repository.trovaUtentiPerCriteri(request.getBudgetMin(), request.getBudgetMax(), request.getAreaDiInteresse(), request.getTipoDiContrattoDiInteresse(), request.getTipologiaDiImmobileDiInteresse(), LocalDateTime.now().minusDays(request.getIntervalloGiorniStoricoRicerca()));
     }
 
 
