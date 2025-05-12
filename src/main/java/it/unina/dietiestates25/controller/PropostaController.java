@@ -20,6 +20,10 @@ public class PropostaController {
 
 
     @GetMapping("/pb/proposte")
+    @Operation(
+            summary = "OTTIENI LISTA PROPOSTE",
+            description = "Metodo per ricevere la lista delle proposte di acquisto o affitto di un immobile",
+            tags = {"Proposta"})
     public ResponseEntity<List<PropostaResponse>> getProposte(@RequestParam int idAnnuncio){
 
         return ResponseEntity.ok(propostaService.getProposte(idAnnuncio));

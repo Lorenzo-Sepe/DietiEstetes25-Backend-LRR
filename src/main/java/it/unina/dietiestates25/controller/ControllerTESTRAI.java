@@ -1,5 +1,6 @@
 package it.unina.dietiestates25.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
@@ -29,23 +30,34 @@ public class ControllerTESTRAI {
 
     //getToken for testing member
     @GetMapping("/pb/test/getToken")
+    @Operation(
+            summary = "GET TOKEN",
+            description = "Metodo per ottenere un token JWT per l'utente con ID specificato",
+            tags = {"TESTS"})
     public Object getToken(@RequestParam int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato", "id", id));
 
 
-        String authority = user.getAuthority().getAuthorityName().name();
         String jwt = jwtService.generateToken(user);
 
      return     JwtAuthenticationResponse.fromEntityToDto(user,jwt);
     }
 
     @PostMapping("pb/test/getUtentiInteressati")
+    @Operation(
+            summary = "OTTIENI UTENTI INTERESSATI",
+            description = "Metodo per ottenere gli utenti interessati a un annuncio",
+            tags = {"Tests"})
     public List<User> getUtentiInteressati(@RequestBody CriteriDiRicercaUtenti request) {
         return ricercaAnnunciEffettuataService.UtentiInteressati(request);
     }
     //test che dato il token di autenticazione ti restituisce user
     @GetMapping("test/getUser")
+    @Operation(
+            summary = "GET USER",
+            description = "Metodo per ottenere l'utente autenticato",
+            tags = {"Tests"})
     @PreAuthorize("hasAnyAuthority('AGENT', 'MANAGER', 'MEMBER')")
     public User getUser() {
         User user= UserContex.getUserCurrent();
@@ -54,6 +66,10 @@ public class ControllerTESTRAI {
     }
 
     @PatchMapping("pb/test/updatePassword")
+    @Operation(
+            summary = "AGGIORNA PASSWORD",
+            description = "Metodo per aggiornare la password di un utente",
+            tags = {"Tests"})
     public String updatePassword(@RequestParam int id, @RequestParam String newPassword) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato", "id", id));
@@ -73,6 +89,10 @@ public class ControllerTESTRAI {
 
     //test dto get
     @PostMapping("pb/test/annuncioImmobiliare")
+    @Operation(
+            summary = "GET ANNUNCIO IMMOBILIARE",
+            description = "Metodo per ottenere un annuncio immobiliare attraverso il DTO",
+            tags = {"Tests"})
     public AnnuncioImmobiliareRequest getDtoCreazioneAnnuncio(@ModelAttribute AnnuncioImmobiliareRequest request) {
         return request;
     }

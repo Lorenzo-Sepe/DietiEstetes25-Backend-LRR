@@ -43,7 +43,6 @@ public class NotificaService {
         List<User> destinatari = getDestinatariNotifica(request.getCriteridiRicerca());
         String mittente = getNomeAzenziaImmobiliare();
         for(User destinatario : destinatari){
-
                 try{
                     boolean inviato = inviaNotifica(CategoriaNotificaName.PROMOZIONI,destinatario,mittente,DatiContenutoNotificaPromozioni.fromRequest(request));
 
