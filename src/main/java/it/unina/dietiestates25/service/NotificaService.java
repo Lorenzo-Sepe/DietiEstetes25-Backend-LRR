@@ -72,7 +72,7 @@ public class NotificaService {
     }
 
     private List<User> getDestinatariNotifica(CriteriDiRicercaUtenti request) {
-        return  ricercaAnnunciEffettuataService.UtentiInteressati(request);
+        return  ricercaAnnunciEffettuataService.utentiInteressati(request);
     }
 
     private String getNomeAzenziaImmobiliare(){

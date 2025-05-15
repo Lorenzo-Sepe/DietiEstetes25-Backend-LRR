@@ -50,7 +50,7 @@ public class ControllerTESTRAI {
             description = "Metodo per ottenere gli utenti interessati a un annuncio",
             tags = {"Tests"})
     public List<User> getUtentiInteressati(@RequestBody CriteriDiRicercaUtenti request) {
-        return ricercaAnnunciEffettuataService.UtentiInteressati(request);
+        return ricercaAnnunciEffettuataService.utentiInteressati(request);
     }
     //test che dato il token di autenticazione ti restituisce user
     @GetMapping("test/getUser")

@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RicercaAnnunciEffettuataService {
 
-    private RicercaAnnunciEffettuataRepository repository;
+    private RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
 
     public void salvaRicercaAnnunciEffettuata(FiltroAnnuncio filtro) {
         User user= UserContex.getUserCurrent();
@@ -43,11 +43,11 @@ public class RicercaAnnunciEffettuataService {
         ricerca.setFiltoUsatoJson(SerializzazioneUtils.serializzaFiltroAnnuncio(filtro));
         
         if(checkIsSameRicerca(filtro)){
-            int idUltimaRicerca= repository.findFirstByUtenteOrderByUpdatedAtDesc(user).get().getId();
-            ricerca.setId(idUltimaRicerca);
+            ricerca.setId(ricercaAnnunciEffettuataRepository.findFirstByUtenteOrderByUpdatedAtDesc(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", 0)).getId());
         }
         try {
-        repository.save(ricerca);
+        ricercaAnnunciEffettuataRepository.save(ricerca);
         }catch (Exception e) {
             //non fare nulla non serve che blocchi la ricerca}
         }
@@ -58,7 +58,7 @@ public class RicercaAnnunciEffettuataService {
     User user = UserContex.getUserCurrent();
 
     // Recupera l'ultima ricerca effettuata dall'utente
-    RicercaAnnunciEffettuata ricerca = repository.findFirstByUtenteOrderByUpdatedAtDesc(user).orElse(null);
+    RicercaAnnunciEffettuata ricerca = ricercaAnnunciEffettuataRepository.findFirstByUtenteOrderByUpdatedAtDesc(user).orElse(null);
 
     // Se non esiste alcuna ricerca precedente, restituisce false
     if (ricerca == null) {
@@ -107,20 +107,25 @@ public class RicercaAnnunciEffettuataService {
 
     public List<RicercaAnnunciEffettuata> getStoricoRicerche() {
         User user= UserContex.getUserCurrent();
-        return repository.findByUtente(user);
+        return ricercaAnnunciEffettuataRepository.findByUtente(user);
     }
 
 
-    public List<User>UtentiInteressati(CriteriDiRicercaUtenti request){
+    public List<User> utentiInteressati(CriteriDiRicercaUtenti request){
         if(request.getIntervalloGiorniStoricoRicerca()<=0)
             request.setIntervalloGiorniStoricoRicerca(7);
 
-        return repository.trovaUtentiPerCriteri(request.getBudgetMin(), request.getBudgetMax(), request.getAreaDiInteresse(), request.getTipoDiContrattoDiInteresse(), request.getTipologiaDiImmobileDiInteresse(), LocalDateTime.now().minusDays(request.getIntervalloGiorniStoricoRicerca()));
+        return ricercaAnnunciEffettuataRepository.trovaUtentiPerCriteri(request.getBudgetMin(),
+                                                request.getBudgetMax(),
+                                                request.getAreaDiInteresse(),
+                                                request.getTipoDiContrattoDiInteresse(),
+                                                request.getTipologiaDiImmobileDiInteresse(),
+                                                LocalDateTime.now().minusDays(request.getIntervalloGiorniStoricoRicerca()));
     }
 
 
     public FiltroAnnuncio getFiltroRicerca(int id) {
-        RicercaAnnunciEffettuata ricerca = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", id));
+        RicercaAnnunciEffettuata ricerca = ricercaAnnunciEffettuataRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", id));
         if(ricerca.getUtente().getId() !=UserContex.getUserCurrent().getId()){
             throw new AccessDeniedException("Non puoi visualizzare la ricerca di un altro utente");
         }
