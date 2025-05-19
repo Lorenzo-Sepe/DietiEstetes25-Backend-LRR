@@ -28,6 +28,11 @@ public class ImageUploaderService {
             throw new IllegalArgumentException("Input string cannot be null or empty");
         }
 
+        //if the string starts with Agente or Manager, remove it
+        if (inputString.startsWith("agente") || inputString.startsWith("manager")) {
+            inputString = inputString.substring(inputString.indexOf(" ") + 1);
+        }
+
         // Get the initial letter, uppercase
         char initial = Character.toUpperCase(inputString.trim().charAt(0));
 
@@ -46,7 +51,7 @@ public class ImageUploaderService {
         int[] rgb = hslToRgb(hue, saturation, lightness);
         String colorHex = String.format("%02X%02X%02X", rgb[0], rgb[1], rgb[2]);
 
-        return String.format("https://placehold.co/%dx%d/%s/FFFFFF?text=%c", width, height, colorHex, initial);
+        return String.format("https://dummyimage.com/%dx%d/%s/FFFFFF?text=%c", width, height, colorHex, initial);
     }
 
     public int[] hslToRgb(float h, float s, float l) {

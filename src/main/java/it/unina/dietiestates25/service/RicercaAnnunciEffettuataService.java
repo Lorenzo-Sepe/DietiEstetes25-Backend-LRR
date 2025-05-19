@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -125,8 +126,9 @@ public class RicercaAnnunciEffettuataService {
 
 
     public FiltroAnnuncio getFiltroRicerca(int id) {
-        RicercaAnnunciEffettuata ricerca = ricercaAnnunciEffettuataRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", id));
-        if(ricerca.getUtente().getId() !=UserContex.getUserCurrent().getId()){
+        RicercaAnnunciEffettuata ricerca = ricercaAnnunciEffettuataRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", id));
+        if(ricerca.getUtente().getId() != Objects.requireNonNull(UserContex.getUserCurrent()).getId()){
             throw new AccessDeniedException("Non puoi visualizzare la ricerca di un altro utente");
         }
         return SerializzazioneUtils.deserializzaFiltroAnnuncio(ricerca.getFiltoUsatoJson());

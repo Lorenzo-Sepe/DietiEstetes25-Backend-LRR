@@ -84,4 +84,15 @@ public class UserController {
         return ResponseEntity.ok(userService.getInfoUtente(email));
     }
 
+    @GetMapping("/user")
+    @Operation(
+            summary = "OTTIENI I DATI DELL'ACCOUNT TRAMITE EMAIL",
+            description = "Metodo per ottenere i dati dell'account in base all'email",
+            tags = {"Utente"}
+    )
+    public ResponseEntity<UserInfoResponse> getUser(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getInfoUtente(email));
+    }
+
+
 }

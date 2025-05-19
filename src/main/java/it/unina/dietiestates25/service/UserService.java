@@ -18,6 +18,7 @@ import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.UserContex;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -247,10 +248,15 @@ public class UserService {
         return DatiImpiegatoResponse.fromEntityToDto(datiImpiegato);
     }
 
+    @Transactional
     public UserInfoResponse getInfoUtente(String email) {
-       User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Utente","email",email));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Utente","email",email));
+        //String nomeVisualizzato = user.getNomeVisualizzato();
+        //String urlFotoProfilo = imageUploaderService.getDefaultAvatar(nomeVisualizzato);
+        //user.setUrlFotoProfilo(urlFotoProfilo);
+        //userRepository.save(user);
         return UserInfoResponse.fromEntityToDto(user);
     }
-
 
 }

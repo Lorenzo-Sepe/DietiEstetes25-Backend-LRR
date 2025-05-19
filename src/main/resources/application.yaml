@@ -99,7 +99,7 @@ application:
       secret-key: ${JWT_SECRET_KEY}
       auth0-domain: ${AUTH0_DOMAIN}
       # 12 ORE in millisecondi
-      expiration: 86400000
+      expiration: 43200000
 
   image:
     avatar:
