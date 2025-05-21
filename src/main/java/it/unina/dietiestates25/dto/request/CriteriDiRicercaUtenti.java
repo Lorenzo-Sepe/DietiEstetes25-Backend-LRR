@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 public class CriteriDiRicercaUtenti {
     @NotBlank
     private String areaDiInteresse;
+
     private TipoContratto tipoDiContrattoDiInteresse;
     private TipologiaImmobile tipologiaDiImmobileDiInteresse;
     private BigDecimal budgetMin;

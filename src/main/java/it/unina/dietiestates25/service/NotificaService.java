@@ -45,11 +45,10 @@ public class NotificaService {
         for(User destinatario : destinatari){
                 try{
                     boolean inviato = inviaNotifica(CategoriaNotificaName.PROMOZIONI,destinatario,mittente,DatiContenutoNotificaPromozioni.fromRequest(request));
-
                     if(inviato)count++;
 
                 }catch(Exception e){
-
+                    //stop the method
                 }
 
         }
