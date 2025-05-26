@@ -7,6 +7,7 @@ import it.unina.dietiestates25.dto.response.NotificaResponse;
 import it.unina.dietiestates25.service.NotificaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class NotificaController {
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     public ResponseEntity<String> inviaNotificaPromozionale(@RequestBody @Valid NotificaPromozionaleRequest request){
 
-        return notificaService.inviaNotificaPromozionale(request);
+        return new ResponseEntity<String>(notificaService.inviaNotificaPromozionale(request), HttpStatus.CREATED);
     }
 
 

@@ -6,6 +6,7 @@ import it.unina.dietiestates25.dto.request.NotificaPromozionaleRequest;
 import it.unina.dietiestates25.dto.response.NotificaResponse;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.exception.UnauthorizedException;
 import it.unina.dietiestates25.factory.GeneratoreContenutoFactory;
 import it.unina.dietiestates25.factory.notifica.dati.*;
@@ -15,7 +16,9 @@ import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.NotificaRepository;
 import it.unina.dietiestates25.strategy.GeneratoreContenutoNotifica;
 import it.unina.dietiestates25.utils.UserContex;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,11 +40,12 @@ public class NotificaService {
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
     private final CategoriaNotificaRepository categoriaNotificaRepository;
 
-    public ResponseEntity<String> inviaNotificaPromozionale(NotificaPromozionaleRequest request){
+    @Transactional
+    public String inviaNotificaPromozionale(@NotNull NotificaPromozionaleRequest request){
         int count = 0;
 
         List<User> destinatari = getDestinatariNotifica(request.getCriteriDiRicerca());
-        String mittente = getNomeAzenziaImmobiliare();
+        String mittente = getNomeAgenziaImmobiliare();
         for(User destinatario : destinatari){
                 try{
                     boolean inviato = inviaNotifica(CategoriaNotificaName.PROMOZIONI,destinatario,mittente,DatiContenutoNotificaPromozioni.fromRequest(request));
@@ -50,10 +54,8 @@ public class NotificaService {
                 }catch(Exception e){
                     //stop the method
                 }
-
         }
-
-        return ResponseEntity.ok("numero di notifiche inviate: " + count);
+        return "Notifica inviata con successo, inviate: " + count;
     }
 
     public void inviaNotificaPerNuovoAnnuncioImmobiliare(AnnuncioImmobiliare annuncio) {
@@ -61,11 +63,11 @@ public class NotificaService {
         List<User> destinatari = getDestinatariNotifica(criteri);
         for(User destinatario : destinatari){
             DatiContenutoImmobile dati = DatiContenutoImmobile.fromAnnuncio(annuncio, destinatario);
-           try {
-               inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE,destinatario,"DietiEstate",dati);
-           }catch (Exception e){
-               //non fare nulla
-           }
+            try {
+                inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE,destinatario,"DietiEstate",dati);
+            }catch (Exception e){
+                   //non fare nulla
+            }
         }
 
     }
@@ -74,7 +76,7 @@ public class NotificaService {
         return  ricercaAnnunciEffettuataService.utentiInteressati(request);
     }
 
-    private String getNomeAzenziaImmobiliare(){
+    private String getNomeAgenziaImmobiliare(){
         AgenziaImmobiliare agenzia =agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent())
                 .orElseThrow(() -> new UnauthorizedException("Permesso negato.\n L'utente non è un dipendente di un'agenzia immobiliare"));
 
@@ -82,9 +84,7 @@ public class NotificaService {
     }
 
     public Integer getNumeroAllNotifiche(){
-
         User userCurrent = UserContex.getUserCurrent();
-
         return notificaRepository.countByDestinatario(userCurrent);
     }
 
@@ -92,14 +92,14 @@ public class NotificaService {
 
         User userCurrent = UserContex.getUserCurrent();
 
-        Pageable pageable = getPaginableNotifiche(request);
+        Pageable pageable = getPageableNotifiche(request);
 
         List<Notifica> notifiche = notificaRepository.findAllByDestinatario(userCurrent,pageable);
 
         return getListNotificaResponseFromListaNotifica(notifiche);
     }
 
-    private Pageable getPaginableNotifiche(FiltroNotificaRequest request){
+    private Pageable getPageableNotifiche(FiltroNotificaRequest request){
 
         Pageable pageable;
 
@@ -149,7 +149,7 @@ public class NotificaService {
 
         User userCurrent = UserContex.getUserCurrent();
 
-        Pageable pageable = getPaginableNotifiche(request);
+        Pageable pageable = getPageableNotifiche(request);
 
         CategoriaNotifica categoriaNotifica = CategoriaNotifica.builder()
                 .id(request.getIdCategoria())
@@ -160,7 +160,7 @@ public class NotificaService {
         return getListNotificaResponseFromListaNotifica(notifiche);
     }
 
-    private DatiImpiegato getDatiImpiegato(Proposta proposta) {
+    private DatiImpiegato getDatiImpiegato(@NotNull Proposta proposta) {
         return datiImpiegatoRepository.findByUser_Id(proposta.getAnnuncio().getAgente().getId())
                 .orElseThrow(() -> new UnauthorizedException("Permesso negato.\n L'utente non è un impiegato"));
     }
@@ -180,6 +180,7 @@ public class NotificaService {
         inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), "info@dieti.estate.it",dati);
     }
 
+
     private <T extends DatiContenutoNotifica> boolean inviaNotifica(CategoriaNotificaName tipoNotifica, User destinatario,String mittente, T dati) {
         CategoriaNotifica categoria = recuperaCategoria(tipoNotifica);
         if(destinatario == null || destinatario.getCategorieDisattivate().contains(categoria)){
@@ -190,7 +191,6 @@ public class NotificaService {
         GeneratoreContenutoNotifica<T> generatore = GeneratoreContenutoFactory.getGeneratore(tipoNotifica);
         // Genera il contenuto HTML
         String contenutoHtml = generatore.generaContenuto(dati);
-
 
         // Creazione della notifica utilizzando il builder
         Notifica notifica = Notifica.builder()
@@ -208,14 +208,16 @@ public class NotificaService {
     }
 
     private CategoriaNotifica recuperaCategoria(CategoriaNotificaName tipoNotifica) {
-        return categoriaNotificaRepository.findByCategoriaName(tipoNotifica).orElseThrow(() ->new IllegalArgumentException("Tipo di notifica non riconosciuto: " + tipoNotifica));
+        return categoriaNotificaRepository.findByCategoriaName(tipoNotifica)
+                .orElseThrow(() ->new ResourceNotFoundException("Categoria Notifica","tipoNotifica",tipoNotifica) );
     }
 
     public String setTrueVisualizzazioneNotifica(int idNotifica){
 
-        Notifica notifica = notificaRepository.findById(idNotifica).get();
+        Notifica notifica = notificaRepository.findById(idNotifica)
+                .orElseThrow(() -> new ResourceNotFoundException("Notifica","idNotifica",idNotifica));
 
-        checkIsPropretarioNotifica(notifica);
+        checkIsProprietarioNotifica(notifica);
 
         notifica.setLetta(true);
 
@@ -224,7 +226,7 @@ public class NotificaService {
         return "Notifica settata come letta";
     }
 
-    private void checkIsPropretarioNotifica(Notifica notifica){
+    private void checkIsProprietarioNotifica(@NotNull Notifica notifica){
 
         User userCurrent = UserContex.getUserCurrent();
 
@@ -232,7 +234,7 @@ public class NotificaService {
 
         if(!(userCurrent.equals(proprietarioNotifica))){
 
-            throw new AccessDeniedException("Permesso negato.\n L'utente che vuole settare letta la notifica non è il propretario della notifica.");
+            throw new AccessDeniedException("Permesso negato.\n L'utente che vuole settare letta la notifica non è il proprietario della notifica.");
         }
     }
 }
