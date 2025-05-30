@@ -26,11 +26,14 @@ public class RicercaAnnunciEffettuata extends CreationUpdate {
     private User utente;
 
     private TipologiaImmobile tipologiaImmobile;
+
     private TipoContratto tipologiaContratto;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> localita;
+
     private BigDecimal prezzoMin;
     private BigDecimal prezzoMax;
     @Column(columnDefinition = "TEXT", length = 65535)
-    private String filtoUsatoJson;
+    private String filtroUsatoJson;
 }

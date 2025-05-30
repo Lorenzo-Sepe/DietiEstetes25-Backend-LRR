@@ -41,7 +41,7 @@ public class RicercaAnnunciEffettuataService {
         ricerca.setTipologiaImmobile(filtro.getTipologiaImmobile());
         ricerca.setTipologiaContratto(filtro.getTipologiaContratto());
 
-        ricerca.setFiltoUsatoJson(SerializzazioneUtils.serializzaFiltroAnnuncio(filtro));
+        ricerca.setFiltroUsatoJson(SerializzazioneUtils.serializzaFiltroAnnuncio(filtro));
         
         if(checkIsSameRicerca(filtro)){
             ricerca.setId(ricercaAnnunciEffettuataRepository.findFirstByUtenteOrderByUpdatedAtDesc(user)
@@ -131,7 +131,7 @@ public class RicercaAnnunciEffettuataService {
         if(ricerca.getUtente().getId() != Objects.requireNonNull(UserContex.getUserCurrent()).getId()){
             throw new AccessDeniedException("Non puoi visualizzare la ricerca di un altro utente");
         }
-        return SerializzazioneUtils.deserializzaFiltroAnnuncio(ricerca.getFiltoUsatoJson());
+        return SerializzazioneUtils.deserializzaFiltroAnnuncio(ricerca.getFiltroUsatoJson());
 
     }
 }
