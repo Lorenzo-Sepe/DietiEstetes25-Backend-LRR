@@ -36,6 +36,10 @@ spring:
         # none: da usare in ambiente di produzione: non viene riportata alcuna modifica al db
         # update: aggiorna il db con le tabelle/colonne nuove; non elimina colonne che non hanno piu' corrispondenza con l'entita'
     properties:
+      query:
+        plan_cache_max_size: 1024
+        plan_parameter_metadata_max_size: 64
+        in_clause_parameter_padding: true
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
