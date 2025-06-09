@@ -2,29 +2,16 @@ package it.unina.dietiestates25.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
+@Getter
 @Data
 @Builder
 public class CategoriaNotificaRequest {
-    private boolean AttivoPromozioni;
-    private boolean AttivoCategoriaPropostaAccettata;
-    private boolean AttivoCategoriaPropostaRifitata;
-    private boolean AttivoCategoriaControproposta;
-    private boolean AttivoCategoriaOpportunitaImmobile;
-    public boolean isAttivoPromozioni() {
-        return AttivoPromozioni;
-    }
-    public boolean isAttivoCategoriaPropostaAccettata() {
-        return AttivoCategoriaPropostaAccettata;
-    }
-    public boolean isAttivoCategoriaPropostaRifitata() {
-        return AttivoCategoriaPropostaRifitata;
-    }
-    public boolean isAttivoCategoriaControproposta() {
-        return AttivoCategoriaControproposta;
-    }
-    public boolean isAttivoCategoriaOpportunitaImmobile() {
-        return AttivoCategoriaOpportunitaImmobile;
-    }
+    private boolean attivoPromozioni;
+    private boolean attivoCategoriaPropostaAccettata;
+    private boolean attivoCategoriaPropostaRifiutata;
+    private boolean attivoCategoriaControproposta;
+    private boolean attivoCategoriaOpportunityImmobile;
 }
 

@@ -33,7 +33,6 @@
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>DietiEstates25</sonar.projectKey>
         <sonar.login>sqp_4ae71aaf96c7c7c3e15f07cdbdbea34f14823c3d</sonar.login>
-        <!--Token Sonar Lorenzo : sqp_4ae71aaf96c7c7c3e15f07cdbdbea34f14823c3d-->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>

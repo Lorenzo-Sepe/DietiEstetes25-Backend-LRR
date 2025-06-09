@@ -134,13 +134,13 @@ public class UserService {
 
         if(!request.isAttivoPromozioni())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROMOZIONI));
-        if(!request.isAttivoCategoriaPropostaRifitata())
+        if(!request.isAttivoCategoriaPropostaRifiutata())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA));
         if(!request.isAttivoCategoriaPropostaAccettata())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA));
         if(!request.isAttivoCategoriaControproposta())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.CONTROPROPOSTA));
-        if(!request.isAttivoCategoriaOpportunitaImmobile())
+        if(!request.isAttivoCategoriaOpportunityImmobile())
             categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE));
 
         return categorieDisattivate;

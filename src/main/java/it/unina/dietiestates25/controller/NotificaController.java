@@ -28,7 +28,7 @@ public class NotificaController {
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     public ResponseEntity<String> inviaNotificaPromozionale(@RequestBody @Valid NotificaPromozionaleRequest request){
 
-        return new ResponseEntity<String>(notificaService.inviaNotificaPromozionale(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(notificaService.inviaNotificaPromozionale(request), HttpStatus.CREATED);
     }
 
 
