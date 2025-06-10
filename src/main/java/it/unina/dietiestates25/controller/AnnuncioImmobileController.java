@@ -82,7 +82,7 @@ public class AnnuncioImmobileController {
             description = "Metodo per ottenere la lista di annunci immobiliari dal database con autenticazione",
             tags = {"Annuncio Immobiliare"})
     @PreAuthorize("hasAuthority('MEMBER')")
-    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutentificazione(@RequestBody FiltroAnnuncio filtro) {
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutenticazione(@RequestBody FiltroAnnuncio filtro) {
         ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro);
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }

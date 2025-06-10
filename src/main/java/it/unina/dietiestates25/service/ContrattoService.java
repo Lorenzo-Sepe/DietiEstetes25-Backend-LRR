@@ -4,6 +4,7 @@ import it.unina.dietiestates25.dto.request.DatiAffittoRequest;
 import it.unina.dietiestates25.dto.request.DatiVenditaRequest;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
+import it.unina.dietiestates25.entity.Contratto;
 import it.unina.dietiestates25.entity.ContrattoAffitto;
 import it.unina.dietiestates25.entity.ContrattoVendita;
 import it.unina.dietiestates25.entity.enumeration.TipoContratto;
@@ -45,5 +46,25 @@ public class ContrattoService {
         contratto.setMutuoEstinto(request.isMutuoEstinto());
         contratto.setPrezzoVendita(request.getPrezzo());
         contratto.setTipoContratto(TipoContratto.VENDITA.toString());
+    }
+
+    public Contratto createContrattoFromRequest(ContrattoRequest request) {
+
+        Contratto contratto;
+
+        if (request.getTipoDiContratto().equals("AFFITTO")) {
+            contratto = new ContrattoAffitto();
+            ((ContrattoAffitto) contratto).setCaparra(request.getDatiAffittoRequest().getCaparra());
+            ((ContrattoAffitto) contratto).setTempoMinimo(request.getDatiAffittoRequest().getTempoMinimo());
+            ((ContrattoAffitto) contratto).setTempoMassimo(request.getDatiAffittoRequest().getTempoMassimo());
+            ((ContrattoAffitto) contratto).setPrezzoAffitto(request.getDatiAffittoRequest().getPrezzo());
+        } else {
+            contratto = new ContrattoVendita();
+            ((ContrattoVendita) contratto).setMutuoEstinto(request.getDatiVenditaRequest().isMutuoEstinto());
+            ((ContrattoVendita) contratto).setPrezzoVendita(request.getDatiVenditaRequest().getPrezzo());
+        }
+
+        contratto.setTipoContratto(request.getTipoDiContratto());
+        return contratto;
     }
 }

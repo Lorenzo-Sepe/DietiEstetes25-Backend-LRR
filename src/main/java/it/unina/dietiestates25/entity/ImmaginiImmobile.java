@@ -3,6 +3,8 @@ package it.unina.dietiestates25.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -26,14 +28,6 @@ public class ImmaginiImmobile {
     private Immobile immobile;
 
     public String getUrl(){
-
-        if(url == null){
-
-            return "";
-
-        }else{
-
-            return url;
-        }
+        return Objects.requireNonNullElse(url, "");
     }
 }

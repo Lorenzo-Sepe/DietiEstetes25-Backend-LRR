@@ -19,6 +19,7 @@ public class PropostaResponse {
     private String stato;
     private DatiUserPropostaResponse datiProponente;
 
+    //TODO durante la creazione della tabella ho scoperto che mi serveno insieme agli annunci quindi lo lascerei
     public static List<PropostaResponse> fromListEntityToDto(List<Proposta> proposte){
 
         List<PropostaResponse> proposteResponse = new ArrayList<>();
@@ -39,14 +40,12 @@ public class PropostaResponse {
 
     public static PropostaResponse fromEntityToDto(Proposta proposta){
 
-            PropostaResponse propostaResponse = PropostaResponse.builder()
+        return PropostaResponse.builder()
                     .idProposta(proposta.getId())
                     .prezzoProposta(proposta.getPrezzoProposta())
                     .controproposta(proposta.getControproposta())
                     .stato(proposta.getStato().toString())
                     .datiProponente(DatiUserPropostaResponse.fromEntityToDto(proposta))
                     .build();
-
-        return propostaResponse;
     }
 }

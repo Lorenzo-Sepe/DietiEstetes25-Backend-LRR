@@ -3,6 +3,7 @@ package it.unina.dietiestates25.service;
 import it.unina.dietiestates25.dto.request.ImmaginiImmobiliRequest;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.ImmaginiImmobile;
+import it.unina.dietiestates25.entity.Immobile;
 import it.unina.dietiestates25.utils.ImageContainerUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -84,10 +85,15 @@ public class ImageUploaderService {
         return new int[]{ red, green, blue };
     }
 
+    public List<MultipartFile> getListMultipartFilesFromRequest(List<ImmaginiImmobiliRequest> immaginiRequests) {
+        if (immaginiRequests == null) {
+            throw new IllegalArgumentException("The list of immaginiRequests cannot be null");
+        }
 
-    public String salvaFotoProfilo(MultipartFile file, int userId) {
-        String nomePath = "fotoprofilo" + userId;
-        return imageContainerUtil.uploadImage(file, nomePath);
+        return immaginiRequests.stream()
+                .filter(request -> request != null && request.getFile() != null) // Ensure non-null elements and files
+                .map(ImmaginiImmobiliRequest::getFile)
+                .toList(); // Creates an unmodifiable list
     }
 
    public List<String> salvaImmaginiAnnuncioToBlob(List<MultipartFile> files, int annuncioId,int valoreInizialeCounter) {
@@ -144,6 +150,34 @@ public class ImageUploaderService {
         }
 
         return immaginiFile;
+    }
+
+    public void updateImmaginiAnnuncio(List<ImmaginiImmobiliRequest> immaginiRequest, AnnuncioImmobiliare annuncio){
+
+        int immobileId = annuncio.getImmobile().getId();
+
+        List <MultipartFile> immaginiFile = getListMultipartFilesFromRequest(immaginiRequest);
+
+        List<String> urlImmagini = salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId,0);
+
+        annuncio.getImmobile().setImmagini(getListaImmaginiImmobili(urlImmagini,immaginiRequest,annuncio.getImmobile()));
+    }
+
+    private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini, List<ImmaginiImmobiliRequest> request, Immobile immobile){
+
+        List<ImmaginiImmobile> immaginiImmobile = new ArrayList<>();
+
+        for(int i=0; i< request.size();i++){
+
+            ImmaginiImmobile immagine = ImmaginiImmobile.builder()
+                    .immobile(immobile)
+                    .descrizione(request.get(i).getDescrizione())
+                    .url(urlImmagini.get(i))
+                    .build();
+            immaginiImmobile.add(immagine);
+        }
+
+        return immaginiImmobile;
     }
 
     public void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,AnnuncioImmobiliare annuncio) {
