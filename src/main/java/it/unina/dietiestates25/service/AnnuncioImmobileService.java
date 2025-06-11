@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,7 +45,16 @@ public class AnnuncioImmobileService {
     //-------------------------------------------------------CREA ANNUNCIO-------------------------------------------------------
 
     @Transactional
-    public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request){
+    public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList){
+        // collega file alle immagini nel DTO se necessario
+        if (immaginiList != null && request.getImmobile() != null && request.getImmobile().getImmagini() != null) {
+            List<ImmaginiImmobiliRequest> immagini = request.getImmobile().getImmagini();
+            for (int i = 0; i < immagini.size(); i++) {
+                if (i < immaginiList.size()) {
+                    immagini.get(i).setFile(immaginiList.get(i));
+                }
+            }
+        }
 
         User agenteImmobiliare = UserContex.getUserCurrent();
         Immobile immobile = immobileService.createImmobileByRequest(request.getImmobile());

@@ -163,12 +163,19 @@ public class ImageUploaderService {
         annuncio.getImmobile().setImmagini(getListaImmaginiImmobili(urlImmagini,immaginiRequest,annuncio.getImmobile()));
     }
 
-    private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini, List<ImmaginiImmobiliRequest> request, Immobile immobile){
+    private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini, List<ImmaginiImmobiliRequest> request, Immobile immobile) {
 
         List<ImmaginiImmobile> immaginiImmobile = new ArrayList<>();
 
-        for(int i=0; i< request.size();i++){
+        if (urlImmagini == null || request == null) {
+            throw new IllegalArgumentException("Le liste di URL immagini o richieste sono null.");
+        }
 
+        if (urlImmagini.size() != request.size()) {
+            throw new IllegalArgumentException("Il numero di URL immagini non corrisponde al numero di richieste.");
+        }
+
+        for (int i = 0; i < request.size(); i++) {
             ImmaginiImmobile immagine = ImmaginiImmobile.builder()
                     .immobile(immobile)
                     .descrizione(request.get(i).getDescrizione())
@@ -179,6 +186,7 @@ public class ImageUploaderService {
 
         return immaginiImmobile;
     }
+
 
     public void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,AnnuncioImmobiliare annuncio) {
 

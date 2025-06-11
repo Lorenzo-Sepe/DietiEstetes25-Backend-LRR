@@ -9,10 +9,12 @@ import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,15 +26,17 @@ public class AnnuncioImmobileController {
     private final AnnuncioImmobileService annuncioImmobileService;
     private final RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
 
-    @PostMapping("/annuncioImmobiliare")
+    @PostMapping(value = "/annuncioImmobiliare", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "AGGIUNGI UN ANNUNCIO IMMOBILIARE",
             description = "Metodo per aggiungere un nuovo annuncio immobiliare nel database",
             tags = {"Annuncio Immobiliare"})
     @PreAuthorize("hasAnyAuthority('AGENT')")
-    ResponseEntity<String> creaAnnuncioImmobiliare(@ModelAttribute AnnuncioImmobiliareRequest request){
+    ResponseEntity<String> creaAnnuncioImmobiliare(@RequestPart("dati") AnnuncioImmobiliareRequest request,
+                                                   @RequestPart(value = "immagini", required = false) List<MultipartFile> immaginiList) {
 
-        return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request));
+
+        return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request,immaginiList));
     }
 
     
