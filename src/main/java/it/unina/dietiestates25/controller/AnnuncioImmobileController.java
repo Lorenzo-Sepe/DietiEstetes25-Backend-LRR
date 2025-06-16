@@ -34,8 +34,6 @@ public class AnnuncioImmobileController {
     @PreAuthorize("hasAnyAuthority('AGENT')")
     ResponseEntity<String> creaAnnuncioImmobiliare(@RequestPart("dati") AnnuncioImmobiliareRequest request,
                                                    @RequestPart(value = "immagini", required = false) List<MultipartFile> immaginiList) {
-
-
         return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request,immaginiList));
     }
 
@@ -46,7 +44,6 @@ public class AnnuncioImmobileController {
             description = "Metodo per ottenere la lista di annunci immobiliari dal database",
             tags = {"Annuncio Immobiliare"})
     public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
-
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
@@ -56,7 +53,6 @@ public class AnnuncioImmobileController {
             description = "Metodo per ottenere il numero di annunci immobiliari dal database a partire da filtri",
             tags = {"Annuncio Immobiliare"})
     public ResponseEntity<Long> getNumeroAnnunci(@RequestBody FiltroAnnuncio filtro){
-
         return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(filtro));
     }
 
@@ -66,7 +62,6 @@ public class AnnuncioImmobileController {
             description = "Metodo per ottenere la lista di annunci immobiliari dal database esclusivo per Impiegati",
             tags = {"Annuncio Immobiliare"})
     public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciByStaff(@RequestBody FiltroAnnuncio filtro){
-
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
@@ -76,7 +71,6 @@ public class AnnuncioImmobileController {
             description = "Metodo per ottenere il numero di annunci immobiliari dal database a partire da filtri esclusivo per Impiegati",
             tags = {"Annuncio Immobiliare"})
     public ResponseEntity<Long> getNumeroAnnunciByStaff(){
-
         return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(null));
     }
 
