@@ -26,7 +26,7 @@ public interface RicercaAnnunciEffettuataRepository extends JpaRepository<Ricerc
     @Query("SELECT r.utente FROM RicercaAnnunciEffettuata r " +
             "WHERE (:prezzoMin IS NULL OR r.prezzoMin >= :prezzoMin) " +
             "AND (:prezzoMax IS NULL OR r.prezzoMax <= :prezzoMax) " +
-            "AND (:luogo IS NULL OR :luogo MEMBER OF r.localita) " +
+            "AND (:luogo IS NULL OR :luogo MEMBER OF r.locality) " +
             "AND (:tipologiaContratto IS NULL OR r.tipologiaContratto = :tipologiaContratto) " +
             "AND (:tipologiaImmobile IS NULL OR r.tipologiaImmobile = :tipologiaImmobile) " +
             "AND r.updatedAt >= :dataSettimana")

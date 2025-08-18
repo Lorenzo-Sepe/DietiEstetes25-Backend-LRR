@@ -6,6 +6,7 @@ import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
+import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.SerializzazioneUtils;
 import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
@@ -21,13 +22,22 @@ import java.util.Objects;
 @AllArgsConstructor
 public class RicercaAnnunciEffettuataService {
 
-    private RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
+    private final RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
+    private final UserRepository userRepository;
+
+    public List<RicercaAnnunciEffettuata> getStoricoRicerche() {
+        User user = userRepository.findById(Objects.requireNonNull(UserContex.getUserCurrent()).getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", UserContex.getUserCurrent().getId())
+                        );
+
+        return ricercaAnnunciEffettuataRepository.findByUtente(user);
+    }
 
     public void salvaRicercaAnnunciEffettuata(FiltroAnnuncio filtro) {
         User user= UserContex.getUserCurrent();
         RicercaAnnunciEffettuata ricerca= RicercaAnnunciEffettuata.builder().utente(user).build();
-        List <String> localita= getLocalita(filtro);
-        ricerca.setLocalita(localita);
+        List <String> locality= getLocality(filtro);
+        ricerca.setLocality(locality);
         if(filtro.getPrezzoMin() ==null  || filtro.getPrezzoMin()<0)
             ricerca.setPrezzoMin(null);
         else
@@ -50,7 +60,7 @@ public class RicercaAnnunciEffettuataService {
         try {
         ricercaAnnunciEffettuataRepository.save(ricerca);
         }catch (Exception e) {
-            //non fare nulla non serve che blocchi la ricerca}
+            //non fare nulla non serve che blocchi la ricerca
         }
     }
 
@@ -77,12 +87,12 @@ public class RicercaAnnunciEffettuataService {
     }
 
     // Confronta le località
-    List<String> localita = getLocalita(filtro);
-    if (localita.size() != ricerca.getLocalita().size()) {
+    List<String> localita = getLocality(filtro);
+    if (localita.size() != ricerca.getLocality().size()) {
         return false;
     }
     for (String loc : localita) {
-        if (!ricerca.getLocalita().contains(loc)) {
+        if (!ricerca.getLocality().contains(loc)) {
             return false;
         }
     }
@@ -90,7 +100,7 @@ public class RicercaAnnunciEffettuataService {
     // Se tutte le condizioni sono soddisfatte, restituisce true
     return true;
 }
-    private List<String> getLocalita(FiltroAnnuncio filtro) {
+    private List<String> getLocality(FiltroAnnuncio filtro) {
         if (filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
             return List.of(filtro.getProvincia());
         }
@@ -106,10 +116,7 @@ public class RicercaAnnunciEffettuataService {
         return List.of();
     }
 
-    public List<RicercaAnnunciEffettuata> getStoricoRicerche() {
-        User user= UserContex.getUserCurrent();
-        return ricercaAnnunciEffettuataRepository.findByUtente(user);
-    }
+
 
 
     public List<User> utentiInteressati(CriteriDiRicercaUtenti request){

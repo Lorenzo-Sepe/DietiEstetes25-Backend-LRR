@@ -95,17 +95,6 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(ricercaAnnunciEffettuataService.getFiltroRicerca(id));
     }
 
-    //TODO AGGIUNGERE UNA DTO RESPONSE
-    @GetMapping("/annuncioImmobiliare/storicoRicerche")
-    @Operation(
-            summary = "OTTIENI STORICO RICERCHE",
-            description = "Metodo per ottenere lo storico delle ricerche effettuate",
-            tags = {"Annuncio Immobiliare"})
-    @PreAuthorize("hasAuthority('MEMBER')")
-    public ResponseEntity<List<RicercaAnnunciEffettuata>> getStoricoRicerche() {
-        return ResponseEntity.ok(ricercaAnnunciEffettuataService.getStoricoRicerche());
-    }
-
 
     @DeleteMapping("/annuncioImmobiliare/{id}")
     @Operation(

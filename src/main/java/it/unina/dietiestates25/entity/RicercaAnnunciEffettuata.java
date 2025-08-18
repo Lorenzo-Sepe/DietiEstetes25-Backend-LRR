@@ -30,10 +30,11 @@ public class RicercaAnnunciEffettuata extends CreationUpdate {
     private TipoContratto tipologiaContratto;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> localita;
+    private List<String> locality;
 
     private BigDecimal prezzoMin;
     private BigDecimal prezzoMax;
+
     @Column(columnDefinition = "TEXT", length = 65535)
     private String filtroUsatoJson;
 }
