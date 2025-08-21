@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AnnuncioImmobiliareResponse {
-
     private int id;
     private String titolo;
     private String descrizione;
@@ -22,7 +21,5 @@ public class AnnuncioImmobiliareResponse {
     private ContrattoResponse contratto;
     private List<PropostaResponse> proposte;
     private LocalDateTime dataCreazione;
-
-
 }
 

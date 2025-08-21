@@ -96,10 +96,10 @@ public class RicercaAnnunciEffettuataService {
             return false;
         }
     }
-
     // Se tutte le condizioni sono soddisfatte, restituisce true
     return true;
 }
+
     private List<String> getLocality(FiltroAnnuncio filtro) {
         if (filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
             return List.of(filtro.getProvincia());

@@ -1,10 +1,14 @@
 package it.unina.dietiestates25.repository;
 
+import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -24,4 +28,6 @@ public interface AnnuncioImmobiliareRepository extends JpaRepository<AnnuncioImm
     long countByAgente(User agente);
 
     long countByAgenteIn(Collection<User> agentes);
-}
+
+
+    }

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
-import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
 import lombok.RequiredArgsConstructor;
@@ -84,17 +83,6 @@ public class AnnuncioImmobileController {
         ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro);
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
-
-    @GetMapping("/annuncioImmobiliare/storicoRicerche/{id}")
-    @Operation(
-            summary = "OTTIENI STORICO RICERCHE DATO UTENTE",
-            description = "Metodo per ottenere lo storico delle ricerche effettuate di un utente",
-            tags = {"Annuncio Immobiliare"})
-    @PreAuthorize("hasAuthority('MEMBER')")
-    public ResponseEntity<FiltroAnnuncio> getRicerca(@PathVariable int id) {
-        return ResponseEntity.ok(ricercaAnnunciEffettuataService.getFiltroRicerca(id));
-    }
-
 
     @DeleteMapping("/annuncioImmobiliare/{id}")
     @Operation(
