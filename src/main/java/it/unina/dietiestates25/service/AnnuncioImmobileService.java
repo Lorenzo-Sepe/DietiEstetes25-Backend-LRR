@@ -35,6 +35,7 @@ public class AnnuncioImmobileService {
 
     private final ContrattoService contrattoService;
     private final ImmobileService immobileService;
+    private final AgenziaImmobiliareService agenziaImmobiliareService;
     private final AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
     private final ImageUploaderService imageUploaderService;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
@@ -101,7 +102,9 @@ public class AnnuncioImmobileService {
 
         ImmobileResponse immobileResponse = ImmobileResponse.fromEntityToDto(annuncio.getImmobile());
 
-        return AnnuncioImmobiliareResponse.builder()
+        AgenziaImmobiliare agenzia = agenziaImmobiliareService.getAgenziaImmobiliare(agente.getEmail());
+
+        AnnuncioImmobiliareResponse annuncioImmobiliareResponse = AnnuncioImmobiliareResponse.builder()
                 .immobile(immobileResponse)
                 .titolo(annuncio.getTitolo())
                 .agente(DipendenteResponse.fromEntityToDto(datiImpiegato))
@@ -111,6 +114,10 @@ public class AnnuncioImmobileService {
                 .proposte(PropostaResponse.fromListEntityToDto(annuncio.getProposte()))
                 .dataCreazione(annuncio.getDataPubblicazione())
                 .build();
+
+        annuncioImmobiliareResponse.getAgente().setAgenzia(agenzia.getNomeAzienda());
+
+        return annuncioImmobiliareResponse;
     }
 
     public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {

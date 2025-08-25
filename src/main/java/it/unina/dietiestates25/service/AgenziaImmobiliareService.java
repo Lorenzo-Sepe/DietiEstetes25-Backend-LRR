@@ -104,4 +104,10 @@ public class AgenziaImmobiliareService {
                 .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
              return DatiAgenziaImmobiliareResponse.fromEntityToDto(agenzia);
     }
+
+    public AgenziaImmobiliare getAgenziaImmobiliare(String email) {
+
+        return agenziaImmobiliareRepository.findByDipendenteEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
+    }
 }

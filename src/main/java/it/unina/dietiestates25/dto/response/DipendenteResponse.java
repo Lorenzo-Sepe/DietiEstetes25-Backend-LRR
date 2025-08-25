@@ -2,6 +2,7 @@ package it.unina.dietiestates25.dto.response;
 
 import it.unina.dietiestates25.entity.Contatto;
 import it.unina.dietiestates25.entity.DatiImpiegato;
+import it.unina.dietiestates25.service.AgenziaImmobiliareService;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +18,10 @@ public class DipendenteResponse {
     private String email;
     private List<Contatto> contatti;
     private String urlFotoProfilo;
+    private String agenzia;
 
     public static DipendenteResponse fromEntityToDto(DatiImpiegato dipendente){
+
         return DipendenteResponse.builder()
                 .nome(dipendente.getNome())
                 .cognome(dipendente.getCognome())
