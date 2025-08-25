@@ -29,7 +29,7 @@ public class IndirizzoResponse {
                 .numeroCivico(indirizzoImmobile.getNumeroCivico())
                 .citta(indirizzoImmobile.getCitta())
                 .cap(indirizzoImmobile.getCap())
-                .provincia(indirizzoImmobile.getCap())
+                .provincia(indirizzoImmobile.getProvincia())
                 .nazione(indirizzoImmobile.getNazione())
                 .longitudine(indirizzoImmobile.getLongitudine())
                 .latitudine(indirizzoImmobile.getLatitudine())

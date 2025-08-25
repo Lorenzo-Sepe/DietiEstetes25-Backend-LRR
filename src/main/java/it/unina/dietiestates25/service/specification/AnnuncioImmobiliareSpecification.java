@@ -142,7 +142,7 @@ public class AnnuncioImmobiliareSpecification {
             Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
             Join<Immobile, Indirizzo> indirizzo = immobile.join("indirizzo");
 
-            return cb.like(cb.lower(indirizzo.get("provincia")), "%" + provincia.toLowerCase() + "%");
+            return cb.like(cb.lower(indirizzo.get("citta")), "%" + provincia.toLowerCase() + "%");
 
         };
     }
