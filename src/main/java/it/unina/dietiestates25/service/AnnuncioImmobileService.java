@@ -70,8 +70,6 @@ public class AnnuncioImmobileService {
                 .proposte(new ArrayList<>())
                 .build();
 
-        annuncioImmobiliareRepository.save(annuncioImmobiliare);
-
         imageUploaderService.updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncioImmobiliare);
         annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
