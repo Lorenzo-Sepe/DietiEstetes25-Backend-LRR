@@ -1,11 +1,15 @@
 package it.unina.dietiestates25.service;
 
+import it.unina.dietiestates25.dto.request.ImmaginiImmobiliRequest;
 import it.unina.dietiestates25.dto.request.ImmobileRequest;
 import it.unina.dietiestates25.entity.Immobile;
 import it.unina.dietiestates25.entity.enumeration.ClasseEnergetica;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,8 +19,16 @@ public class ImmobileService {
     private final ClasseEnergeticaService classeEnergeticaService;
     private final CaratteristicheAggiuntiveService caratteristicheAggiuntiveService;
 
-    public Immobile createImmobileByRequest(ImmobileRequest request){
-        //immobile.setImmagini(getListaImmaginiFromRequest(request.getImmagini(),immobile));
+    public Immobile createImmobileByRequest(ImmobileRequest request, List<MultipartFile> immaginiList){
+
+        if (immaginiList != null && request != null && request.getImmagini() != null) {
+            List<ImmaginiImmobiliRequest> immagini = request.getImmagini();
+            for (int i = 0; i < immagini.size(); i++) {
+                if (i < immaginiList.size()) {
+                    immagini.get(i).setFile(immaginiList.get(i));
+                }
+            }
+        }
 
         return Immobile.builder()
                 .tipologiaImmobile(tipologiaImmobileService.checkEnumTipologiaImmobileFromString(request.getTipologiaImmobile()))

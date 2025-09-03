@@ -47,18 +47,9 @@ public class AnnuncioImmobileService {
 
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList){
-        // collega file alle immagini nel DTO se necessario
-        if (immaginiList != null && request.getImmobile() != null && request.getImmobile().getImmagini() != null) {
-            List<ImmaginiImmobiliRequest> immagini = request.getImmobile().getImmagini();
-            for (int i = 0; i < immagini.size(); i++) {
-                if (i < immaginiList.size()) {
-                    immagini.get(i).setFile(immaginiList.get(i));
-                }
-            }
-        }
 
         User agenteImmobiliare = UserContex.getUserCurrent();
-        Immobile immobile = immobileService.createImmobileByRequest(request.getImmobile());
+        Immobile immobile = immobileService.createImmobileByRequest(request.getImmobile(), immaginiList);
         Contratto contratto = contrattoService.createContrattoFromRequest(request.getContratto());
         AnnuncioImmobiliare annuncioImmobiliare = AnnuncioImmobiliare.builder()
                 .immobile(immobile)
