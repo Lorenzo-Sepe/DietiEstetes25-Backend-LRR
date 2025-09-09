@@ -109,7 +109,7 @@ public class AnnuncioImmobileService {
         return annuncioImmobiliareResponse;
     }
 
-    public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncio filtro) {
+    public List<AnnuncioImmobiliareResponse> cercaAnnunci(FiltroAnnuncioDTO filtro) {
 
         AuthorityName ruoloUserCurrent = UserContex.getRoleCurrent();
         List<AnnuncioImmobiliare> annunci = getAnnunciByRuolo(ruoloUserCurrent,filtro);
@@ -140,7 +140,7 @@ public class AnnuncioImmobileService {
         return annunciResponse;
     }
 
-    private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo, FiltroAnnuncio filtro){
+    private List<AnnuncioImmobiliare> getAnnunciByRuolo(AuthorityName ruolo, FiltroAnnuncioDTO filtro){
 
         List<AnnuncioImmobiliare> annunci;
         Pageable pageable = null;
@@ -175,7 +175,7 @@ public class AnnuncioImmobileService {
         return annunci;
     }
 
-    private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncio filtro){
+    private Specification<AnnuncioImmobiliare> getSpecificationQuery(FiltroAnnuncioDTO filtro){
 
         return Specification
                 .where(AnnuncioImmobiliareSpecification.conTitolo(filtro.getTitolo()))
@@ -195,7 +195,7 @@ public class AnnuncioImmobileService {
 
     //------------------------------------------------------GET NUMERO DI ANNUNCI------------------------------------------------------
 
-    public long getNumeroAnnunci(FiltroAnnuncio filtro){
+    public long getNumeroAnnunci(FiltroAnnuncioDTO filtro){
 
         long numeroDiAnnunci;
 

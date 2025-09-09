@@ -2,7 +2,7 @@ package it.unina.dietiestates25.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
+import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
@@ -42,7 +42,7 @@ public class AnnuncioImmobileController {
             summary = "CERCA ANNUNCI IMMOBILIARI",
             description = "Metodo per ottenere la lista di annunci immobiliari dal database",
             tags = {"Annuncio Immobiliare"})
-    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunci(@RequestBody FiltroAnnuncio filtro) {
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunci(@RequestBody FiltroAnnuncioDTO filtro) {
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
@@ -51,7 +51,7 @@ public class AnnuncioImmobileController {
             summary = "OTTIENI NUMERO ANNUNCI IMMOBILIARI",
             description = "Metodo per ottenere il numero di annunci immobiliari dal database a partire da filtri",
             tags = {"Annuncio Immobiliare"})
-    public ResponseEntity<Long> getNumeroAnnunci(@RequestBody FiltroAnnuncio filtro){
+    public ResponseEntity<Long> getNumeroAnnunci(@RequestBody FiltroAnnuncioDTO filtro){
         return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(filtro));
     }
 
@@ -60,7 +60,7 @@ public class AnnuncioImmobileController {
             summary = "CERCA ANNUNCI IMMOBILIARI STAFF",
             description = "Metodo per ottenere la lista di annunci immobiliari dal database esclusivo per Impiegati",
             tags = {"Annuncio Immobiliare"})
-    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciByStaff(@RequestBody FiltroAnnuncio filtro){
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciByStaff(@RequestBody FiltroAnnuncioDTO filtro){
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
@@ -79,7 +79,7 @@ public class AnnuncioImmobileController {
             description = "Metodo per ottenere la lista di annunci immobiliari dal database con autenticazione",
             tags = {"Annuncio Immobiliare"})
     @PreAuthorize("hasAuthority('MEMBER')")
-    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutenticazione(@RequestBody FiltroAnnuncio filtro) {
+    public ResponseEntity<List<AnnuncioImmobiliareResponse>> cercaAnnunciConAutenticazione(@RequestBody FiltroAnnuncioDTO filtro) {
         ricercaAnnunciEffettuataService.salvaRicercaAnnunciEffettuata(filtro);
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }

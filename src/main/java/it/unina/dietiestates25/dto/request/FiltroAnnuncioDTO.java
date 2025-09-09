@@ -5,7 +5,7 @@ import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import lombok.Data;
 
 @Data
-public class FiltroAnnuncio {
+public class FiltroAnnuncioDTO {
     //pageable
     private Integer numeroPagina;
     private Integer numeroDiElementiPerPagina;

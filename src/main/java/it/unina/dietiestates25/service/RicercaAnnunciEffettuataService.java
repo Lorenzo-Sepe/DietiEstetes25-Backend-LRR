@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
-import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
+import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
@@ -33,7 +33,7 @@ public class RicercaAnnunciEffettuataService {
         return ricercaAnnunciEffettuataRepository.findByUtente(user);
     }
 
-    public void salvaRicercaAnnunciEffettuata(FiltroAnnuncio filtro) {
+    public void salvaRicercaAnnunciEffettuata(FiltroAnnuncioDTO filtro) {
         User user= UserContex.getUserCurrent();
         RicercaAnnunciEffettuata ricerca= RicercaAnnunciEffettuata.builder().utente(user).build();
         List <String> locality= getLocality(filtro);
@@ -64,7 +64,7 @@ public class RicercaAnnunciEffettuataService {
         }
     }
 
-   private boolean checkIsSameRicerca(FiltroAnnuncio filtro) {
+   private boolean checkIsSameRicerca(FiltroAnnuncioDTO filtro) {
     // Ottiene l'utente corrente
     User user = UserContex.getUserCurrent();
 
@@ -100,7 +100,7 @@ public class RicercaAnnunciEffettuataService {
     return true;
 }
 
-    private List<String> getLocality(FiltroAnnuncio filtro) {
+    private List<String> getLocality(FiltroAnnuncioDTO filtro) {
         if (filtro.getProvincia()!=null && !filtro.getProvincia().isBlank()){
             return List.of(filtro.getProvincia());
         }
@@ -132,7 +132,7 @@ public class RicercaAnnunciEffettuataService {
     }
 
 
-    public FiltroAnnuncio getFiltroRicerca(int id) {
+    public FiltroAnnuncioDTO getFiltroRicerca(int id) {
         RicercaAnnunciEffettuata ricerca = ricercaAnnunciEffettuataRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ricerca", "id", id));
         if(ricerca.getUtente().getId() != Objects.requireNonNull(UserContex.getUserCurrent()).getId()){

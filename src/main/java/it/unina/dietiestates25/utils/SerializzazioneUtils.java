@@ -1,12 +1,12 @@
 package it.unina.dietiestates25.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
+import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 
 public class SerializzazioneUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static String serializzaFiltroAnnuncio(FiltroAnnuncio filtro) {
+    public static String serializzaFiltroAnnuncio(FiltroAnnuncioDTO filtro) {
         try {
             return mapper.writeValueAsString(filtro);
         } catch (Exception e) {
@@ -15,9 +15,9 @@ public class SerializzazioneUtils {
         }
     }
 
-    public static FiltroAnnuncio deserializzaFiltroAnnuncio(String json) {
+    public static FiltroAnnuncioDTO deserializzaFiltroAnnuncio(String json) {
         try {
-            return mapper.readValue(json, FiltroAnnuncio.class);
+            return mapper.readValue(json, FiltroAnnuncioDTO.class);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

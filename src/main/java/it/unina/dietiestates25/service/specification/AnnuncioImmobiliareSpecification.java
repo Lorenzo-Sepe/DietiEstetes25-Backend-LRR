@@ -1,6 +1,6 @@
 package it.unina.dietiestates25.service.specification;
 
-import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
+import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import jakarta.persistence.criteria.Expression;
@@ -147,7 +147,7 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
-    public static Specification<AnnuncioImmobiliare> conCaratteristicheAggiuntive(FiltroAnnuncio filtro) {
+    public static Specification<AnnuncioImmobiliare> conCaratteristicheAggiuntive(FiltroAnnuncioDTO filtro) {
         return (root, query, cb) -> {
             Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
             Join<Immobile, CaratteristicheAggiuntive> caratteristiche = immobile.join("caratteristicheAggiuntive");

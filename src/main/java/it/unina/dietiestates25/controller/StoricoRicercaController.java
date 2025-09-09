@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import it.unina.dietiestates25.dto.request.FiltroAnnuncio;
+import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class StoricoRicercaController {
             summary = "OTTIENI STORICO RICERCHE DATO UTENTE",
             description = "Metodo per ottenere lo storico delle ricerche effettuate di un utente",
             tags = {"Storico Ricerche"})
-    public ResponseEntity<FiltroAnnuncio> getRicerca(@PathVariable int id ) {
+    public ResponseEntity<FiltroAnnuncioDTO> getRicerca(@PathVariable int id ) {
         return ResponseEntity.ok(ricercaAnnunciEffettuataService.getFiltroRicerca(id));
     }
 }
