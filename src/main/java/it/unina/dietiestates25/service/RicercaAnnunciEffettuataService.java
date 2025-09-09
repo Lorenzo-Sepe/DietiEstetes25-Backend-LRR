@@ -30,7 +30,7 @@ public class RicercaAnnunciEffettuataService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", UserContex.getUserCurrent().getId())
                         );
 
-        return ricercaAnnunciEffettuataRepository.findByUtente(user);
+        return ricercaAnnunciEffettuataRepository.findByUtenteOrderByCreatedAtDesc(user);
     }
 
     public void salvaRicercaAnnunciEffettuata(FiltroAnnuncioDTO filtro) {

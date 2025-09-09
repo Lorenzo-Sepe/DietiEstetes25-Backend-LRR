@@ -20,7 +20,7 @@ import java.util.Optional;
 public interface RicercaAnnunciEffettuataRepository extends JpaRepository<RicercaAnnunciEffettuata, Integer>, JpaSpecificationExecutor<RicercaAnnunciEffettuata> {
 
 
-    List<RicercaAnnunciEffettuata> findByUtente(User user);
+    List<RicercaAnnunciEffettuata> findByUtenteOrderByCreatedAtDesc(User user);
 
 
     @Query("SELECT r.utente FROM RicercaAnnunciEffettuata r " +
