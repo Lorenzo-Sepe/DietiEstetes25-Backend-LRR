@@ -27,14 +27,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.signup(request));
     }
 
-    @PostMapping("/pb/auth/registerIdProv")
-    @Operation(
-            summary = "ADD A NEW USER USO IDENTITY PROVIDER",
-            description = "Method to add a new user to the database with a sign in procedure and send an email to confirm the registration using identity provider Google or Github",
-            tags = {"Auth"})
-    public ResponseEntity<String> registerIdProv(@RequestBody String accessToken){
-        return ResponseEntity.ok(authService.registerIdProv(accessToken));
-    }
 
     @Operation(
             summary = "LOGIN",

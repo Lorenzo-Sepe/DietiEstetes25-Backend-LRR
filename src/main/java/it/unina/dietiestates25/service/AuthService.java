@@ -111,23 +111,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        return JwtAuthenticationResponse.fromEntityToDto(user,accessToken);
+        return JwtAuthenticationResponse.fromEntityToDto(user,jwtService.generateToken(user));
     }
 
-    @Transactional
-    public String registerIdProv(String accessToken) {
-        DecodedJWT token = jwtService.decodeJWT(accessToken);
-        if(userRepository.existsByEmail( token.getClaim("email").asString()))
-            throw new ConflictException(Msg.USER_ALREADY_PRESENT);
-        Authority authority = authorityRepository.findByDefaultAuthorityTrue()
-                .orElseThrow(() -> new ResourceNotFoundException("Authority", "defaultAuthority", true));
-        User user = User.builder()
-                .email(token.getClaim("email").asString())
-                .nomeVisualizzato(token.getClaim("name").asString())
-                //.password(passwordEncoder.encode())
-                .authority(authority)
-                .build();
-        userRepository.save(user);
-        return Msg.USER_SIGNUP_FIRST_STEP;
-    }
 }
