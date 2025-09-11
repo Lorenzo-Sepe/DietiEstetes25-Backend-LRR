@@ -22,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,20 @@ public class UserService {
 
 
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
+
+        if(!request.getRuolo().equals("MANAGER") && !request.getRuolo().equals("AGENT")) {
+
+            throw new IllegalArgumentException("Ruolo non valido: " + request.getRuolo());
+        }
+
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
         String password = passwordService.generaPasswordDipendente();
         AuthorityName authorityName = request.getRuolo().equals("MANAGER") ? AuthorityName.MANAGER : AuthorityName.AGENT;
 
+        String ruolo = authorityName.name().equals("MANAGER") ? "Manager" : "Agente";
+
         //Agente Nome C.
-        String nomeVisualizzato = "agente " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";
+        String nomeVisualizzato = ruolo + " " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";
         String fotoProfilo = imageUploaderService.getDefaultAvatar(nomeVisualizzato);
         User user = User.builder()
                 .email(email)
