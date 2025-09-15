@@ -164,6 +164,10 @@ import java.util.List;
             if(proposta.getControproposta()!=null && proposta.getControproposta() != 0){
                 throw new BadRequestException("La proposta ha già una controproposta");
             }
+
+            if(controproposta < proposta.getPrezzoProposta()){
+                throw new BadRequestException("Non puoi proporre una controproposta minore della proposta del proponente");
+            }
             checkPropostaStatus(proposta);
             proposta.setControproposta(controproposta);
             proposta.setStato(StatoProposta.IN_TRATTAZIONE);
