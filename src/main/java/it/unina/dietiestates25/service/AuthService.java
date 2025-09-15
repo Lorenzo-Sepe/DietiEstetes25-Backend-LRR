@@ -92,15 +92,25 @@ public class AuthService {
         User user = userRepository.findById(Objects.requireNonNull(UserContex.getUserCurrent()).getId())
                 .orElseThrow(() -> new UnauthorizedException("Utente non trovato. Assicurati di essere autenticato correttamente."));
 
+        if(passwordEncoder.matches(newPassword, user.getPassword()))
+            throw new ConflictException("La nuova password non può essere uguale alla password attuale");
+
         if(!newPassword.equals(confirmPassword))
-            throw new ConflictException("Le password non corrispondono");
+            throw new ConflictException("la nuova password e la password di conferma non corrispondono");
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new BadCredentialsException("La password inserita non corrisponde alla password attuale");
         }
 
+
+
         user.setPassword(passwordEncoder.encode(newPassword));
+        try {
         userRepository.save(user);
+
+        }catch (Exception e){
+            throw new UnauthorizedException("Errore al momento del salvataggio della nuova password\n non è stato possibile cambiare la password\nRiprova più tardi");
+        }
 
         return Msg.PASSWORD_CHANGED;
     }
