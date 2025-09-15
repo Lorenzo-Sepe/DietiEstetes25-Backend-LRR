@@ -122,6 +122,30 @@ public class RicercaAnnunciEffettuataService {
     public List<User> utentiInteressati(CriteriDiRicercaUtenti request){
         if(request.getIntervalloGiorniStoricoRicerca()<=0)
             request.setIntervalloGiorniStoricoRicerca(7);
+        //controllo validità parametri
+        if(request.getBudgetMin()!=null && request.getBudgetMin().compareTo(BigDecimal.ZERO)<0){
+            request.setBudgetMin(null);
+        }
+        //controllo validità parametri maxBudget
+        if(request.getBudgetMax()!=null && request.getBudgetMax().compareTo(BigDecimal.ZERO)<0){
+            request.setBudgetMax(null);
+        }
+        //controllo se il budget max è minore del budget min
+        if(request.getBudgetMin()!=null && request.getBudgetMax()!=null &&
+                request.getBudgetMax().compareTo(request.getBudgetMin())<0){
+            BigDecimal temp = request.getBudgetMin();
+            //scambio i valori TODO decide se farlo o lancia eccezione
+            request.setBudgetMin(request.getBudgetMax());
+            request.setBudgetMax(temp);
+        }
+        //controllo validità area di interesse
+        if(request.getAreaDiInteresse()==null || request.getAreaDiInteresse().isBlank()){
+            request.setAreaDiInteresse(null);
+        }
+        //controllo se area di interesse sia italia o una città valida
+        //TODO implementare controllo area di interesse valida
+
+
 
         return ricercaAnnunciEffettuataRepository.trovaUtentiPerCriteri(request.getBudgetMin(),
                                                 request.getBudgetMax(),
