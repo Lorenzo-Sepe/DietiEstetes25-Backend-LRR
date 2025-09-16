@@ -21,9 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -89,27 +86,35 @@ public class AuthService {
 
     public String changePassword(String oldPassword, String newPassword, String confirmPassword) {
 
-        User user = userRepository.findById(Objects.requireNonNull(UserContex.getUserCurrent()).getId())
-                .orElseThrow(() -> new UnauthorizedException("Utente non trovato. Assicurati di essere autenticato correttamente."));
+        //1
+        if(UserContex.getUserCurrent() == null)
+            throw new UnauthorizedException("Utente non autenticato. Effettua il login per cambiare la password.");
 
-        if(passwordEncoder.matches(newPassword, user.getPassword()))
-            throw new ConflictException("La nuova password non può essere uguale alla password attuale");
+        //2
+        User user = userRepository.findById(UserContex.getUserCurrent().getId())
+                .orElseThrow(() -> new ResourceNotFoundException(UserContex.getUserCurrent().getEmail(),"Utente non trovato. Assicurati di essere autenticato correttamente."));
 
-        if(!newPassword.equals(confirmPassword))
-            throw new ConflictException("la nuova password e la password di conferma non corrispondono");
-
+        //3
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new BadCredentialsException("La password inserita non corrisponde alla password attuale");
         }
 
+        //4
+        if(!newPassword.equals(confirmPassword))
+            throw new ConflictException("la nuova password e la password di conferma non corrispondono");
+
+        //5
+        if(passwordEncoder.matches(newPassword, user.getPassword()))
+            throw new ConflictException("La nuova password non può essere uguale alla password attuale");
+
+
 
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        try {
+        try {//6
         userRepository.save(user);
-
         }catch (Exception e){
-            throw new UnauthorizedException("Errore al momento del salvataggio della nuova password\n non è stato possibile cambiare la password\nRiprova più tardi");
+            throw new RuntimeException("Errore al momento del salvataggio della nuova password\n non è stato possibile cambiare la password\nRiprova più tardi");
         }
 
         return Msg.PASSWORD_CHANGED;
