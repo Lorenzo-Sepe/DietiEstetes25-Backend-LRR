@@ -38,8 +38,6 @@ public class RicercaAnnunciEffettuataService {
         InputStream is = getClass().getResourceAsStream("/comuniCap.json");
        try {
         List<CittaItaliana> list = mapper.readValue(is, new TypeReference<List<CittaItaliana>>() {});
-        System.out.println(list);
-        System.out.println("LISTA CREATA ");
         cittaItaliane = list.stream()
                 .map(c -> c.denominazione_ita())
                 .map(String::toLowerCase)
@@ -168,8 +166,14 @@ public class RicercaAnnunciEffettuataService {
             request.setAreaDiInteresse(null);
         }
         //controllo se area di interesse sia italia o una città valida
-        if(!isItalianCitty(request.getAreaDiInteresse())){
+        if(request.getAreaDiInteresse()!=null && !request.getAreaDiInteresse().isBlank()){
+            if(request.getAreaDiInteresse().equalsIgnoreCase("italia")) {
+                request.setAreaDiInteresse(null);
+            }
+            else if(!isItalianCitty(request.getAreaDiInteresse())){
             request.setAreaDiInteresse(null);
+            }
+
         }
 
 
