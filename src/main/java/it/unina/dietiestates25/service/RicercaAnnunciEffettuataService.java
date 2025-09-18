@@ -35,16 +35,19 @@ public class RicercaAnnunciEffettuataService {
         this.ricercaAnnunciEffettuataRepository = ricercaAnnunciEffettuataRepository;
         this.userRepository = userRepository;
        ObjectMapper mapper = new ObjectMapper();
-        InputStream is = getClass().getResourceAsStream("src/main/resources/comuniCap.json"); // src/main/resources/citta.json
+        InputStream is = getClass().getResourceAsStream("/comuniCap.json");
        try {
         List<CittaItaliana> list = mapper.readValue(is, new TypeReference<List<CittaItaliana>>() {});
+        System.out.println(list);
+        System.out.println("LISTA CREATA ");
         cittaItaliane = list.stream()
-                .map(c -> c.getDenominazione_ita())
+                .map(c -> c.denominazione_ita())
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
-       }catch (Exception e){}
-
+       }catch (Exception e){
+        e.printStackTrace();
+       }
 
 
     }
