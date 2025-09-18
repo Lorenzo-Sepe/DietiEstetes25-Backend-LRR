@@ -1,5 +1,7 @@
 package it.unina.dietiestates25.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unina.dietiestates25.dto.request.CriteriDiRicercaUtenti;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 import it.unina.dietiestates25.entity.RicercaAnnunciEffettuata;
@@ -7,24 +9,45 @@ import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.utils.CittaItaliana;
 import it.unina.dietiestates25.utils.SerializzazioneUtils;
 import it.unina.dietiestates25.utils.UserContex;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class RicercaAnnunciEffettuataService {
 
     private final RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
     private final UserRepository userRepository;
+    public Set<String> cittaItaliane;
 
+    public RicercaAnnunciEffettuataService(RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository, UserRepository userRepository) {
+        this.ricercaAnnunciEffettuataRepository = ricercaAnnunciEffettuataRepository;
+        this.userRepository = userRepository;
+       ObjectMapper mapper = new ObjectMapper();
+        InputStream is = getClass().getResourceAsStream("src/main/resources/comuniCap.json"); // src/main/resources/citta.json
+       try {
+        List<CittaItaliana> list = mapper.readValue(is, new TypeReference<List<CittaItaliana>>() {});
+        cittaItaliane = list.stream()
+                .map(c -> c.getDenominazione_ita())
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
+       }catch (Exception e){}
+
+
+
+    }
     public List<RicercaAnnunciEffettuata> getStoricoRicerche() {
         User user = userRepository.findById(Objects.requireNonNull(UserContex.getUserCurrent()).getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", UserContex.getUserCurrent().getId())
@@ -134,7 +157,6 @@ public class RicercaAnnunciEffettuataService {
         if(request.getBudgetMin()!=null && request.getBudgetMax()!=null &&
                 request.getBudgetMax().compareTo(request.getBudgetMin())<0){
             BigDecimal temp = request.getBudgetMin();
-            //scambio i valori TODO decide se farlo o lancia eccezione
             request.setBudgetMin(request.getBudgetMax());
             request.setBudgetMax(temp);
         }
@@ -143,7 +165,9 @@ public class RicercaAnnunciEffettuataService {
             request.setAreaDiInteresse(null);
         }
         //controllo se area di interesse sia italia o una città valida
-        //TODO implementare controllo area di interesse valida
+        if(!isItalianCitty(request.getAreaDiInteresse())){
+            request.setAreaDiInteresse(null);
+        }
 
 
 
@@ -153,6 +177,12 @@ public class RicercaAnnunciEffettuataService {
                                                 request.getTipoDiContrattoDiInteresse(),
                                                 request.getTipologiaDiImmobileDiInteresse(),
                                                 LocalDateTime.now().minusDays(request.getIntervalloGiorniStoricoRicerca()));
+    }
+
+    public boolean isItalianCitty(@NotBlank String input) {
+
+
+    return cittaItaliane.contains(input.toLowerCase());
     }
 
 
