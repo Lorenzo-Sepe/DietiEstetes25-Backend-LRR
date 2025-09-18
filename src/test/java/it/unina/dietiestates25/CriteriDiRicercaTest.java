@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
@@ -21,7 +23,7 @@ public class CriteriDiRicercaTest {
     UserRepository userRepository;
     @BeforeEach
     void setup() {
-        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(ricercaAnnunciEffettuataRepository,userRepository);
+        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(ricercaAnnunciEffettuataRepository,userRepository,new HashSet<String>());
     }
     @Test
     void NapoliShouldBeValid() {

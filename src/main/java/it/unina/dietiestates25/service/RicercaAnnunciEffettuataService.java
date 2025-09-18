@@ -31,7 +31,7 @@ public class RicercaAnnunciEffettuataService {
     private final UserRepository userRepository;
     public Set<String> cittaItaliane;
 
-    public RicercaAnnunciEffettuataService(RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository, UserRepository userRepository) {
+    public RicercaAnnunciEffettuataService(RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository, UserRepository userRepository, Set<String> inputList) {
         this.ricercaAnnunciEffettuataRepository = ricercaAnnunciEffettuataRepository;
         this.userRepository = userRepository;
        ObjectMapper mapper = new ObjectMapper();
