@@ -42,6 +42,11 @@ public class UserService {
 
     public NewDipendeteResponse addDipendete(DipendenteRequest request, String aliasAgenzia) {
 
+        if(request.getRuolo() == null  || request.getRuolo().equals("")){
+
+            throw new IllegalArgumentException("Ruolo inesistente. ");
+        }
+
         if(!request.getRuolo().equals("MANAGER") && !request.getRuolo().equals("AGENT")) {
 
             throw new IllegalArgumentException("Ruolo non valido: " + request.getRuolo());
@@ -90,14 +95,20 @@ public class UserService {
     }
 
     private void convalidaParametri(String nome, String cognome, String aliasAgenzia) {
-        if (nome == null || nome.isBlank() ||
-                cognome == null || cognome.isBlank() ||
-                aliasAgenzia == null || aliasAgenzia.isBlank()) {
 
-            throw new IllegalArgumentException(String.format(
-                    "Per generare un'email i parametri non devono essere nulli:\n nome: %s\n cognome: %s\n aliasAgenzia: %s",
-                    nome, cognome, aliasAgenzia
-            ));
+        if (nome == null || nome.isBlank() ) {
+
+            throw new IllegalArgumentException(String.format("Il parametro nome è vuoto."));
+        }
+
+        if(cognome == null || cognome.isBlank()){
+
+            throw new IllegalArgumentException(String.format("Il parametro cognome è vuoto."));
+        }
+
+        if(aliasAgenzia == null || aliasAgenzia.isBlank()){
+
+            throw new IllegalArgumentException(String.format("Il parametro aliasAgenzia è vuoto."));
         }
     }
 

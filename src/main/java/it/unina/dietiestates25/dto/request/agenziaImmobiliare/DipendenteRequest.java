@@ -19,7 +19,6 @@ package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
 
         // ruolo del dipendente
         @NotBlank
-        @Pattern(regexp = "MANAGER|AGENT", message = "Il ruolo deve essere 'MANAGER' o 'AGENT'")
         @Schema(allowableValues = {"MANAGER", "AGENT"}, description = "Il ruolo deve essere 'MANAGER' o 'AGENT'")
         private String ruolo;
 

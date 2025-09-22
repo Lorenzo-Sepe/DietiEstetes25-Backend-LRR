@@ -72,6 +72,9 @@ public class addDipendenteTest {
         );
     }
 
+    /**
+     * Test che copre le classi valide: DRN1 (Valida); DRC1 (Valida); DRR1(Valida); AA1(Valida);
+     */
     @Test
     void addDipedenteTestAddAgente(){
 
@@ -122,6 +125,9 @@ public class addDipendenteTest {
         assertTrue(fotoProfilo.matches("^https://dummyimage.com/.*"), "Url foto profilo non valido");
     }
 
+    /**
+     *  Test che copre le classi valide: DRN1 (Valida); DRC1 (Valida); DRR2(Valida); AA1(Valida);
+     */
     @Test
     void addDipedenteTestAddManager(){
 
@@ -172,17 +178,65 @@ public class addDipendenteTest {
         assertTrue(fotoProfilo.matches("^https://dummyimage.com/.*"), "Url foto profilo non valido");
     }
 
+    /**
+     * Test per coprire la classe nome non valida: DRN1 (Non Valida); DRC1 (Valida); DRR2(Valida); AA1(Valida);
+     */
     @Test
-    void addDipedenteTestDipendenteNonValido(){
+    void addDipedenteTestNomeNonValido(){
+
+        DipendenteRequest dipendente = new DipendenteRequest(null, "Sepe", "MANAGER");
+        String dominioAgenzia = null;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> userService.addDipendete(dipendente,dominioAgenzia));
+
+        assertTrue(ex.getMessage().contains("Il parametro nome è vuoto."));
+    }
+
+    /**
+     * Test per coprire la classe cognome non valida: DRN1 (Valida); DRC1 (Non Valida); DRR2(Valida); AA1(Valida);
+     */
+    @Test
+    void addDipedenteTestCognomeNonValido(){
 
         DipendenteRequest dipendente = new DipendenteRequest("Lorenzo", "", "MANAGER");
         String dominioAgenzia = "LorenzoImmobili";
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> userService.addDipendete(dipendente,dominioAgenzia));
 
-        assertTrue(ex.getMessage().contains("Per generare un'email i parametri non devono essere nulli:"));
+        assertTrue(ex.getMessage().contains("Il parametro cognome è vuoto."));
     }
 
+    /**
+     *  Test per coprire la classe ruolo non valida: DRN1 (Valida); DRC1 (Valida); DRR2(Non Valida); AA1(Valida);
+     */
+    @Test
+    void addDipedenteTestRuoloNonValido(){
+
+        DipendenteRequest dipendente = new DipendenteRequest("", "Sepe", "ADMIN");
+        String dominioAgenzia = "LorenzoImmobili";
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> userService.addDipendete(dipendente,dominioAgenzia));
+
+        assertTrue(ex.getMessage().contains("Ruolo non valido:"));
+    }
+
+    /**
+     *  Test per coprire la classe ruolo non esistente: DRN1 (Valida); DRC1 (Valida); DRR4(Non Valida); AA1(Valida);
+     */
+    @Test
+    void addDipedenteTestRuoloInesistente(){
+
+        DipendenteRequest dipendente = new DipendenteRequest("", "Sepe", "");
+        String dominioAgenzia = "LorenzoImmobili";
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> userService.addDipendete(dipendente,dominioAgenzia));
+
+        assertTrue(ex.getMessage().contains("Ruolo inesistente"));
+    }
+
+    /**
+     * Test per coprire la classe aliasAgeniza non valida: DRN1 (Valida); DRC1 (Valida); DRR2(Valida); AA1(Non Valida);
+     */
     @Test
     void addDipedenteTestDominioAgenziaNonValido(){
 
@@ -191,6 +245,7 @@ public class addDipendenteTest {
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> userService.addDipendete(dipendente,dominioAgenzia));
 
-        assertTrue(ex.getMessage().contains("Per generare un'email i parametri non devono essere nulli:"));
+        assertTrue(ex.getMessage().contains("Il parametro aliasAgenzia è vuoto."));
     }
+
 }
