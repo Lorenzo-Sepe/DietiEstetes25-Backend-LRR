@@ -84,16 +84,18 @@ public class changePassword {
      */
    @Test
    void changePassword_ShouldThrowResourceNotFoundException_WhenUserNotFoundInDB() {
-       User mockUser = new User();
-       mockUser.setId(1);
 
-       try (MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class)) {
-           mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
+        User mockUser = new User();
+        mockUser.setId(1);
 
-           when(userRepository.findById(1)).thenReturn(Optional.empty());
+        MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class);
 
-          assertThrows(it.unina.dietiestates25.exception.ResourceNotFoundException.class, () ->authService.changePassword("oldPass", "newPass", "newPass") );
-       }
+        mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
+
+        when(userRepository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(it.unina.dietiestates25.exception.ResourceNotFoundException.class, () ->authService.changePassword("oldPass", "newPass", "newPass") );
+
    }
 
 

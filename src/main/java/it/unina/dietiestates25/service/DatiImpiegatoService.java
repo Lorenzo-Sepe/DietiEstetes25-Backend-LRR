@@ -5,6 +5,8 @@ import it.unina.dietiestates25.dto.response.ContattoResponse;
 import it.unina.dietiestates25.entity.Contatto;
 import it.unina.dietiestates25.entity.DatiImpiegato;
 import it.unina.dietiestates25.entity.User;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
+import it.unina.dietiestates25.exception.UnauthorizedException;
 import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.utils.UserContex;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,7 @@ public class DatiImpiegatoService {
         if(userCurrent != null){
 
             DatiImpiegato datiImpiegato = datiImpiegatoRepository.findDatiImpiegatoByUser(userCurrent).orElseThrow(
-                    () -> new IllegalArgumentException("Impiegato non trovato"));
+                    () -> new ResourceNotFoundException(UserContex.getUserCurrent().getEmail(),"Utente non trovato. Assicurati di essere autenticato correttamente."));
 
             List<Contatto> contattiEsistenti = datiImpiegato.getContatti();
 
@@ -60,7 +62,7 @@ public class DatiImpiegatoService {
             return responses;
         }
 
-        throw new IllegalArgumentException("Impiegato non trovato");
+        throw new UnauthorizedException("Utente non autenticato.");
     }
 
     private int getIndexContattiFromTipo(List<Contatto> contatti, String tipo){
