@@ -8,6 +8,7 @@ import it.unina.dietiestates25.service.AuthService;
 import it.unina.dietiestates25.service.JwtService;
 import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +38,20 @@ public class changePassword {
     @Mock
     private JwtService jwtService;
 
+    MockedStatic<UserContex> mocked;
+
+
     @BeforeEach
     void setup() {
         passwordEncoder = new BCryptPasswordEncoder();
         authService = new AuthService(userRepository,passwordEncoder,authorityRepository,jwtService);
+        mocked = Mockito.mockStatic(UserContex.class);
+
+    }
+    @AfterEach
+    void tearDown() {
+
+        mocked.close();
     }
 
 
@@ -54,7 +65,7 @@ public class changePassword {
 
         mockUser.setPassword(passwordEncoder.encode("oldPass"));
 
-        try (MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class)) {
+
             mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
 
             when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
@@ -65,7 +76,7 @@ public class changePassword {
             assertEquals(Msg.PASSWORD_CHANGED, result);
             //assert true when password encorder match new password with mockUser password
             assertTrue(passwordEncoder.matches("newPass", mockUser.getPassword()));
-        }
+
     }
 
     /**
@@ -74,7 +85,6 @@ public class changePassword {
      */
     @Test
     void changePassword_ShouldThrowUnauthorizedException_WhenUserContextNotFound() {
-        MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class);
             mocked.when(UserContex::getUserCurrent).thenReturn(null);
             Exception ex = assertThrows(it.unina.dietiestates25.exception.UnauthorizedException.class, () ->authService.changePassword("oldPass", "newPass", "newPass") );
     }
@@ -88,7 +98,6 @@ public class changePassword {
         User mockUser = new User();
         mockUser.setId(1);
 
-        MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class);
 
         mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
 
@@ -110,13 +119,11 @@ public class changePassword {
         mockUser.setId(1);
         mockUser.setPassword(passwordEncoder.encode("oldPass"));
 
-        try (MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class)) {
             mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
 
             when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
 
             assertThrows(BadCredentialsException.class, () ->authService.changePassword("wrongOldPass", "newPass", "newPass") );
-        }
     }
     /**
      * Questo test copre i nodi 1, 2, 3, 4, 4.e
@@ -128,7 +135,6 @@ public class changePassword {
         mockUser.setId(1);
         mockUser.setPassword(passwordEncoder.encode("oldPass"));
 
-        MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class);
             mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
 
             when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
@@ -145,7 +151,6 @@ public class changePassword {
         mockUser.setId(1);
         mockUser.setPassword(passwordEncoder.encode("oldPass"));
 
-        MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class);
             mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
 
             when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
@@ -159,11 +164,12 @@ public class changePassword {
     @Test
     void changePassword_ShouldThrowRuntimeException_WhenErrorOnSave() {
         User mockUser = new User();
+
         mockUser.setId(1);
         mockUser.setPassword(passwordEncoder.encode("oldPass"));
 
-        MockedStatic<UserContex> mocked = Mockito.mockStatic(UserContex.class);
-            mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
+
+        mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
 
             when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
             //simula un errore durante il salvataggio

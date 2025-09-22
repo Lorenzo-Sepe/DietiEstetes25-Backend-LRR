@@ -1,3 +1,5 @@
+package it.unina.dietiestates25;
+
 import it.unina.dietiestates25.dto.request.ContattoRequest;
 import it.unina.dietiestates25.dto.response.ContattoResponse;
 import it.unina.dietiestates25.entity.Contatto;
