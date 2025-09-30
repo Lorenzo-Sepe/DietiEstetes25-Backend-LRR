@@ -160,7 +160,15 @@ public class ImageUploaderService {
 
         List<String> urlImmagini = salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId,0);
 
-        annuncio.getImmobile().setImmagini(getListaImmaginiImmobili(urlImmagini,immaginiRequest,annuncio.getImmobile()));
+        if(annuncio.getImmobile().getImmagini() != null)
+            annuncio.getImmobile().getImmagini().clear();
+
+        List<ImmaginiImmobile> immaginiImmobili = getListaImmaginiImmobili(urlImmagini,immaginiRequest,annuncio.getImmobile());
+
+        if(annuncio.getImmobile().getImmagini() != null)
+            annuncio.getImmobile().getImmagini().addAll(immaginiImmobili);
+        else
+            annuncio.getImmobile().setImmagini(immaginiImmobili);
     }
 
     private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini, List<ImmaginiImmobiliRequest> request, Immobile immobile) {

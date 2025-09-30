@@ -101,9 +101,11 @@ public class AnnuncioImmobileController {
             description = "Metodo per modificare un annuncio immobiliare nel database",
             tags = {"Annuncio Immobiliare"})
     @PreAuthorize("hasAnyAuthority('AGENT', 'MANAGER')")
-    public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id, @ModelAttribute AnnuncioImmobiliareRequest request) {
+    public ResponseEntity<String> modificaAnnuncioImmobiliare(@PathVariable int id,
+                                                              @RequestPart("dati") AnnuncioImmobiliareRequest request,
+                                                              @RequestPart(value = "immagini", required = false) List<MultipartFile> immaginiList) {
 
-        return ResponseEntity.ok(annuncioImmobileService.modificaAnnuncioImmobiliare(id, request));
+        return ResponseEntity.ok(annuncioImmobileService.modificaAnnuncioImmobiliare(id, request, immaginiList));
     }
 
     @GetMapping("/pb/annuncioImmobiliare/{id}")

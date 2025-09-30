@@ -42,7 +42,16 @@ public class ImmobileService {
                 .build();
     }
 
-    public void updateImmobile(ImmobileRequest request,Immobile immobile){
+    public void updateImmobile(ImmobileRequest request,Immobile immobile, List<MultipartFile> immaginiList){
+
+        if (immaginiList != null && request != null && request.getImmagini() != null) {
+            List<ImmaginiImmobiliRequest> immagini = request.getImmagini();
+            for (int i = 0; i < immagini.size(); i++) {
+                if (i < immaginiList.size()) {
+                    immagini.get(i).setFile(immaginiList.get(i));
+                }
+            }
+        }
 
         immobile.setTipologiaImmobile(tipologiaImmobileService.checkEnumTipologiaImmobileFromString(request.getTipologiaImmobile()));
         immobile.setMetriQuadri(request.getMetriQuadri());

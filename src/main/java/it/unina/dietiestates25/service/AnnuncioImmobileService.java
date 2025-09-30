@@ -227,19 +227,18 @@ public class AnnuncioImmobileService {
     //-------------------------------------------------------MODIFICA ANNUNCIO-------------------------------------------------------
 
     @Transactional
-    public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request) {
+    public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList) {
 
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
 
         verificaPermessoModificaAnnuncio(annuncio);
 
-        immobileService.updateImmobile(request.getImmobile(),annuncio.getImmobile());
+        immobileService.updateImmobile(request.getImmobile(),annuncio.getImmobile(),immaginiList);
         contrattoService.updateContratto(request.getContratto(),annuncio);
         annuncio.setTitolo(request.getTitolo());
         annuncio.setDescrizione(request.getDescrizione());
 
-        //TODO testare la funzione e valutare se si può scrivere un codice migliore
-        imageUploaderService.updateImmagini(request.getImmobile().getImmagini(),annuncio);
+        imageUploaderService.updateImmaginiAnnuncio(request.getImmobile().getImmagini(),annuncio);
 
         annuncioImmobiliareRepository.save(annuncio);
 
