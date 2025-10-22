@@ -33,7 +33,7 @@ public class CriteriDiRicercaUtenti {
             tipoContratto= TipoContratto.AFFITTO;
             prezzo = ((ContrattoAffitto) annuncio.getContratto()).getPrezzoAffitto();
         }
-        else if(annuncio.getContratto() instanceof ContrattoAffitto){
+        else if(annuncio.getContratto() instanceof ContrattoVendita){
             tipoContratto= TipoContratto.VENDITA;
             prezzo= ((ContrattoVendita) annuncio.getContratto()).getPrezzoVendita();
         }
