@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AgenziaImmobiliareRequest;
-import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
@@ -10,6 +10,9 @@ import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
+import it.unina.dietiestates25.repository.AuthorityRepository;
+import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
+import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.GenericMail;
 import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
@@ -25,7 +28,7 @@ import java.util.List;
 @Slf4j
 public class AgenziaImmobiliareService {
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
-    private final UserService userService;
+    private final  UserService userService;
     private final EmailService emailService;
 
     @Transactional
@@ -37,18 +40,17 @@ public class AgenziaImmobiliareService {
         agenziaImmobiliare.addDipendente(fondatoreResponse.getUser());
         saveAgenzia(agenziaImmobiliare);
         GenericMail mail = new GenericMail(
-                Msg.MAIL_SIGNUP_SUBJECT,
-                String.format(Msg.MAIL_SIGNUP_BODY, fondatoreResponse.getUser().getEmail(),
-                        fondatoreResponse.getPassword()),
-                request.getEmailFondatore());
+            Msg.MAIL_SIGNUP_SUBJECT,
+            String.format(Msg.MAIL_SIGNUP_BODY, fondatoreResponse.getUser().getEmail(), fondatoreResponse.getPassword()),
+            request.getEmailFondatore()
+        );
         emailService.sendVerificationMail(mail);
         String response = Msg.AGENCY_CREATION_SUCCESS;
         log.info(response);
         return response;
     }
 
-    private AgenziaImmobiliare buildAgenziaImmobiliare(AgenziaImmobiliareRequest request,
-            NewDipendeteResponse fondatoreResponse) {
+    private AgenziaImmobiliare buildAgenziaImmobiliare(AgenziaImmobiliareRequest request, NewDipendeteResponse fondatoreResponse) {
         if (agenziaImmobiliareRepository.existsByDominio(request.getDominio())) {
             throw new IllegalArgumentException("Il dominio selezionato non e' disponibile");
         }
@@ -63,7 +65,7 @@ public class AgenziaImmobiliareService {
                 .partitaIva(request.getPartitaIva())
                 .ragioneSociale(request.getRagioneSociale())
                 .dominio(request.getDominio())
-                .fondatore(fondatoreResponse.getUser())
+                .fondatore(fondatoreResponse.getUser ())
                 .build();
     }
 
@@ -71,43 +73,41 @@ public class AgenziaImmobiliareService {
         try {
             agenziaImmobiliareRepository.save(agenziaImmobiliare);
         } catch (Exception e) {
-            throw new InternalServerErrorException(
-                    "Non è stato possibile creare l'agenzia immobiliare: " + e.getMessage());
+            throw new InternalServerErrorException("Non è stato possibile creare l'agenzia immobiliare: " + e.getMessage());
         }
     }
+
 
     public List<AgenziaImmobiliareResponse> getAgenzie() {
         return agenziaImmobiliareRepository.getAllAgenzieImmobiliari();
     }
 
+
     @Transactional
     public String aggiungiDipendete(DipendenteRequest request) {
         User user = UserContex.getUserCurrent();
-        AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository
-                .findAgenziaImmobiliareByDipendentiContains(user)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "L'utente non è un dipendente di nessuna agenzia immobiliare"));
+        AgenziaImmobiliare agenziaImmobiliare =agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(user)
+                .orElseThrow(() -> new IllegalArgumentException("L'utente non è un dipendente di nessuna agenzia immobiliare"));
 
         NewDipendeteResponse newDipendeteResponse = userService.addDipendete(request, agenziaImmobiliare.getDominio());
         agenziaImmobiliare.addDipendente(newDipendeteResponse.getUser());
 
         String email = newDipendeteResponse.getUser().getEmail();
         String password = newDipendeteResponse.getPassword();
-        String response = String.format("Dipendente aggiunto con successo. Le credenziali del dipendete sono:%n%s%n%s",
-                email, password);
+        String response = String.format("Dipendente aggiunto con successo. Le credenziali del dipendete sono:%n%s%n%s", email, password);
         log.info(response);
         return response;
     }
 
     public DatiAgenziaImmobiliareResponse getAgenziaByEmailImpiegato(String email) {
-        AgenziaImmobiliare agenzia = agenziaImmobiliareRepository.findByDipendenteEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare", "email", email));
-        return DatiAgenziaImmobiliareResponse.fromEntityToDto(agenzia);
+        AgenziaImmobiliare agenzia =agenziaImmobiliareRepository.findByDipendenteEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
+             return DatiAgenziaImmobiliareResponse.fromEntityToDto(agenzia);
     }
 
     public AgenziaImmobiliare getAgenziaImmobiliare(String email) {
 
         return agenziaImmobiliareRepository.findByDipendenteEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare", "email", email));
+                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
     }
 }

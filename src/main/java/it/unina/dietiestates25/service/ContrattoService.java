@@ -2,7 +2,7 @@ package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.DatiAffittoRequest;
 import it.unina.dietiestates25.dto.request.DatiVenditaRequest;
-import it.unina.dietiestates25.dto.request.agenzia_immobiliare.ContrattoRequest;
+import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.Contratto;
 import it.unina.dietiestates25.entity.ContrattoAffitto;
@@ -15,20 +15,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ContrattoService {
 
-    public void updateContratto(ContrattoRequest request, AnnuncioImmobiliare annuncio) {
+    public void updateContratto(ContrattoRequest request, AnnuncioImmobiliare annuncio){
 
-        if (request.getTipoDiContratto().equals("AFFITTO")) {
+        if(request.getTipoDiContratto().equals("AFFITTO")){
             annuncio.setContratto(new ContrattoAffitto());
-            updateContrattoAffitto(request.getDatiAffittoRequest(), (ContrattoAffitto) annuncio.getContratto());
+            updateContrattoAffitto(request.getDatiAffittoRequest(),(ContrattoAffitto)annuncio.getContratto());
         }
 
-        else {
+        else{
             annuncio.setContratto(new ContrattoVendita());
-            updateContrattoVendita(request.getDatiVenditaRequest(), (ContrattoVendita) annuncio.getContratto());
+            updateContrattoVendita(request.getDatiVenditaRequest(), (ContrattoVendita)annuncio.getContratto());
         }
     }
 
-    private void updateContrattoAffitto(DatiAffittoRequest request, ContrattoAffitto contratto) {
+    private void updateContrattoAffitto(DatiAffittoRequest request, ContrattoAffitto contratto){
         contratto.setCaparra(request.getCaparra());
         contratto.setTempoMinimo(request.getTempoMinimo());
         contratto.setTempoMassimo(request.getTempoMassimo());
@@ -36,7 +36,7 @@ public class ContrattoService {
         contratto.setTipoContratto("AFFITTO");
     }
 
-    private void updateContrattoVendita(DatiVenditaRequest request, ContrattoVendita contratto) {
+    private void updateContrattoVendita(DatiVenditaRequest request, ContrattoVendita contratto){
         contratto.setMutuoEstinto(request.isMutuoEstinto());
         contratto.setPrezzoVendita(request.getPrezzo());
         contratto.setTipoContratto(TipoContratto.VENDITA.toString());

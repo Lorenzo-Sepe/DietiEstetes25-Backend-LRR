@@ -4,13 +4,12 @@ import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
 import it.unina.dietiestates25.strategy.*;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GeneratoreContenutoFactory {
 
-    private static final Map<CategoriaNotificaName, GeneratoreContenutoNotifica<? extends DatiContenutoNotifica>> generatori = new EnumMap<>(
-            CategoriaNotificaName.class);
+    private static final Map<CategoriaNotificaName, GeneratoreContenutoNotifica<? extends DatiContenutoNotifica>> generatori = new HashMap<>();
 
     static {
         generatori.put(CategoriaNotificaName.PROPOSTA_ACCETTATA, new GeneratoreContenutoPropostaAccettata());
@@ -20,10 +19,6 @@ public class GeneratoreContenutoFactory {
         generatori.put(CategoriaNotificaName.PROMOZIONI, new GeneratoreContenutoPromozioni());
     }
 
-    private GeneratoreContenutoFactory() {
-        // Prevent instantiation
-    }
-
     /**
      * Restituisce il generatore di contenuto corrispondente al tipo di notifica.
      *
@@ -31,8 +26,7 @@ public class GeneratoreContenutoFactory {
      * @return Il generatore corrispondente
      */
     @SuppressWarnings("unchecked")
-    public static <T extends DatiContenutoNotifica> GeneratoreContenutoNotifica<T> getGeneratore(
-            CategoriaNotificaName tipoNotifica) {
+    public static <T extends DatiContenutoNotifica> GeneratoreContenutoNotifica<T> getGeneratore(CategoriaNotificaName tipoNotifica) {
         if (!generatori.containsKey(tipoNotifica)) {
             throw new IllegalArgumentException("Tipo di notifica non riconosciuto: " + tipoNotifica);
         }
