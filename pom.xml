@@ -30,9 +30,13 @@
         <java.version>21</java.version>
         <jjwt.version>0.11.5</jjwt.version>
         <springdoc>2.5.0</springdoc>
+
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>DietiEstates25</sonar.projectKey>
-        <sonar.login>sqp_cdadac0130e414be52e2a0f73763c62979c11149</sonar.login>
+		<!-- key rai: sqp_f1e98802f11ac2ab96847a54851075a7fc9006f4 -->
+		<!-- key rob; sqp_f1611ececacfbef94aabe45a26a539ed34e94b2a -->
+		<!-- key lore: sqp_cdadac0130e414be52e2a0f73763c62979c11149 -->
+        <sonar.login>sqp_f1611ececacfbef94aabe45a26a539ed34e94b2a</sonar.login>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
@@ -202,7 +206,7 @@
 			<plugin>
 			<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.11.0.3922</version> <!-- Use latest version -->
+				<version>5.2.0.4988</version> <!-- Use latest version -->
 			</plugin>
 		</plugins>
 	</build>
