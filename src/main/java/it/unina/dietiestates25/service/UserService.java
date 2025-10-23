@@ -1,6 +1,5 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
 import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
@@ -22,7 +21,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,39 +131,7 @@ public class UserService {
 
         return email;
     }
-
-    public String modificaSottoscrizioni(CategoriaNotificaRequest request) {
-
-        User user = UserContex.getUserCurrent();
-
-        List<CategoriaNotifica> categorieDisattivate = getCategorieDisattivate(request);
-
-        assert user != null;
-        user.setCategorieDisattivate(categorieDisattivate);
-
-        userRepository.save(user);
-
-        return "Sottoscrizione modificata con successo";
-    }
-
-    private List<CategoriaNotifica> getCategorieDisattivate(CategoriaNotificaRequest request) {
-
-        List<CategoriaNotifica> categorieDisattivate = new ArrayList<>();
-
-        if(!request.isAttivoPromozioni())
-            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROMOZIONI));
-        if(!request.isAttivoCategoriaPropostaRifiutata())
-            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA));
-        if(!request.isAttivoCategoriaPropostaAccettata())
-            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA));
-        if(!request.isAttivoCategoriaControproposta())
-            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.CONTROPROPOSTA));
-        if(!request.isAttivoCategoriaOpportunityImmobile())
-            categorieDisattivate.add(categoriaService.getCategoriaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE));
-
-        return categorieDisattivate;
-    }
-
+    
     public DipendenteResponse getDipendente(int idDipendente) {
         DatiImpiegato dipendente = datiImpiegatoRepository.findByUser_Id(idDipendente).orElseThrow();
         return DipendenteResponse.fromEntityToDto(dipendente);
