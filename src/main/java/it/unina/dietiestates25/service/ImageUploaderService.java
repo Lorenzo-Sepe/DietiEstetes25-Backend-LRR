@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class ImageUploaderService {
             throw new IllegalArgumentException("Input string cannot be null or empty");
         }
 
-        // if the string starts with Agente or Manager, remove it
+        //if the string starts with Agente or Manager, remove it
         if (inputString.startsWith("agente") || inputString.startsWith("manager")) {
             inputString = inputString.substring(inputString.indexOf(" ") + 1);
         }
@@ -44,8 +45,8 @@ public class ImageUploaderService {
 
         // Convert hash to HSL values
         float hue = (Math.abs(hash) % 360); // Hue: 0 - 359
-        float saturation = 0.6f; // Saturation: 60%
-        float lightness = 0.6f; // Lightness: 60%
+        float saturation = 0.6f;            // Saturation: 60%
+        float lightness = 0.6f;             // Lightness: 60%
 
         // Convert HSL to RGB
         int[] rgb = hslToRgb(hue, saturation, lightness);
@@ -64,36 +65,24 @@ public class ImageUploaderService {
         float b = 0;
 
         if (0 <= h && h < 60) {
-            r = c;
-            g = x;
-            b = 0;
+            r = c; g = x; b = 0;
         } else if (60 <= h && h < 120) {
-            r = x;
-            g = c;
-            b = 0;
+            r = x; g = c; b = 0;
         } else if (120 <= h && h < 180) {
-            r = 0;
-            g = c;
-            b = x;
+            r = 0; g = c; b = x;
         } else if (180 <= h && h < 240) {
-            r = 0;
-            g = x;
-            b = c;
+            r = 0; g = x; b = c;
         } else if (240 <= h && h < 300) {
-            r = x;
-            g = 0;
-            b = c;
+            r = x; g = 0; b = c;
         } else if (300 <= h && h < 360) {
-            r = c;
-            g = 0;
-            b = x;
+            r = c; g = 0; b = x;
         }
 
         int red = Math.round((r + m) * 255);
         int green = Math.round((g + m) * 255);
         int blue = Math.round((b + m) * 255);
 
-        return new int[] { red, green, blue };
+        return new int[]{ red, green, blue };
     }
 
     public List<MultipartFile> getListMultipartFilesFromRequest(List<ImmaginiImmobiliRequest> immaginiRequests) {
@@ -107,35 +96,32 @@ public class ImageUploaderService {
                 .toList(); // Creates an unmodifiable list
     }
 
-    public List<String> salvaImmaginiAnnuncioToBlob(List<MultipartFile> files, int annuncioId,
-            int valoreInizialeCounter) {
-        AtomicInteger counter = new AtomicInteger(valoreInizialeCounter);
-        return files.stream()
-                .map(file -> {
-                    String nomePath = "annuncio" + annuncioId + "-" + counter.getAndIncrement();
-                    return imageContainerUtil.uploadImage(file, nomePath);
-                })
-                .toList();
-    }
+   public List<String> salvaImmaginiAnnuncioToBlob(List<MultipartFile> files, int annuncioId,int valoreInizialeCounter) {
+       AtomicInteger counter = new AtomicInteger(valoreInizialeCounter);
+       return files.stream()
+               .map(file -> {
+                   String nomePath = "annuncio" + annuncioId + "-" + counter.getAndIncrement();
+                   return imageContainerUtil.uploadImage(file, nomePath);
+               })
+               .collect(Collectors.toList());
+   }
 
-    public void updateImmagini(List<ImmaginiImmobiliRequest> request, AnnuncioImmobiliare annuncio) {
+    public void updateImmagini(List<ImmaginiImmobiliRequest> request, AnnuncioImmobiliare annuncio){
 
         annuncio.getImmobile().getImmagini().clear();
-        int numeroImmaginiGiaInserite = addImmaginiGiaEsistentiToNuovaListaImmagini(request, annuncio);
-        List<String> urls = salvaImmaginiAnnuncioToBlob(getListaImmaginiFile(request), annuncio.getId(),
-                numeroImmaginiGiaInserite + 1);
-        addNuoveImmaginiToNuovaListaImmagini(urls, request, annuncio);
+        int numeroImmaginiGiaInserite = addImmaginiGiaEsistentiToNuovaListaImmagini(request,annuncio);
+        List<String> urls = salvaImmaginiAnnuncioToBlob(getListaImmaginiFile(request), annuncio.getId(),numeroImmaginiGiaInserite+1);
+        addNuoveImmaginiToNuovaListaImmagini(urls,request,annuncio);
 
     }
 
-    public int addImmaginiGiaEsistentiToNuovaListaImmagini(List<ImmaginiImmobiliRequest> request,
-            AnnuncioImmobiliare annuncio) {
+    public int addImmaginiGiaEsistentiToNuovaListaImmagini(List<ImmaginiImmobiliRequest> request, AnnuncioImmobiliare annuncio){
 
         int countInserimenti = 0;
 
-        for (ImmaginiImmobiliRequest immagine : request) {
+        for(ImmaginiImmobiliRequest immagine : request ){
 
-            if (immagine.getUrlImmagineEsistente() != null) {
+            if(immagine.getUrlImmagineEsistente() != null){
                 ImmaginiImmobile immagineGiaEsistente = ImmaginiImmobile.builder()
                         .immobile(annuncio.getImmobile())
                         .descrizione(immagine.getDescrizione())
@@ -151,13 +137,13 @@ public class ImageUploaderService {
         return countInserimenti;
     }
 
-    public List<MultipartFile> getListaImmaginiFile(List<ImmaginiImmobiliRequest> request) {
+    public List<MultipartFile> getListaImmaginiFile(List<ImmaginiImmobiliRequest> request){
 
         List<MultipartFile> immaginiFile = new ArrayList<>();
 
-        for (ImmaginiImmobiliRequest immagine : request) {
+        for(ImmaginiImmobiliRequest immagine : request ){
 
-            if (immagine.getFile() != null) {
+            if(immagine.getFile() != null){
 
                 immaginiFile.add(immagine.getFile());
             }
@@ -166,28 +152,26 @@ public class ImageUploaderService {
         return immaginiFile;
     }
 
-    public void updateImmaginiAnnuncio(List<ImmaginiImmobiliRequest> immaginiRequest, AnnuncioImmobiliare annuncio) {
+    public void updateImmaginiAnnuncio(List<ImmaginiImmobiliRequest> immaginiRequest, AnnuncioImmobiliare annuncio){
 
         int immobileId = annuncio.getImmobile().getId();
 
-        List<MultipartFile> immaginiFile = getListMultipartFilesFromRequest(immaginiRequest);
+        List <MultipartFile> immaginiFile = getListMultipartFilesFromRequest(immaginiRequest);
 
-        List<String> urlImmagini = salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId, 0);
+        List<String> urlImmagini = salvaImmaginiAnnuncioToBlob(immaginiFile, immobileId,0);
 
-        if (annuncio.getImmobile().getImmagini() != null)
+        if(annuncio.getImmobile().getImmagini() != null)
             annuncio.getImmobile().getImmagini().clear();
 
-        List<ImmaginiImmobile> immaginiImmobili = getListaImmaginiImmobili(urlImmagini, immaginiRequest,
-                annuncio.getImmobile());
+        List<ImmaginiImmobile> immaginiImmobili = getListaImmaginiImmobili(urlImmagini,immaginiRequest,annuncio.getImmobile());
 
-        if (annuncio.getImmobile().getImmagini() != null)
+        if(annuncio.getImmobile().getImmagini() != null)
             annuncio.getImmobile().getImmagini().addAll(immaginiImmobili);
         else
             annuncio.getImmobile().setImmagini(immaginiImmobili);
     }
 
-    private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini,
-            List<ImmaginiImmobiliRequest> request, Immobile immobile) {
+    private List<ImmaginiImmobile> getListaImmaginiImmobili(List<String> urlImmagini, List<ImmaginiImmobiliRequest> request, Immobile immobile) {
 
         List<ImmaginiImmobile> immaginiImmobile = new ArrayList<>();
 
@@ -211,8 +195,8 @@ public class ImageUploaderService {
         return immaginiImmobile;
     }
 
-    public void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,
-            AnnuncioImmobiliare annuncio) {
+
+    public void addNuoveImmaginiToNuovaListaImmagini(List<String> urls, List<ImmaginiImmobiliRequest> request,AnnuncioImmobiliare annuncio) {
 
         int countFile = 0;
 
