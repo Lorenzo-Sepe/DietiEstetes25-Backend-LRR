@@ -30,6 +30,7 @@
         <java.version>21</java.version>
         <jjwt.version>0.11.5</jjwt.version>
         <springdoc>2.5.0</springdoc>
+
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>DietiEstates25</sonar.projectKey>
         <sonar.login>sqp_4ae71aaf96c7c7c3e15f07cdbdbea34f14823c3d</sonar.login>
