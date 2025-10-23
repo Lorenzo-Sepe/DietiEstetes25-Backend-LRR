@@ -5,6 +5,7 @@ import it.unina.dietiestates25.entity.enumeration.TipoContratto;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
 import it.unina.dietiestates25.repository.RicercaAnnunciEffettuataRepository;
 import it.unina.dietiestates25.repository.UserRepository;
+import it.unina.dietiestates25.service.IndirizzoService;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,12 +30,14 @@ public class CriteriDiRicercaTest {
     RicercaAnnunciEffettuataRepository mockRicercaAnnunciEffettuataRepository;
     @Mock
     UserRepository MockUserRepository;
+    @Mock
+    IndirizzoService mockIndirizzoService;
 
     CriteriDiRicercaUtenti request;
 
     @BeforeEach
     void setup() {
-        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository,MockUserRepository,new HashSet<String>());
+        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository,MockUserRepository,mockIndirizzoService);
         request = CriteriDiRicercaUtenti.builder()
                 .intervalloGiorniStoricoRicerca(10)
                 .tipoDiContrattoDiInteresse(TipoContratto.AFFITTO)
