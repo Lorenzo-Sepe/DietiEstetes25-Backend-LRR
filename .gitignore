@@ -36,4 +36,3 @@ build/
 .vscode/
 docker-compose.yaml
 Dockerfile
-pom.xml
