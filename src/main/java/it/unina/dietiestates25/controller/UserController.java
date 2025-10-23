@@ -1,7 +1,6 @@
 package it.unina.dietiestates25.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest;
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
@@ -21,19 +20,10 @@ import java.util.List;
 public class UserController {
     final UserService userService;
 
+
+
     //Modifica Sottoscrizioni
     @PatchMapping("/utente/sottoscrizioni")
-    @Operation(summary = "Modifica le sottoscrizioni di un utente",
-            description = "Modifica le sottoscrizioni di un utente",
-            tags = {"Utente"}
-    )
-    public ResponseEntity<String> modificaSottoscrizioni(@RequestBody CategoriaNotificaRequest request) {
-
-        return ResponseEntity.ok(userService.modificaSottoscrizioni(request));
-    }
-
-    //Modifica Sottoscrizioni
-    @PatchMapping("/utente/sottoscrizioni2")
     @Operation(summary = "Modifica le sottoscrizioni di un utente",
             description = "Modifica le sottoscrizioni di un utente",
             tags = {"Utente"}
