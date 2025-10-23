@@ -2,7 +2,6 @@ package it.unina.dietiestates25.repository;
 
 import it.unina.dietiestates25.entity.DatiImpiegato;
 import it.unina.dietiestates25.entity.User;
-import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
