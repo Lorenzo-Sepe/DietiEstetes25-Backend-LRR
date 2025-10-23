@@ -131,7 +131,7 @@ public class UserService {
 
         return email;
     }
-    
+
     public DipendenteResponse getDipendente(int idDipendente) {
         DatiImpiegato dipendente = datiImpiegatoRepository.findByUser_Id(idDipendente).orElseThrow();
         return DipendenteResponse.fromEntityToDto(dipendente);
