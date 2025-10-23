@@ -2,6 +2,7 @@ package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.entity.CategoriaNotifica;
 import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
+import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.CategoriaNotificaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,14 @@ public class CategoriaNotificaService {
 
     public CategoriaNotifica getCategoriaNotifica(CategoriaNotificaName name) {
 
-        return categoriaRepository.findByCategoriaName(name).get();
+        return categoriaRepository.findByCategoriaName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria","name",name));
     }
 
     public CategoriaNotifica getCategoriaNotifica(int id){
 
-        return categoriaRepository.findById(id).get();
+        return categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria","id",id));
     }
 
 }

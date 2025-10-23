@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,7 +95,7 @@ public class NearbyPlacesChecker {
         return earthRadius * c;
     }
 
-    public Set<VicinoA> getPuntiInteresseVicini(@PathVariable double latitudine, @PathVariable double longitudine) {
+    public Set<VicinoA> getPuntiInteresseVicini( double latitudine,  double longitudine) {
         Set<VicinoA> indicatori = new HashSet<>();
 
         // Mappa delle categorie con corrispondente valore enum
@@ -120,11 +121,12 @@ public class NearbyPlacesChecker {
                                 throw new RuntimeException("Errore nella richiesta a Geoapify: " + error.getMessage());
                             })
                     )
-                    .bodyToMono(Map.class)
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                     .block(); // Chiamata sincrona
 
+
             if (risposta != null && risposta.containsKey(FEATURES_KEY) &&
-                    ((List<?>) risposta.get(FEATURES_KEY)).size() > 0) {
+                    !((List<?>) risposta.get(FEATURES_KEY)).isEmpty()) {
                 indicatori.add(voce.getKey());
             }
         }
