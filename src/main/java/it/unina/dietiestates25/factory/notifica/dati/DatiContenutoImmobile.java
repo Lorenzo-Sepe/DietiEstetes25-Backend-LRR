@@ -36,12 +36,13 @@ public class DatiContenutoImmobile implements DatiContenutoNotifica {
     }
 
     private static Double ottieniPrezzoImmobile(AnnuncioImmobiliare annuncio) {
-        if (annuncio.getContratto() instanceof ContrattoAffitto) {
-            return ((ContrattoAffitto) annuncio.getContratto()).getPrezzoAffitto();
-        } else if (annuncio.getContratto() instanceof ContrattoVendita) {
-            return ((ContrattoVendita) annuncio.getContratto()).getPrezzoVendita();
+        if (annuncio.getContratto() instanceof ContrattoAffitto contrattoAffitto) {
+            return contrattoAffitto.getPrezzoAffitto();
+        } else if (annuncio.getContratto() instanceof ContrattoVendita contrattoVendita) {
+            return contrattoVendita.getPrezzoVendita();
         } else {
-            throw new IllegalArgumentException("Tipo di contratto non riconosciuto: " + annuncio.getContratto().getClass().getSimpleName());
+            throw new IllegalArgumentException(
+                    "Tipo di contratto non riconosciuto: " + annuncio.getContratto().getClass().getSimpleName());
         }
     }
 }

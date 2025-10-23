@@ -45,12 +45,13 @@ public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica {
     }
 
     private static Double ottieniPrezzoImmobile(Proposta proposta) {
-        if (proposta.getAnnuncio().getContratto() instanceof ContrattoAffitto) {
-        return ((ContrattoAffitto) proposta.getAnnuncio().getContratto()).getPrezzoAffitto();
-    } else if (proposta.getAnnuncio().getContratto() instanceof ContrattoVendita) {
-        return ((ContrattoVendita) proposta.getAnnuncio().getContratto()).getPrezzoVendita();
-    } else {
-        throw new IllegalArgumentException("Tipo di contratto non riconosciuto: " + proposta.getAnnuncio().getContratto().getClass().getSimpleName());
+        if (proposta.getAnnuncio().getContratto() instanceof ContrattoAffitto contrattoAffitto) {
+            return contrattoAffitto.getPrezzoAffitto();
+        } else if (proposta.getAnnuncio().getContratto() instanceof ContrattoVendita contrattoVendita) {
+            return contrattoVendita.getPrezzoVendita();
+        } else {
+            throw new IllegalArgumentException("Tipo di contratto non riconosciuto: "
+                    + proposta.getAnnuncio().getContratto().getClass().getSimpleName());
+        }
     }
-}
 }

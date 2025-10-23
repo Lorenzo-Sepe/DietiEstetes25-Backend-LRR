@@ -24,9 +24,11 @@ public class DatiContenutoPropostaRifiutata implements DatiContenutoNotifica {
                 .titoloAnnuncio(proposta.getAnnuncio().getTitolo())
                 .prezzoProposto(proposta.getPrezzoProposta())
                 .urlImmagineImmobile(proposta.getAnnuncio().getImmobile().getImmagini().getFirst().getUrl())
-                .prezzo(ottieniPrezzoImmobile(proposta).toString()) // Assumendo che il prezzo sia lo stesso della proposta
+                .prezzo(ottieniPrezzoImmobile(proposta).toString()) // Assumendo che il prezzo sia lo stesso della
+                                                                    // proposta
                 .descrizione(proposta.getAnnuncio().getDescrizione())
-                .urlAnnuncioImmobile(proposta.getAnnuncio().getUrl()) // Assumendo che ci sia un metodo per ottenere l'URL dell'annuncio
+                .urlAnnuncioImmobile(proposta.getAnnuncio().getUrl()) // Assumendo che ci sia un metodo per ottenere
+                                                                      // l'URL dell'annuncio
                 .indirizzoImmobile(costruisciIndirizzoImmobile(proposta))
                 .build();
     }
@@ -36,13 +38,15 @@ public class DatiContenutoPropostaRifiutata implements DatiContenutoNotifica {
                 + " " + proposta.getAnnuncio().getImmobile().getIndirizzo().getVia()
                 + " " + proposta.getAnnuncio().getImmobile().getIndirizzo().getNumeroCivico();
     }
+
     private static Double ottieniPrezzoImmobile(Proposta proposta) {
-        if (proposta.getAnnuncio().getContratto() instanceof ContrattoAffitto) {
-            return ((ContrattoAffitto) proposta.getAnnuncio().getContratto()).getPrezzoAffitto();
-        } else if (proposta.getAnnuncio().getContratto() instanceof ContrattoVendita) {
-            return ((ContrattoVendita) proposta.getAnnuncio().getContratto()).getPrezzoVendita();
+        if (proposta.getAnnuncio().getContratto() instanceof ContrattoAffitto contrattoAffitto) {
+            return contrattoAffitto.getPrezzoAffitto();
+        } else if (proposta.getAnnuncio().getContratto() instanceof ContrattoVendita contrattovendita) {
+            return contrattovendita.getPrezzoVendita();
         } else {
-            throw new IllegalArgumentException("Tipo di contratto non riconosciuto: " + proposta.getAnnuncio().getContratto().getClass().getSimpleName());
+            throw new IllegalArgumentException("Tipo di contratto non riconosciuto: "
+                    + proposta.getAnnuncio().getContratto().getClass().getSimpleName());
         }
     }
 }
