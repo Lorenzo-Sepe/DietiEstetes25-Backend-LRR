@@ -13,13 +13,12 @@ public enum ClasseEnergetica {
     E("E"),
     F("F"),
     G("G"),
-    Non_Specificata("Non specificata");
+    NON_SPACIFICATA("Non specificata");
 
     private final String label;
 
     ClasseEnergetica(String label) {
         this.label = label;
     }
-
 
 }

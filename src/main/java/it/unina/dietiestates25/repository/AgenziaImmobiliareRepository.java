@@ -24,8 +24,7 @@ public interface AgenziaImmobiliareRepository extends JpaRepository<AgenziaImmob
             "join User u on a.fondatore.id=u.id")
     List<AgenziaImmobiliareResponse> getAllAgenzieImmobiliari();
 
-    Optional<AgenziaImmobiliare> findAgenziaImmobiliareByDipendentiContains(User Dipendente);
-
+    Optional<AgenziaImmobiliare> findAgenziaImmobiliareByDipendentiContains(User dipendente);
 
     @Query("SELECT a FROM AgenziaImmobiliare a JOIN a.dipendenti d WHERE d.email = :email")
     Optional<AgenziaImmobiliare> findByDipendenteEmail(@Param("email") String email);

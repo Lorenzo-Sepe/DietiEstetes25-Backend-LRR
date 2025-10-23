@@ -1,11 +1,12 @@
 package it.unina.dietiestates25.dto.request;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
 
 public class PropostaRequest {
-    @Schema(description = "ID dell'annuncio Immobiliare", required = true)
+    @Schema(description = "ID dell'annuncio Immobiliare", requiredMode = Schema.RequiredMode.REQUIRED)
     private int annuncioId;
 
     @Schema(description = "Nome del proponente")
@@ -30,4 +31,3 @@ public class PropostaRequest {
         MESSAGGIO
     }
 }
-

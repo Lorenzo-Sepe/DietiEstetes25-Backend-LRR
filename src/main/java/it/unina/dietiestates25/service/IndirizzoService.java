@@ -16,12 +16,12 @@ import java.util.Set;
 public class IndirizzoService {
     private final NearbyPlacesChecker nearbyPlacesChecker;
 
-    public List<String> getProvinceVicine(double lat, double lon, int raggio) {
+    public List<String> getProvinceVicine(double lat, double lon, double raggio) {
         Point centro = new Point(lat, lon);
         return nearbyPlacesChecker.getProvinceVicine(centro, raggio);
     }
 
-    public Indirizzo createIndirizzoFromRequest(IndirizzoRequest request){
+    public Indirizzo createIndirizzoFromRequest(IndirizzoRequest request) {
 
         return Indirizzo.builder()
                 .nazione(request.getNazione())
@@ -32,15 +32,15 @@ public class IndirizzoService {
                 .numeroCivico(request.getNumeroCivico())
                 .longitudine(request.getLongitudine())
                 .latitudine(request.getLatitudine())
-                .luoghiVicini(getPostiVicino(request.getLatitudine(),request.getLongitudine()))
+                .luoghiVicini(getPostiVicino(request.getLatitudine(), request.getLongitudine()))
                 .build();
     }
 
-    private Set<VicinoA> getPostiVicino(double latitudine, double longitudine){
-        return nearbyPlacesChecker.getPuntiInteresseVicini(latitudine,longitudine);
+    private Set<VicinoA> getPostiVicino(double latitudine, double longitudine) {
+        return nearbyPlacesChecker.getPuntiInteresseVicini(latitudine, longitudine);
     }
 
-    public void updateIndirizzo(IndirizzoRequest request, Indirizzo indirizzo){
+    public void updateIndirizzo(IndirizzoRequest request, Indirizzo indirizzo) {
         indirizzo.setNazione(request.getNazione());
         indirizzo.setCap(request.getCap());
         indirizzo.setCitta(request.getCitta());

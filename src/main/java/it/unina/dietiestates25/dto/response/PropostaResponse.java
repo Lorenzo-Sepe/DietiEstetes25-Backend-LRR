@@ -19,12 +19,13 @@ public class PropostaResponse {
     private String stato;
     private DatiUserPropostaResponse datiProponente;
 
-    //TODO durante la creazione della tabella ho scoperto che mi serveno insieme agli annunci quindi lo lascerei
-    public static List<PropostaResponse> fromListEntityToDto(List<Proposta> proposte){
+    // durante la creazione della tabella ho scoperto che mi serveno insieme agli
+    // annunci quindi lo lascerei
+    public static List<PropostaResponse> fromListEntityToDto(List<Proposta> proposte) {
 
         List<PropostaResponse> proposteResponse = new ArrayList<>();
 
-        for(Proposta proposta : proposte){
+        for (Proposta proposta : proposte) {
             PropostaResponse propostaResponse = PropostaResponse.builder()
                     .idProposta(proposta.getId())
                     .prezzoProposta(proposta.getPrezzoProposta())
@@ -38,14 +39,14 @@ public class PropostaResponse {
         return proposteResponse;
     }
 
-    public static PropostaResponse fromEntityToDto(Proposta proposta){
+    public static PropostaResponse fromEntityToDto(Proposta proposta) {
 
         return PropostaResponse.builder()
-                    .idProposta(proposta.getId())
-                    .prezzoProposta(proposta.getPrezzoProposta())
-                    .controproposta(proposta.getControproposta())
-                    .stato(proposta.getStato().toString())
-                    .datiProponente(DatiUserPropostaResponse.fromEntityToDto(proposta))
-                    .build();
+                .idProposta(proposta.getId())
+                .prezzoProposta(proposta.getPrezzoProposta())
+                .controproposta(proposta.getControproposta())
+                .stato(proposta.getStato().toString())
+                .datiProponente(DatiUserPropostaResponse.fromEntityToDto(proposta))
+                .build();
     }
 }

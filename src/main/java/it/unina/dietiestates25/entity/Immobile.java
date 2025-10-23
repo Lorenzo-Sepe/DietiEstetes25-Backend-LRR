@@ -32,7 +32,7 @@ public class Immobile extends CreationUpdate {
 
     @Column(nullable = false)
     @Builder.Default
-    int numeroDiPiani=0;
+    int numeroDiPiani = 0;
 
     @Column(nullable = false)
     @Builder.Default
@@ -40,7 +40,7 @@ public class Immobile extends CreationUpdate {
 
     @Column(nullable = false)
     @Builder.Default
-    int numeroServizi= 0;
+    int numeroServizi = 0;
 
     @Enumerated(EnumType.STRING)
     private ClasseEnergetica classeEnergetica;
