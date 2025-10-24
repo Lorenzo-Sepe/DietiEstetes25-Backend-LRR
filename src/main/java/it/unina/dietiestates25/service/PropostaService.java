@@ -1,9 +1,6 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.PageableProposte;
 import it.unina.dietiestates25.dto.request.PropostaRequest;
-import it.unina.dietiestates25.dto.response.ContattoResponse;
-import it.unina.dietiestates25.dto.response.DatiUserPropostaResponse;
 import it.unina.dietiestates25.dto.response.PropostaResponse;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.Contatto;
@@ -14,28 +11,23 @@ import it.unina.dietiestates25.exception.BadRequestException;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AnnuncioImmobiliareRepository;
-import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
 import it.unina.dietiestates25.repository.PropostaRepository;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
     @RequiredArgsConstructor
     public class PropostaService {
+
     private static final String PROPOSTA_NON_TROVATA = "Proposta non trovata";
 
     final private PropostaRepository propostaRepository;
-        final private AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
+    final private AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
     private final NotificaService notificaService;
-    private final DatiImpiegatoRepository datiImpiegatoRepository;
 
     //----------------------------------GET-----------------------------------------------------------------------
 
@@ -45,67 +37,6 @@ import java.util.List;
             return PropostaResponse.fromListEntityToDto(proposte);
         }
 
-        private Pageable getPageable(PageableProposte request){
-
-            Pageable pageable;
-
-            if(request.isOrdinatiPerDataDesc()){
-
-                pageable = PageRequest.of(request.getNumeroPagina()-1,request.getNumeroElementiPerPagina(), Sort.by("dataDellaProposta").descending());
-
-            }else{
-
-                pageable = PageRequest.of(request.getNumeroPagina()-1,request.getNumeroElementiPerPagina(), Sort.by("dataDellaProposta").ascending());
-            }
-
-            return pageable;
-        }
-
-        private List<PropostaResponse> getListProposteResponse(List<Proposta> proposte){
-
-            List<PropostaResponse> proposteResponse = new ArrayList<>();
-
-            for(Proposta proposta : proposte){
-
-                PropostaResponse propostaResponse = PropostaResponse.builder()
-                        .idProposta(proposta.getId())
-                        .stato(proposta.getStato().toString())
-                        .prezzoProposta(proposta.getPrezzoProposta())
-                        .controproposta(proposta.getControproposta())
-                        .datiProponente(getDatiUserPropostaResponse(proposta))
-                        .build();
-
-                proposteResponse.add(propostaResponse);
-            }
-
-            return proposteResponse;
-        }
-
-        private DatiUserPropostaResponse getDatiUserPropostaResponse(Proposta proposta){
-            String email;
-            if(proposta.getUser()==null){
-                email=null;
-            }
-            email=proposta.getUser().getEmail();
-            DatiUserPropostaResponse datiUser = DatiUserPropostaResponse.builder()
-                    .email(email)
-                    .nome(proposta.getNome())
-                    .cognome(proposta.getCognome())
-                    .contatto(getContattoResponse(proposta.getContatto()))
-                    .build();
-
-            return datiUser;
-        }
-
-        private ContattoResponse getContattoResponse(Contatto contatto){
-
-            ContattoResponse contattoResponse = ContattoResponse.builder()
-                    .valore(contatto.getValore())
-                    .tipo(contatto.getTipo())
-                    .build();
-
-            return contattoResponse;
-        }
 
         //------------------------------------------------------------------------------------------------------------
 
