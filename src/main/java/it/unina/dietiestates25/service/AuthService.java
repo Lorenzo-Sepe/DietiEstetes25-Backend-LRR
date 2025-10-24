@@ -60,7 +60,7 @@ public class AuthService {
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
             throw new BadCredentialsException("Password Errata");
 
-        String authority = user.getAuthority().getAuthorityName().name();
+
         String jwt = jwtService.generateToken(user);
 
         return JwtAuthenticationResponse.fromEntityToDto(user,jwt);
