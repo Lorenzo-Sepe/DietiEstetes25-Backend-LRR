@@ -2,7 +2,7 @@ package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.DatiAffittoRequest;
 import it.unina.dietiestates25.dto.request.DatiVenditaRequest;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.ContrattoRequest;
 import it.unina.dietiestates25.entity.AnnuncioImmobiliare;
 import it.unina.dietiestates25.entity.Contratto;
 import it.unina.dietiestates25.entity.ContrattoAffitto;
