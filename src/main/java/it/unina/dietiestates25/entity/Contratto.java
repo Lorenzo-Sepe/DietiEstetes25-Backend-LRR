@@ -1,6 +1,5 @@
 package it.unina.dietiestates25.entity;
 
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.ContrattoRequest;
 import it.unina.dietiestates25.entity.common.CreationUpdate;
 import jakarta.persistence.*;
 import lombok.*;
