@@ -4,12 +4,14 @@ import it.unina.dietiestates25.entity.enumeration.CategoriaNotificaName;
 import it.unina.dietiestates25.factory.notifica.dati.DatiContenutoNotifica;
 import it.unina.dietiestates25.strategy.*;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class GeneratoreContenutoFactory {
 
-    private static final Map<CategoriaNotificaName, GeneratoreContenutoNotifica<? extends DatiContenutoNotifica>> generatori = new HashMap<>();
+    private GeneratoreContenutoFactory() {}
+
+    private static final Map<CategoriaNotificaName, GeneratoreContenutoNotifica<? extends DatiContenutoNotifica>> generatori = new EnumMap<>(CategoriaNotificaName.class);
 
     static {
         generatori.put(CategoriaNotificaName.PROPOSTA_ACCETTATA, new GeneratoreContenutoPropostaAccettata());
