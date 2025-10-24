@@ -3,7 +3,7 @@ package it.unina.dietiestates25.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.AnnuncioImmobiliareResponse;
 import it.unina.dietiestates25.service.AnnuncioImmobileService;
 import it.unina.dietiestates25.service.RicercaAnnunciEffettuataService;
