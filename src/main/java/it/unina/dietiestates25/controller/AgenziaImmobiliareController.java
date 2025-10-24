@@ -1,8 +1,8 @@
 package it.unina.dietiestates25.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
 import it.unina.dietiestates25.service.AgenziaImmobiliareService;
