@@ -169,7 +169,7 @@ public class AnnuncioImmobileService {
                     () -> new ResourceNotFoundException("User", "email", filtro.getAgenteCreatoreAnnuncio()));
 
 
-            annunci = annuncioImmobiliareRepository.findByAgente(agente);
+            annunci = annuncioImmobiliareRepository.findByAgente(agente,pageable);
         }
 
         return annunci;
