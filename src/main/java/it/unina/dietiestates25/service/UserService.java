@@ -29,6 +29,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class UserService {
+    private static final String RUOLO_MANAGER = "MANAGER";
 
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
@@ -45,16 +46,16 @@ public class UserService {
             throw new IllegalArgumentException("Ruolo inesistente. ");
         }
 
-        if(!request.getRuolo().equals("MANAGER") && !request.getRuolo().equals("AGENT")) {
+        if(!request.getRuolo().equals(RUOLO_MANAGER) && !request.getRuolo().equals("AGENT")) {
 
             throw new IllegalArgumentException("Ruolo non valido: " + request.getRuolo());
         }
 
         String email = generaEmailDipendente(request.getNome(), request.getCognome(), aliasAgenzia);
         String password = passwordService.generaPasswordDipendente();
-        AuthorityName authorityName = request.getRuolo().equals("MANAGER") ? AuthorityName.MANAGER : AuthorityName.AGENT;
+        AuthorityName authorityName = request.getRuolo().equals(RUOLO_MANAGER) ? AuthorityName.MANAGER : AuthorityName.AGENT;
 
-        String ruolo = authorityName.name().equals("MANAGER") ? "Manager" : "Agente";
+        String ruolo = authorityName.name().equals(RUOLO_MANAGER) ? "Manager" : "Agente";
 
         //Agente Nome C.
         String nomeVisualizzato = ruolo + " " + request.getNome() + " " + request.getCognome().substring(0, 1).toUpperCase() + ".";
