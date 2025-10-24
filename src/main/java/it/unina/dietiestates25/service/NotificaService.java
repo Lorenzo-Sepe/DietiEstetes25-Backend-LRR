@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +32,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificaService {
+    private static final String EMAIL_DIETI = "info@dieti.estate.it";
 
     private final NotificaRepository notificaRepository;
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
@@ -167,17 +167,17 @@ public class NotificaService {
 
     public void inviaNotificaControproposta( Proposta proposta) {
         DatiContenutoControproposta dati = DatiContenutoControproposta.fromProposta(proposta, getDatiImpiegato(proposta));
-        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, proposta.getUser(),"info@dieti.estate.it", dati);
+        inviaNotifica(CategoriaNotificaName.CONTROPROPOSTA, proposta.getUser(),EMAIL_DIETI, dati);
     }
 
     public void inviaNotificaAccettazione( Proposta proposta) {
         DatiContenutoPropostaAccettata dati = DatiContenutoPropostaAccettata.fromProposta(proposta, getDatiImpiegato(proposta));
-        inviaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA, proposta.getUser(), "info@dieti.estate.it",dati);
+        inviaNotifica(CategoriaNotificaName.PROPOSTA_ACCETTATA, proposta.getUser(), EMAIL_DIETI,dati);
     }
 
     public void inviaNotificaRifiuto(Proposta proposta) {
         DatiContenutoPropostaRifiutata dati = DatiContenutoPropostaRifiutata.fromProposta(proposta);
-        inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), "info@dieti.estate.it",dati);
+        inviaNotifica(CategoriaNotificaName.PROPOSTA_RIFIUTATA, proposta.getUser(), EMAIL_DIETI,dati);
     }
 
 

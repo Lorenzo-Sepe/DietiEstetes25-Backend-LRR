@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    private static final String FIELD_EMAIL = "email";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
@@ -52,7 +54,8 @@ public class AuthService {
     @Transactional
     public JwtAuthenticationResponse login(SignInRequest request) {
         User user = userRepository.findByEmail(request.Email().toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundException("Account", "email", request.Email()));
+                .orElseThrow(() -> new ResourceNotFoundException("Account", FIELD_EMAIL
+, request.Email()));
 
         if(!passwordEncoder.matches(request.password(), user.getPassword()))
             throw new BadCredentialsException("Password Errata");
@@ -122,9 +125,11 @@ public class AuthService {
 
     public JwtAuthenticationResponse loginIdProv(String accessToken) {
         DecodedJWT token = jwtService.decodeJWT(accessToken);
-        String email = token.getClaim("email").asString();
+        String email = token.getClaim(FIELD_EMAIL
+).asString();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", FIELD_EMAIL
+, email));
 
         return JwtAuthenticationResponse.fromEntityToDto(user,jwtService.generateToken(user));
     }

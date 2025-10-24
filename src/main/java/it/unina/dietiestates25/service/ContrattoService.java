@@ -17,7 +17,7 @@ public class ContrattoService {
 
     public void updateContratto(ContrattoRequest request, AnnuncioImmobiliare annuncio){
 
-        if(request.getTipoDiContratto().equals("AFFITTO")){
+        if(request.getTipoDiContratto().equals(TipoContratto.AFFITTO.toString())){
             annuncio.setContratto(new ContrattoAffitto());
             updateContrattoAffitto(request.getDatiAffittoRequest(),(ContrattoAffitto)annuncio.getContratto());
         }
@@ -33,7 +33,7 @@ public class ContrattoService {
         contratto.setTempoMinimo(request.getTempoMinimo());
         contratto.setTempoMassimo(request.getTempoMassimo());
         contratto.setPrezzoAffitto(request.getPrezzo());
-        contratto.setTipoContratto("AFFITTO");
+        contratto.setTipoContratto(TipoContratto.AFFITTO.toString());
     }
 
     private void updateContrattoVendita(DatiVenditaRequest request, ContrattoVendita contratto){
@@ -45,7 +45,7 @@ public class ContrattoService {
     public Contratto createContrattoFromRequest(ContrattoRequest request) {
         Contratto contratto;
 
-        if (request.getTipoDiContratto().equals("AFFITTO")) {
+        if (request.getTipoDiContratto().equals(TipoContratto.AFFITTO.toString())) {
             contratto = new ContrattoAffitto();
             ((ContrattoAffitto) contratto).setCaparra(request.getDatiAffittoRequest().getCaparra());
             ((ContrattoAffitto) contratto).setTempoMinimo(request.getDatiAffittoRequest().getTempoMinimo());

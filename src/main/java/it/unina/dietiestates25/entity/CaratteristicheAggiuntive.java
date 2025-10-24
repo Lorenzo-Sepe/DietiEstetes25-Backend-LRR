@@ -3,6 +3,8 @@ package it.unina.dietiestates25.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @Setter
@@ -10,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-public class CaratteristicheAggiuntive {
+public class CaratteristicheAggiuntive implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
