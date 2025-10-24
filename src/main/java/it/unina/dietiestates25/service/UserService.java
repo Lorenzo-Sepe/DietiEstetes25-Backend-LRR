@@ -30,6 +30,8 @@ import java.util.List;
 @Slf4j
 public class UserService {
     private static final String RUOLO_MANAGER = "MANAGER";
+    private static final String FIELD_EMAIL = "email";
+
 
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
@@ -144,7 +146,7 @@ public class UserService {
 
         User userCurrent = userRepository.findByEmail(userCurrentContex.getEmail())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Utente", "email", userCurrentContex.getEmail())
+                        () -> new ResourceNotFoundException("Utente", FIELD_EMAIL, userCurrentContex.getEmail())
                 );
 
         List<CategoriaNotifica>  categorieDisattivate = userCurrent.getCategorieDisattivate();
@@ -230,7 +232,7 @@ public class UserService {
 
     public DatiImpiegatoResponse getDatiDipendente(String email) {
         DatiImpiegato datiImpiegato =datiImpiegatoRepository.findByUser_Email(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato","email",email));
+                .orElseThrow(() -> new ResourceNotFoundException("Dati impiegato",FIELD_EMAIL,email));
 
         return DatiImpiegatoResponse.fromEntityToDto(datiImpiegato);
     }
@@ -238,7 +240,7 @@ public class UserService {
     @Transactional
     public UserInfoResponse getInfoUtente(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Utente","email",email));
+                .orElseThrow(() -> new ResourceNotFoundException("Utente",FIELD_EMAIL,email));
         //String nomeVisualizzato = user.getNomeVisualizzato();
         //String urlFotoProfilo = imageUploaderService.getDefaultAvatar(nomeVisualizzato);
         //user.setUrlFotoProfilo(urlFotoProfilo);
