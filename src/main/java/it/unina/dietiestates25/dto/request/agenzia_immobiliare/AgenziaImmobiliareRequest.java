@@ -1,4 +1,4 @@
-package it.unina.dietiestates25.dto.request.agenziaImmobiliare;
+package it.unina.dietiestates25.dto.request.agenzia_immobiliare;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,7 +18,7 @@ public class AgenziaImmobiliareRequest {
     @Size(min=3,max=80)
     String ragioneSociale;
     @NotBlank
-    @Pattern(regexp = "^[0-9]{11}$")
+    @Pattern(regexp = "^\\d{11}$") // \\d è sinonimo di [0-9]
     String partitaIva;
     //non deve contenere caratteri speciali o spazi
     @Pattern(regexp = "^[a-z0-9]+$")

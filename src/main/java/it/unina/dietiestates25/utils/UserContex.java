@@ -14,8 +14,8 @@ public class UserContex {
         if (autenticazione != null && autenticazione.getPrincipal() instanceof UserDetails) {
             UserDetails dettagliUtente = (UserDetails) autenticazione.getPrincipal();
 
-            if (dettagliUtente instanceof User) {
-                return (User) dettagliUtente;
+            if (dettagliUtente instanceof User user) {
+                return user;
             }
         }
         return null; // Se non c'è alcun utente autenticato
