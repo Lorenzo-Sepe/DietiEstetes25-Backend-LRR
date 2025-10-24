@@ -2,7 +2,7 @@ package it.unina.dietiestates25.service;
 
 
 import it.unina.dietiestates25.dto.request.*;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AnnuncioImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AnnuncioImmobiliareRequest;
 import it.unina.dietiestates25.dto.response.*;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.*;
