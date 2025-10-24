@@ -30,7 +30,9 @@ import java.util.List;
 @Service
     @RequiredArgsConstructor
     public class PropostaService {
-        final private PropostaRepository propostaRepository;
+    private static final String PROPOSTA_NON_TROVATA = "Proposta non trovata";
+
+    final private PropostaRepository propostaRepository;
         final private AnnuncioImmobiliareRepository annuncioImmobiliareRepository;
     private final NotificaService notificaService;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
@@ -158,7 +160,7 @@ import java.util.List;
         @Transactional
         public void aggiungiUnaControProposta(int propostaId, Double controproposta) {
             Proposta proposta = propostaRepository.findById(propostaId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
+                    .orElseThrow(() -> new ResourceNotFoundException(PROPOSTA_NON_TROVATA, "id", propostaId));
             verificaProprietarioAnnuncio(proposta);
 
             if(proposta.getControproposta()!=null && proposta.getControproposta() != 0){
@@ -188,7 +190,7 @@ import java.util.List;
         @Transactional
         public void accettaProposta(int propostaId) {
             Proposta proposta = propostaRepository.findById(propostaId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
+                    .orElseThrow(() -> new ResourceNotFoundException(PROPOSTA_NON_TROVATA, "id", propostaId));
             verificaProprietarioAnnuncio(proposta);
             checkPropostaStatus(proposta);
             proposta.setStato(StatoProposta.ACCETTATO);
@@ -199,7 +201,7 @@ import java.util.List;
         @Transactional
         public void rifiutaProposta(int propostaId) {
             Proposta proposta = propostaRepository.findById(propostaId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Proposta non trovata", "id", propostaId));
+                    .orElseThrow(() -> new ResourceNotFoundException(PROPOSTA_NON_TROVATA, "id", propostaId));
             verificaProprietarioAnnuncio(proposta);
             checkPropostaStatus(proposta);
             proposta.setStato(StatoProposta.RIFIUTATO);
