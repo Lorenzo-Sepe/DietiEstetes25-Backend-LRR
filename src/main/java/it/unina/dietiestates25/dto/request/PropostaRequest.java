@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 
 public class PropostaRequest {
-    @Schema(description = "ID dell'annuncio Immobiliare", required = true)
+
+    @Schema(description = "ID dell'annuncio Immobiliare")
     private int annuncioId;
 
     @Schema(description = "Nome del proponente")
