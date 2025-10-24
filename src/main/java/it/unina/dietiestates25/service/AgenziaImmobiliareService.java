@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.AgenziaImmobiliareRequest;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AgenziaImmobiliareRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
@@ -10,9 +10,6 @@ import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
 import it.unina.dietiestates25.exception.ResourceNotFoundException;
 import it.unina.dietiestates25.repository.AgenziaImmobiliareRepository;
-import it.unina.dietiestates25.repository.AuthorityRepository;
-import it.unina.dietiestates25.repository.DatiImpiegatoRepository;
-import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.GenericMail;
 import it.unina.dietiestates25.utils.Msg;
 import it.unina.dietiestates25.utils.UserContex;
