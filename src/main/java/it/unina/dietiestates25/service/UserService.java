@@ -1,7 +1,7 @@
 package it.unina.dietiestates25.service;
 
 import it.unina.dietiestates25.dto.request.CategoriaNotificaRequest2;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.DipendenteResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.SottoscrizioneNotificaResponse;
