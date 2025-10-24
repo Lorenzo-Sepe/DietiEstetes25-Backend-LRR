@@ -10,7 +10,7 @@ public class Msg {
     // -------------------- USER
     public static final String USER_ALREADY_PRESENT = "Email o nome utente già presenti";
     public static final String EMAIL_ALREADY_PRESENT = "Email già in uso";
-    public static final String PASSWORD_CHANGED ="Password cambiata con successo"; ;
+    public static final String PASSWORD_CHANGED ="Password cambiata con successo";
 
     public static final String USER_SIGNUP_FIRST_STEP = "Utente registrato con successo. Effettua il login";
     public static final String USER_HAS_DEFAULT_AUTHORITY = "Questo utente ha l'autorizzazione predefinita: l'autorizzazione non può essere modificata fino alla verifica dell'email";
