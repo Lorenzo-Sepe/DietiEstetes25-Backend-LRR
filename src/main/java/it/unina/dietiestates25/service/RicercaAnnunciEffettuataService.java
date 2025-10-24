@@ -29,7 +29,7 @@ public class RicercaAnnunciEffettuataService {
 
     private final RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
     private final UserRepository userRepository;
-    public Set<String> cittaItaliane;
+    private Set<String> cittaItaliane;
 
     public RicercaAnnunciEffettuataService(RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository, UserRepository userRepository, Set<String> inputList) {
         this.ricercaAnnunciEffettuataRepository = ricercaAnnunciEffettuataRepository;
