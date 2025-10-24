@@ -9,6 +9,11 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AnnuncioImmobiliareSpecification {
+
+    private AnnuncioImmobiliareSpecification(){
+
+    }
+
     private static final String FIELD_IMMOBILE = "immobile";
     private static final String FIELD_CONTRATTO = "contratto";
     private static final String FIELD_PREZZO_AFFITTO = "prezzoAffitto";
@@ -53,7 +58,7 @@ public class AnnuncioImmobiliareSpecification {
 
             // Definiamo le espressioni per il prezzo
             Expression<Double> prezzoAffitto = contratto.get(FIELD_PREZZO_AFFITTO);
-            Expression<Double> prezzoVendita = contratto.get(FIELD_PREZZO_AFFITTO);
+            Expression<Double> prezzoVendita = contratto.get(FIELD_PREZZO_VENDITA);
 
             // Predicati per il range di prezzo
             Predicate rangeAffitto = null;
@@ -216,7 +221,7 @@ public class AnnuncioImmobiliareSpecification {
 
                 // downcast: specificare che vogliamo solo ContrattoVendita
                 query.orderBy(cb.asc(
-                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_AFFITTO)
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_VENDITA)
                 ));
             }
 
@@ -246,7 +251,7 @@ public class AnnuncioImmobiliareSpecification {
 
                 // downcast: specificare che vogliamo solo ContrattoVendita
                 query.orderBy(cb.desc(
-                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_AFFITTO)
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_VENDITA)
                 ));
             }
 
