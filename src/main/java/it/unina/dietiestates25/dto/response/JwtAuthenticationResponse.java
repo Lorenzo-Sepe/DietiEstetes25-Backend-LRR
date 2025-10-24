@@ -10,7 +10,7 @@ public class JwtAuthenticationResponse {
 
     private int id;
     private String nomeVisualizzato;
-    private String UrlFotoProfilo;
+    private String urlFotoProfilo;
     private String email;
     private String authority;
     private String token;
@@ -22,7 +22,7 @@ public class JwtAuthenticationResponse {
                 .email(user.getEmail())
                 .token(token)
                .nomeVisualizzato(user.getNomeVisualizzato())
-               .UrlFotoProfilo(user.getUrlFotoProfilo())
+               .urlFotoProfilo(user.getUrlFotoProfilo())
                 .build();
     }
 }
