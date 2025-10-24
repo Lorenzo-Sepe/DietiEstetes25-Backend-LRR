@@ -32,6 +32,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class AnnuncioImmobileService {
+    private static final String ENTITY_NAME_ANNUNCIO_IMMOBILIARE = "Annuncio immobiliare";
 
     private final ContrattoService contrattoService;
     private final ImmobileService immobileService;
@@ -81,7 +82,7 @@ public class AnnuncioImmobileService {
 
     public AnnuncioImmobiliareResponse getAnnuncioImmobiliare(int id) {
         AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
+                .orElseThrow(() -> new ResourceNotFoundException(ENTITY_NAME_ANNUNCIO_IMMOBILIARE, "id", id));
 
         User agente = userRepository.findById(annuncio.getAgente().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", annuncio.getAgente().getId()));
@@ -229,7 +230,7 @@ public class AnnuncioImmobileService {
     @Transactional
     public String modificaAnnuncioImmobiliare(int id, AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList) {
 
-        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id));
+        AnnuncioImmobiliare annuncio = annuncioImmobiliareRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ENTITY_NAME_ANNUNCIO_IMMOBILIARE, "id", id));
 
         verificaPermessoModificaAnnuncio(annuncio);
 
@@ -252,7 +253,7 @@ public class AnnuncioImmobileService {
 
     public String cancellaAnnuncioImmobiliare(int id) {
         verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Annuncio immobiliare", "id", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(ENTITY_NAME_ANNUNCIO_IMMOBILIARE, "id", id)));
 
         annuncioImmobiliareRepository.deleteById(id);
         return "Annuncio cancellato";
