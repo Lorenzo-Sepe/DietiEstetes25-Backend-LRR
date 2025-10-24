@@ -23,19 +23,19 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class CriteriDiRicercaTest {
+public class TestCriteriDiRicerca {
 
     RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
     @Mock
     RicercaAnnunciEffettuataRepository mockRicercaAnnunciEffettuataRepository;
     @Mock
-    UserRepository MockUserRepository;
+    UserRepository mockUserRepository;
 
     CriteriDiRicercaUtenti request;
 
     @BeforeEach
     void setup() {
-        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository,MockUserRepository,new HashSet<String>());
+        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository, mockUserRepository,new HashSet<String>());
         request = CriteriDiRicercaUtenti.builder()
                 .intervalloGiorniStoricoRicerca(10)
                 .tipoDiContrattoDiInteresse(TipoContratto.AFFITTO)

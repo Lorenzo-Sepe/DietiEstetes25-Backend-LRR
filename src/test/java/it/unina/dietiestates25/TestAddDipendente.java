@@ -1,7 +1,7 @@
 package it.unina.dietiestates25;
 
 import com.azure.storage.blob.BlobContainerClient;
-import it.unina.dietiestates25.dto.request.agenziaImmobiliare.DipendenteRequest;
+import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.entity.Authority;
 import it.unina.dietiestates25.entity.DatiImpiegato;
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class addDipendenteTest {
+public class TestAddDipendente {
 
     @Mock
     private AuthorityRepository authorityRepository;

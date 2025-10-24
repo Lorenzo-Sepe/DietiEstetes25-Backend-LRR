@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
-public class changePassword {
+public class TestChangePassword {
     @Mock
     private UserRepository userRepository;
 
@@ -86,7 +86,7 @@ public class changePassword {
     @Test
     void changePassword_ShouldThrowUnauthorizedException_WhenUserContextNotFound() {
             mocked.when(UserContex::getUserCurrent).thenReturn(null);
-            Exception ex = assertThrows(it.unina.dietiestates25.exception.UnauthorizedException.class, () ->authService.changePassword("oldPass", "newPass", "newPass") );
+            assertThrows(it.unina.dietiestates25.exception.UnauthorizedException.class, () ->authService.changePassword("oldPass", "newPass", "newPass") );
     }
     /**
      * Questo test copre i nodi 1, 2, 2.e

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class aggiungiContattoTest {
+public class TestAggiungiContatto {
 
     @Mock
     private DatiImpiegatoRepository datiImpiegatoRepository;
