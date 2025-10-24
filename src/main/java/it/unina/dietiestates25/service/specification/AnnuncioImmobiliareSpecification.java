@@ -9,6 +9,10 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AnnuncioImmobiliareSpecification {
+    private static final String FIELD_IMMOBILE = "immobile";
+    private static final String FIELD_CONTRATTO = "contratto";
+    private static final String FIELD_PREZZO_AFFITTO = "prezzoAffitto";
+    private static final String FIELD_PREZZO_VENDITA = "prezzoVendita";
 
     public static Specification<AnnuncioImmobiliare> conTitolo(String titolo) {
         return (root, query, cb) -> {
@@ -24,7 +28,7 @@ public class AnnuncioImmobiliareSpecification {
             if (tipologia == null) {
                 return null;
             }
-            Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
+            Join<AnnuncioImmobiliare, Immobile> immobile = root.join(FIELD_IMMOBILE);
             return cb.equal(immobile.get("tipologiaImmobile"), tipologia);
         };
     }
@@ -34,7 +38,7 @@ public class AnnuncioImmobiliareSpecification {
             if (tipoContratto == null || tipoContratto.isEmpty()) {
                 return null;
             }
-            Join<AnnuncioImmobiliare, Contratto> contratto = root.join("contratto");
+            Join<AnnuncioImmobiliare, Contratto> contratto = root.join(FIELD_CONTRATTO);
             return cb.equal(cb.lower(contratto.get("tipoContratto")), tipoContratto.toLowerCase());
         };
     }
@@ -45,11 +49,11 @@ public class AnnuncioImmobiliareSpecification {
             }
 
             // Creiamo il join con la tabella del Contratto
-            Join<AnnuncioImmobiliare, Contratto> contratto = root.join("contratto");
+            Join<AnnuncioImmobiliare, Contratto> contratto = root.join(FIELD_CONTRATTO);
 
             // Definiamo le espressioni per il prezzo
-            Expression<Double> prezzoAffitto = contratto.get("prezzoAffitto");
-            Expression<Double> prezzoVendita = contratto.get("prezzoVendita");
+            Expression<Double> prezzoAffitto = contratto.get(FIELD_PREZZO_AFFITTO);
+            Expression<Double> prezzoVendita = contratto.get(FIELD_PREZZO_AFFITTO);
 
             // Predicati per il range di prezzo
             Predicate rangeAffitto = null;
@@ -91,7 +95,7 @@ public class AnnuncioImmobiliareSpecification {
             if (minMq == null && maxMq == null) {
                 return null;
             }
-            Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
+            Join<AnnuncioImmobiliare, Immobile> immobile = root.join(FIELD_IMMOBILE);
 
             Expression<Integer> metriQuadri =  immobile.get("metriQuadri");
             Predicate rangeMetriQuadri = null;
@@ -124,7 +128,7 @@ public class AnnuncioImmobiliareSpecification {
             double lonMin = lon - (raggioGradi / Math.cos(Math.toRadians(lat)));
             double lonMax = lon + (raggioGradi / Math.cos(Math.toRadians(lat)));
 
-            Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
+            Join<AnnuncioImmobiliare, Immobile> immobile = root.join(FIELD_IMMOBILE);
             Join<Immobile, Indirizzo> indirizzo = immobile.join("indirizzo");
 
             Predicate filtroLat = cb.between(indirizzo.get("latitudine"), latMin, latMax);
@@ -139,7 +143,7 @@ public class AnnuncioImmobiliareSpecification {
             if (provincia == null || provincia.isEmpty()) {
                 return null;
             }
-            Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
+            Join<AnnuncioImmobiliare, Immobile> immobile = root.join(FIELD_IMMOBILE);
             Join<Immobile, Indirizzo> indirizzo = immobile.join("indirizzo");
 
             return cb.like(cb.lower(indirizzo.get("citta")), "%" + provincia.toLowerCase() + "%");
@@ -149,7 +153,7 @@ public class AnnuncioImmobiliareSpecification {
 
     public static Specification<AnnuncioImmobiliare> conCaratteristicheAggiuntive(FiltroAnnuncioDTO filtro) {
         return (root, query, cb) -> {
-            Join<AnnuncioImmobiliare, Immobile> immobile = root.join("immobile");
+            Join<AnnuncioImmobiliare, Immobile> immobile = root.join(FIELD_IMMOBILE);
             Join<Immobile, CaratteristicheAggiuntive> caratteristiche = immobile.join("caratteristicheAggiuntive");
 
             Predicate predicate = cb.conjunction();
@@ -199,20 +203,20 @@ public class AnnuncioImmobiliareSpecification {
                 return null;
             }
 
-            Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join("contratto");
+            Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join(FIELD_CONTRATTO);
 
             if(tipoContratto.equals("AFFITTO")){
 
                 // downcast: specificare che vogliamo solo ContrattoAffitto
                 query.orderBy(cb.asc(
-                        cb.treat(contrattoJoin, ContrattoAffitto.class).get("prezzoAffitto")
+                        cb.treat(contrattoJoin, ContrattoAffitto.class).get(FIELD_PREZZO_AFFITTO)
                 ));
 
             } else {
 
                 // downcast: specificare che vogliamo solo ContrattoVendita
                 query.orderBy(cb.asc(
-                        cb.treat(contrattoJoin, ContrattoVendita.class).get("prezzoVendita")
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_AFFITTO)
                 ));
             }
 
@@ -229,20 +233,20 @@ public class AnnuncioImmobiliareSpecification {
                 return null;
             }
 
-            Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join("contratto");
+            Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join(FIELD_CONTRATTO);
 
             if(tipoContratto.equals("AFFITTO")){
 
                 // downcast: specificare che vogliamo solo ContrattoAffitto
                 query.orderBy(cb.desc(
-                        cb.treat(contrattoJoin, ContrattoAffitto.class).get("prezzoAffitto")
+                        cb.treat(contrattoJoin, ContrattoAffitto.class).get(FIELD_PREZZO_AFFITTO)
                 ));
 
             } else {
 
                 // downcast: specificare che vogliamo solo ContrattoVendita
                 query.orderBy(cb.desc(
-                        cb.treat(contrattoJoin, ContrattoVendita.class).get("prezzoVendita")
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_AFFITTO)
                 ));
             }
 
