@@ -8,18 +8,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserContex {
 
+    private UserContex() {
+        // Prevent instantiation
+    }
+
     public static User getUserCurrent() {
         Authentication autenticazione = SecurityContextHolder.getContext().getAuthentication();
 
-        if (autenticazione != null && autenticazione.getPrincipal() instanceof UserDetails) {
-            UserDetails dettagliUtente = (UserDetails) autenticazione.getPrincipal();
-
-            if (dettagliUtente instanceof User user) {
-                return user;
-            }
+        if (autenticazione != null && autenticazione.getPrincipal() instanceof UserDetails dettagliUtente
+                && dettagliUtente instanceof User user) {
+            return user;
         }
         return null; // Se non c'è alcun utente autenticato
     }
+
     public static AuthorityName getRoleCurrent() {
         User user = getUserCurrent();
         if (user != null) {
