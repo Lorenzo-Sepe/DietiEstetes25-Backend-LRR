@@ -35,7 +35,7 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatoProposta stato;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.EAGER)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )

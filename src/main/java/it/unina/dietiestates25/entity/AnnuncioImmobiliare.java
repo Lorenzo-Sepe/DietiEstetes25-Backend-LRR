@@ -36,7 +36,7 @@ public class AnnuncioImmobiliare {
     @OneToOne(cascade = CascadeType.ALL)
     private Contratto contratto;
 
-    @OneToMany(mappedBy = "annuncio", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "annuncio", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Proposta> proposte;
 
     public String getUrl() {
