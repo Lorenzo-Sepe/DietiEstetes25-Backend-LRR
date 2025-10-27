@@ -214,12 +214,12 @@ public class AnnuncioImmobileService {
 
         }else{
 
-            AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(UserContex.getUserCurrent())
-                    .orElseThrow(() -> new AccessDeniedException("Utente non appartenente a nessuna agenzia immobiliare"));
+           User agente = userRepository.findByEmail(filtro.getAgenteCreatoreAnnuncio()).orElseThrow(
 
-            Set<User> dipendentiAgenziaImmobiliare = agenziaImmobiliare.getDipendenti();
+                   () -> new ResourceNotFoundException("User", "email", filtro.getAgenteCreatoreAnnuncio())
+           );
 
-            numeroDiAnnunci = annuncioImmobiliareRepository.countByAgenteIn(dipendentiAgenziaImmobiliare);
+            numeroDiAnnunci = annuncioImmobiliareRepository.countByAgente(agente);
         }
 
         return numeroDiAnnunci;

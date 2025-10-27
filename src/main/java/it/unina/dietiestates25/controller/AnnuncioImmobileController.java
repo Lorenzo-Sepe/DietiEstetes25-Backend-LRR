@@ -64,13 +64,13 @@ public class AnnuncioImmobileController {
         return ResponseEntity.ok(annuncioImmobileService.cercaAnnunci(filtro));
     }
 
-    @GetMapping("/annuncioImmobiliare/numeroByStaff")
+    @PostMapping("/annuncioImmobiliare/numeroByStaff")
     @Operation(
             summary = "OTTIENI NUMERO ANNUNCI IMMOBILIARI STAFF",
             description = "Metodo per ottenere il numero di annunci immobiliari dal database a partire da filtri esclusivo per Impiegati",
             tags = {"Annuncio Immobiliare"})
-    public ResponseEntity<Long> getNumeroAnnunciByStaff(){
-        return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(null));
+    public ResponseEntity<Long> getNumeroAnnunciByStaff(@RequestBody FiltroAnnuncioDTO filtro){
+        return ResponseEntity.ok(annuncioImmobileService.getNumeroAnnunci(filtro));
     }
 
     @PostMapping("/annuncioImmobiliare/cerca")
