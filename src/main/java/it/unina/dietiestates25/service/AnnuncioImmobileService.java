@@ -255,7 +255,17 @@ public class AnnuncioImmobileService {
         verificaPermessoModificaAnnuncio(annuncioImmobiliareRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ENTITY_NAME_ANNUNCIO_IMMOBILIARE, "id", id)));
 
-        annuncioImmobiliareRepository.deleteById(id);
+        try{
+
+            annuncioImmobiliareRepository.deleteById(id);
+
+        }catch (Exception e){
+
+            System.out.println(e.getMessage());
+
+            throw e;
+        }
+
         return "Annuncio cancellato";
     }
 
