@@ -33,7 +33,7 @@ import java.util.List;
 
         public List<PropostaResponse> getProposte(int idAnnuncio){
             List<Proposta> proposte = propostaRepository.findByAnnuncio_Id(idAnnuncio);
-            //return getListProposteResponse(proposte);
+
             return PropostaResponse.fromListEntityToDto(proposte);
         }
 

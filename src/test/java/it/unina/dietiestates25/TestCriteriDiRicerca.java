@@ -35,7 +35,7 @@ public class TestCriteriDiRicerca {
 
     @BeforeEach
     void setup() {
-        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository, mockUserRepository,new HashSet<String>());
+        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository, mockUserRepository);
         request = CriteriDiRicercaUtenti.builder()
                 .intervalloGiorniStoricoRicerca(10)
                 .tipoDiContrattoDiInteresse(TipoContratto.AFFITTO)

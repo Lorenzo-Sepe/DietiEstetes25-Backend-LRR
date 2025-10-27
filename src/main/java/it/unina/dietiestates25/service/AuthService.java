@@ -7,10 +7,7 @@ import it.unina.dietiestates25.dto.response.JwtAuthenticationResponse;
 import it.unina.dietiestates25.entity.Authority;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.entity.enumeration.AuthorityName;
-import it.unina.dietiestates25.exception.BadCredentialsException;
-import it.unina.dietiestates25.exception.ConflictException;
-import it.unina.dietiestates25.exception.ResourceNotFoundException;
-import it.unina.dietiestates25.exception.UnauthorizedException;
+import it.unina.dietiestates25.exception.*;
 import it.unina.dietiestates25.repository.AuthorityRepository;
 import it.unina.dietiestates25.repository.UserRepository;
 import it.unina.dietiestates25.utils.Msg;
@@ -117,7 +114,7 @@ public class AuthService {
         try {//6
         userRepository.save(user);
         }catch (Exception e){
-            throw new RuntimeException("Errore al momento del salvataggio della nuova password\n non è stato possibile cambiare la password\nRiprova più tardi");
+            throw new InternalServerErrorException("Errore al momento del salvataggio della nuova password");
         }
 
         return Msg.PASSWORD_CHANGED;

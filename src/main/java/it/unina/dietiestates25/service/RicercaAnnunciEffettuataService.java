@@ -31,7 +31,7 @@ public class RicercaAnnunciEffettuataService {
     private final UserRepository userRepository;
     private Set<String> cittaItaliane;
 
-    public RicercaAnnunciEffettuataService(RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository, UserRepository userRepository, Set<String> inputList) {
+    public RicercaAnnunciEffettuataService(RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository, UserRepository userRepository) {
         this.ricercaAnnunciEffettuataRepository = ricercaAnnunciEffettuataRepository;
         this.userRepository = userRepository;
        ObjectMapper mapper = new ObjectMapper();
@@ -167,16 +167,12 @@ public class RicercaAnnunciEffettuataService {
         }
         //controllo se area di interesse sia italia o una città valida
         if(request.getAreaDiInteresse()!=null && !request.getAreaDiInteresse().isBlank()){
-            if(request.getAreaDiInteresse().equalsIgnoreCase("italia")) {
+
+            if(request.getAreaDiInteresse().equalsIgnoreCase("italia") || !isItalianCitty(request.getAreaDiInteresse())) {
+
                 request.setAreaDiInteresse(null);
             }
-            else if(!isItalianCitty(request.getAreaDiInteresse())){
-            request.setAreaDiInteresse(null);
-            }
-
         }
-
-
 
         return ricercaAnnunciEffettuataRepository.trovaUtentiPerCriteri(request.getBudgetMin(),
                                                 request.getBudgetMax(),
@@ -188,8 +184,7 @@ public class RicercaAnnunciEffettuataService {
 
     public boolean isItalianCitty(@NotBlank String input) {
 
-
-    return cittaItaliane.contains(input.toLowerCase());
+        return cittaItaliane.contains(input.toLowerCase());
     }
 
 
