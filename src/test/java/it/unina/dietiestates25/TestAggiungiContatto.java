@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TestAggiungiContatto {
+class TestAggiungiContatto {
 
     @Mock
     private DatiImpiegatoRepository datiImpiegatoRepository;
@@ -45,7 +45,7 @@ public class TestAggiungiContatto {
     private DatiImpiegatoService datiImpiegatoService;
 
     @BeforeEach
-    void setup(){
+    void setup() {
 
         mocked = Mockito.mockStatic(UserContex.class);
 
@@ -76,61 +76,64 @@ public class TestAggiungiContatto {
      * Copertura 1-7
      */
     @Test
-    void aggiungiContatto_ShouldThrowUnauthorizedException_WhenUserContextNotFound(){
+    void aggiungiContatto_ShouldThrowUnauthorizedException_WhenUserContextNotFound() {
 
         mocked.when(UserContex::getUserCurrent).thenReturn(null);
 
-        assertThrows(it.unina.dietiestates25.exception.UnauthorizedException.class, () ->
-                datiImpiegatoService.aggiungiContatto(request));
+        assertThrows(it.unina.dietiestates25.exception.UnauthorizedException.class,
+                () -> datiImpiegatoService.aggiungiContatto(request));
     }
 
     /**
-     * verifica che venga lanciata una ResourceNotFoundException quando l'utente non viene trovato nel database.
+     * verifica che venga lanciata una ResourceNotFoundException quando l'utente non
+     * viene trovato nel database.
      * Copertura cammino 1-2-8
      */
     @Test
-    void aggiungiContatto_ShouldThrowResourceNotFoundException_WhenUserNotFoundInDB(){
+    void aggiungiContatto_ShouldThrowResourceNotFoundException_WhenUserNotFoundInDB() {
 
         User mockUser = new User();
 
         mocked.when(UserContex::getUserCurrent).thenReturn(mockUser);
         when(datiImpiegatoRepository.findDatiImpiegatoByUser(mockUser)).thenReturn(Optional.empty());
 
-        assertThrows(it.unina.dietiestates25.exception.ResourceNotFoundException.class, () ->
-                datiImpiegatoService.aggiungiContatto(request));
+        assertThrows(it.unina.dietiestates25.exception.ResourceNotFoundException.class,
+                () -> datiImpiegatoService.aggiungiContatto(request));
 
     }
 
     /**
-     * Verifica che aggiunge un nuovo contatto tra i contatti già esistenti dell'agente
+     * Verifica che aggiunge un nuovo contatto tra i contatti già esistenti
+     * dell'agente
      * Copertura cammino 1-2-3-4-5-6-5
      */
     @Test
-    void aggiungiContatto_ShouldAddNewContactWithoutExistingContacts(){
+    void aggiungiContatto_ShouldAddNewContactWithoutExistingContacts() {
 
         request.setTipo("Cellulare");
         request.setValore("338469123");
 
         List<ContattoResponse> response = datiImpiegatoService.aggiungiContatto(request);
+        // Controlli sul nuovo stato dei contatti esistenti dell'agente
+        assertEquals(1, contattiEsistenti.size());
+        assertEquals("Cellulare", contattiEsistenti.get(0).getTipo());
+        assertEquals("338469123", contattiEsistenti.get(0).getValore());
 
-        //Controlli sul nuovo stato dei contatti esistenti dell'agente
-        assertTrue(contattiEsistenti.size() == 1);
-        assertTrue(contattiEsistenti.get(0).getTipo().equals("Cellulare"));
-        assertTrue(contattiEsistenti.get(0).getValore().equals("338469123"));
+        // Controlli sulla DTO in risposta
+        assertEquals(1, response.size());
 
-        //Controlli sulla DTO in risposta
-        assertTrue(response.size() == 1);
-
-        assertTrue(response.get(0).getTipo().equals("Cellulare"));
-        assertTrue(response.get(0).getValore().equals("338469123"));
+        assertEquals("Cellulare", response.get(0).getTipo());
+        assertEquals("338469123", response.get(0).getValore());
+        assertEquals("338469123", response.get(0).getValore());
     }
 
     /**
-     * Verica che aggiunge un nuovo contatto (come sorpa ma con almen un iterazione tra i contati esistenti)
-     *Copertura cammino 1-2-3-9-3-4-5-6-5-6-5
+     * Verica che aggiunge un nuovo contatto (come sorpa ma con almen un iterazione
+     * tra i contati esistenti)
+     * Copertura cammino 1-2-3-9-3-4-5-6-5-6-5
      */
     @Test
-    void aggiungiContatto_ShouldAddNewConcatWithExistingContacts(){
+    void aggiungiContatto_ShouldAddNewConcatWithExistingContacts() {
 
         Contatto contatto = Contatto.builder()
                 .tipo("Cellulare")
@@ -143,32 +146,33 @@ public class TestAggiungiContatto {
         request.setValore("roby@gmail.com");
 
         List<ContattoResponse> response = datiImpiegatoService.aggiungiContatto(request);
+        // Controlli sul nuovo stato dei contatti esistenti dell'agente
+        assertEquals(2, contattiEsistenti.size());
 
-        //Controlli sul nuovo stato dei contatti esistenti dell'agente
-        assertTrue(contattiEsistenti.size() == 2);
+        assertEquals("Cellulare", contattiEsistenti.get(0).getTipo());
+        assertEquals("3338469123", contattiEsistenti.get(0).getValore());
 
-        assertTrue(contattiEsistenti.get(0).getTipo().equals("Cellulare"));
-        assertTrue(contattiEsistenti.get(0).getValore().equals("3338469123"));
+        assertEquals("Email", contattiEsistenti.get(1).getTipo());
+        assertEquals("roby@gmail.com", contattiEsistenti.get(1).getValore());
 
-        assertTrue(contattiEsistenti.get(1).getTipo().equals("Email"));
-        assertTrue(contattiEsistenti.get(1).getValore().equals("roby@gmail.com"));
+        // Controlli sulla DTO in risposta
+        assertEquals(2, response.size());
 
-        //Controlli sulla DTO in risposta
-        assertTrue(response.size() == 2);
+        assertEquals("Cellulare", response.get(0).getTipo());
+        assertEquals("3338469123", response.get(0).getValore());
 
-        assertTrue(response.get(0).getTipo().equals("Cellulare"));
-        assertTrue(response.get(0).getValore().equals("3338469123"));
-
-        assertTrue(response.get(1).getTipo().equals("Email"));
-        assertTrue(response.get(1).getValore().equals("roby@gmail.com"));
+        assertEquals("Email", response.get(1).getTipo());
+        assertEquals("roby@gmail.com", response.get(1).getValore());
+        assertEquals("roby@gmail.com", response.get(1).getValore());
     }
 
     /**
-     * verifica che si accorge che il contatto è un tipo già esistente e quindi deve modificarne il valore non aggiungere uno nuovo.
+     * verifica che si accorge che il contatto è un tipo già esistente e quindi deve
+     * modificarne il valore non aggiungere uno nuovo.
      * Copertura cammino 1-2-3-9-3-9-10-5-6-5-6-5
      */
     @Test
-    void aggiungiContatto_ShouldModifyExistingContact(){
+    void aggiungiContatto_ShouldModifyExistingContact() {
 
         Contatto contatto1 = Contatto.builder()
                 .tipo("Cellulare")
@@ -187,33 +191,35 @@ public class TestAggiungiContatto {
         request.setValore("raimondo@gmail.com");
 
         List<ContattoResponse> response = datiImpiegatoService.aggiungiContatto(request);
+        // Controlli sul nuovo stato dei contatti esistenti dell'agente
+        assertEquals(2, contattiEsistenti.size());
 
-        //Controlli sul nuovo stato dei contatti esistenti dell'agente
-        assertTrue(contattiEsistenti.size() == 2);
+        assertEquals("Cellulare", contattiEsistenti.get(0).getTipo());
+        assertEquals("3338469123", contattiEsistenti.get(0).getValore());
 
-        assertTrue(contattiEsistenti.get(0).getTipo().equals("Cellulare"));
-        assertTrue(contattiEsistenti.get(0).getValore().equals("3338469123"));
+        assertEquals("Email", contattiEsistenti.get(1).getTipo());
+        assertEquals("raimondo@gmail.com", contattiEsistenti.get(1).getValore());
 
-        assertTrue(contattiEsistenti.get(1).getTipo().equals("Email"));
-        assertTrue(contattiEsistenti.get(1).getValore().equals("raimondo@gmail.com"));
+        // Controlli sulla DTO in risposta
+        assertEquals(2, response.size());
 
-        //Controlli sulla DTO in risposta
-        assertTrue(response.size() == 2);
+        assertEquals("Cellulare", response.get(0).getTipo());
+        assertEquals("3338469123", response.get(0).getValore());
 
-        assertTrue(response.get(0).getTipo().equals("Cellulare"));
-        assertTrue(response.get(0).getValore().equals("3338469123"));
-
-        assertTrue(response.get(1).getTipo().equals("Email"));
-        assertTrue(response.get(1).getValore().equals("raimondo@gmail.com"));
+        assertEquals("Email", response.get(1).getTipo());
+        assertEquals("raimondo@gmail.com", response.get(1).getValore());
+        assertEquals("raimondo@gmail.com", response.get(1).getValore());
 
     }
 
     /**
-     * verifica che si accorge di moficare il valore di un contatto invece di aggihgerlo uno nuovo. (Stessa verifica di sopra ma senza iterazione nel ciclo)
+     * verifica che si accorge di moficare il valore di un contatto invece di
+     * aggihgerlo uno nuovo. (Stessa verifica di sopra ma senza iterazione nel
+     * ciclo)
      * Copertura cammino 1-2-3-9-10-5-6-5
      */
     @Test
-    void aggiungiContatto_ShouldModifyExistingContactWithoutIteration(){
+    void aggiungiContatto_ShouldModifyExistingContactWithoutIteration() {
 
         Contatto contatto = Contatto.builder()
                 .tipo("Cellulare")
@@ -226,18 +232,18 @@ public class TestAggiungiContatto {
         request.setValore("31520289137");
 
         List<ContattoResponse> response = datiImpiegatoService.aggiungiContatto(request);
+        // Controlli sul nuovo stato dei contatti esistenti dell'agente
+        assertEquals(1, contattiEsistenti.size());
 
-        //Controlli sul nuovo stato dei contatti esistenti dell'agente
-        assertTrue(contattiEsistenti.size() == 1);
+        assertEquals("Cellulare", contattiEsistenti.get(0).getTipo());
+        assertEquals("31520289137", contattiEsistenti.get(0).getValore());
 
-        assertTrue(contattiEsistenti.get(0).getTipo().equals("Cellulare"));
-        assertTrue(contattiEsistenti.get(0).getValore().equals("31520289137"));
+        // Controlli sulla DTO in risposta
+        assertEquals(1, response.size());
 
-        //Controlli sulla DTO in risposta
-        assertTrue(response.size() == 1);
-
-        assertTrue(response.get(0).getTipo().equals("Cellulare"));
-        assertTrue(response.get(0).getValore().equals("31520289137"));
+        assertEquals("Cellulare", response.get(0).getTipo());
+        assertEquals("31520289137", response.get(0).getValore());
+        assertEquals("31520289137", response.get(0).getValore());
 
     }
 }
