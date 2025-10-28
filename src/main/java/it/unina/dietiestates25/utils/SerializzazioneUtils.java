@@ -2,7 +2,9 @@ package it.unina.dietiestates25.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class SerializzazioneUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
 
