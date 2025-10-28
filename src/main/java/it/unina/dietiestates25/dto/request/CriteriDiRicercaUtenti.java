@@ -27,15 +27,19 @@ public class CriteriDiRicercaUtenti {
 
 
     public static CriteriDiRicercaUtenti map(AnnuncioImmobiliare annuncio) {
-        TipoContratto tipoContratto  = null;
-        Double prezzo=null;
-        if(annuncio.getContratto() instanceof ContrattoAffitto){
-            tipoContratto= TipoContratto.AFFITTO;
-            prezzo = ((ContrattoAffitto) annuncio.getContratto()).getPrezzoAffitto();
-        }
-        else if(annuncio.getContratto() instanceof ContrattoVendita){
-            tipoContratto= TipoContratto.VENDITA;
-            prezzo= ((ContrattoVendita) annuncio.getContratto()).getPrezzoVendita();
+        TipoContratto tipoContratto;
+        Double prezzo;
+        Object contratto = annuncio.getContratto();
+        switch (contratto){
+            case ContrattoAffitto contrattoAffitto -> {
+                tipoContratto = TipoContratto.AFFITTO;
+                prezzo = contrattoAffitto.getPrezzoAffitto();
+            }
+            case ContrattoVendita contrattoVendita -> {
+                tipoContratto = TipoContratto.VENDITA;
+                prezzo = contrattoVendita.getPrezzoVendita();
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + contratto);
         }
 
         BigDecimal budgetMin = null;
