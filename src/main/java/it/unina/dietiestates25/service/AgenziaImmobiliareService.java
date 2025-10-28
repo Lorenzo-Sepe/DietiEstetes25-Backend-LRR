@@ -6,7 +6,6 @@ import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
 import it.unina.dietiestates25.dto.response.impiegato.CredenzialiDefaultResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
-import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.entity.AgenziaImmobiliare;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
@@ -27,7 +26,7 @@ import java.util.List;
 @Slf4j
 public class AgenziaImmobiliareService {
     private final AgenziaImmobiliareRepository agenziaImmobiliareRepository;
-    private final  UserService userService;
+    private final UserService userService;
     private final EmailService emailService;
 
     @Transactional
@@ -39,17 +38,18 @@ public class AgenziaImmobiliareService {
         agenziaImmobiliare.addDipendente(fondatoreResponse.getUser());
         saveAgenzia(agenziaImmobiliare);
         GenericMail mail = new GenericMail(
-            Msg.MAIL_SIGNUP_SUBJECT,
-            String.format(Msg.MAIL_SIGNUP_BODY, fondatoreResponse.getUser().getEmail(), fondatoreResponse.getPassword()),
-            request.getEmailFondatore()
-        );
+                Msg.MAIL_SIGNUP_SUBJECT,
+                String.format(Msg.MAIL_SIGNUP_BODY, fondatoreResponse.getUser().getEmail(),
+                        fondatoreResponse.getPassword()),
+                request.getEmailFondatore());
         emailService.sendVerificationMail(mail);
         String response = Msg.AGENCY_CREATION_SUCCESS;
         log.info(response);
         return response;
     }
 
-    private AgenziaImmobiliare buildAgenziaImmobiliare(AgenziaImmobiliareRequest request, NewDipendeteResponse fondatoreResponse) {
+    private AgenziaImmobiliare buildAgenziaImmobiliare(AgenziaImmobiliareRequest request,
+            NewDipendeteResponse fondatoreResponse) {
         if (agenziaImmobiliareRepository.existsByDominio(request.getDominio())) {
             throw new IllegalArgumentException("Il dominio selezionato non e' disponibile");
         }
@@ -64,7 +64,7 @@ public class AgenziaImmobiliareService {
                 .partitaIva(request.getPartitaIva())
                 .ragioneSociale(request.getRagioneSociale())
                 .dominio(request.getDominio())
-                .fondatore(fondatoreResponse.getUser ())
+                .fondatore(fondatoreResponse.getUser())
                 .build();
     }
 
@@ -72,42 +72,41 @@ public class AgenziaImmobiliareService {
         try {
             agenziaImmobiliareRepository.save(agenziaImmobiliare);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Non è stato possibile creare l'agenzia immobiliare: " + e.getMessage());
+            throw new InternalServerErrorException(
+                    "Non è stato possibile creare l'agenzia immobiliare: " + e.getMessage());
         }
     }
-
 
     public List<AgenziaImmobiliareResponse> getAgenzie() {
         return agenziaImmobiliareRepository.getAllAgenzieImmobiliari();
     }
 
-
     @Transactional
     public CredenzialiDefaultResponse aggiungiDipendete(DipendenteRequest request) {
         User user = UserContex.getUserCurrent();
-        AgenziaImmobiliare agenziaImmobiliare =agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(user)
-                .orElseThrow(() -> new IllegalArgumentException("L'utente non è un dipendente di nessuna agenzia immobiliare"));
+        AgenziaImmobiliare agenziaImmobiliare = agenziaImmobiliareRepository
+                .findAgenziaImmobiliareByDipendentiContains(user)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "L'utente non è un dipendente di nessuna agenzia immobiliare"));
 
         NewDipendeteResponse newDipendeteResponse = userService.addDipendete(request, agenziaImmobiliare.getDominio());
         agenziaImmobiliare.addDipendente(newDipendeteResponse.getUser());
 
-        CredenzialiDefaultResponse credenzialiDefaultResponse = CredenzialiDefaultResponse.builder()
+        return CredenzialiDefaultResponse.builder()
                 .email(newDipendeteResponse.getUser().getEmail())
                 .password(newDipendeteResponse.getPassword())
                 .build();
-
-        return credenzialiDefaultResponse;
     }
 
     public DatiAgenziaImmobiliareResponse getAgenziaByEmailImpiegato(String email) {
-        AgenziaImmobiliare agenzia =agenziaImmobiliareRepository.findByDipendenteEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
-             return DatiAgenziaImmobiliareResponse.fromEntityToDto(agenzia);
+        AgenziaImmobiliare agenzia = agenziaImmobiliareRepository.findByDipendenteEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare", "email", email));
+        return DatiAgenziaImmobiliareResponse.fromEntityToDto(agenzia);
     }
 
     public AgenziaImmobiliare getAgenziaImmobiliare(String email) {
 
         return agenziaImmobiliareRepository.findByDipendenteEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare","email",email));
+                .orElseThrow(() -> new ResourceNotFoundException("Agenzia Immobiliare", "email", email));
     }
 }
