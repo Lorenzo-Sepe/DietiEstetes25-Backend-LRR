@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class AnnuncioImmobiliareSpecification {
 
-    private AnnuncioImmobiliareSpecification(){
+    private AnnuncioImmobiliareSpecification() {
 
     }
 
@@ -47,6 +47,7 @@ public class AnnuncioImmobiliareSpecification {
             return cb.equal(cb.lower(contratto.get("tipoContratto")), tipoContratto.toLowerCase());
         };
     }
+
     public static Specification<AnnuncioImmobiliare> conRangePrezzo(Double prezzoMin, Double prezzoMax) {
         return (root, query, cb) -> {
             if (prezzoMin == null && prezzoMax == null) {
@@ -102,13 +103,13 @@ public class AnnuncioImmobiliareSpecification {
             }
             Join<AnnuncioImmobiliare, Immobile> immobile = root.join(FIELD_IMMOBILE);
 
-            Expression<Integer> metriQuadri =  immobile.get("metriQuadri");
+            Expression<Integer> metriQuadri = immobile.get("metriQuadri");
             Predicate rangeMetriQuadri = null;
 
             if (minMq != null && maxMq != null) {
                 // Per l'affitto
                 rangeMetriQuadri = cb.between(metriQuadri, minMq, maxMq);
-            } else if (minMq!= null) {
+            } else if (minMq != null) {
                 // Per l'affitto
                 rangeMetriQuadri = cb.greaterThanOrEqualTo(metriQuadri, minMq);
             } else {
@@ -143,7 +144,7 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
-    public static Specification<AnnuncioImmobiliare> conProvincia(String provincia){
+    public static Specification<AnnuncioImmobiliare> conProvincia(String provincia) {
         return (root, query, cb) -> {
             if (provincia == null || provincia.isEmpty()) {
                 return null;
@@ -181,13 +182,16 @@ public class AnnuncioImmobiliareSpecification {
                 predicate = cb.and(predicate, cb.equal(caratteristiche.get("portiere"), filtro.getPannelliSolari()));
             }
             if (filtro.getRiscaldamentoCentralizzato() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("riscaldamentoCentralizzato"), filtro.getRiscaldamentoCentralizzato()));
+                predicate = cb.and(predicate, cb.equal(caratteristiche.get("riscaldamentoCentralizzato"),
+                        filtro.getRiscaldamentoCentralizzato()));
             }
             if (filtro.getClimatizzatori() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("climatizzatori"), filtro.getClimatizzatori()));
+                predicate = cb.and(predicate,
+                        cb.equal(caratteristiche.get("climatizzatori"), filtro.getClimatizzatori()));
             }
             if (filtro.getPannelliSolari() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("pannelliSolari"), filtro.getPannelliSolari()));
+                predicate = cb.and(predicate,
+                        cb.equal(caratteristiche.get("pannelliSolari"), filtro.getPannelliSolari()));
             }
             if (filtro.getCantina() != null) {
                 predicate = cb.and(predicate, cb.equal(caratteristiche.get("cantina"), filtro.getCantina()));
@@ -199,60 +203,49 @@ public class AnnuncioImmobiliareSpecification {
         };
     }
 
-    public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoAsc(boolean ordinePerPrezzoAsc, String tipoContratto) {
+    public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoAsc(boolean ordinePerPrezzoAsc,
+            String tipoContratto) {
 
         return (root, query, cb) -> {
-
-            if(!ordinePerPrezzoAsc){
-
+            if (!ordinePerPrezzoAsc || query == null) {
                 return null;
             }
 
             Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join(FIELD_CONTRATTO);
 
-            if(tipoContratto.equals("AFFITTO")){
-
-                // downcast: specificare che vogliamo solo ContrattoAffitto
-                query.orderBy(cb.asc(
-                        cb.treat(contrattoJoin, ContrattoAffitto.class).get(FIELD_PREZZO_AFFITTO)
-                ));
-
+            if ("AFFITTO".equals(tipoContratto)) {
+                query.orderBy(cb.asc(cb.treat(contrattoJoin, ContrattoAffitto.class).get(FIELD_PREZZO_AFFITTO)));
             } else {
-
-                // downcast: specificare che vogliamo solo ContrattoVendita
-                query.orderBy(cb.asc(
-                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_VENDITA)
-                ));
+                query.orderBy(cb.asc(cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_VENDITA)));
             }
 
             return cb.conjunction();
         };
     }
 
-    public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoDesc(boolean isOrdinePerPrezzoDesc, String tipoContratto) {
+    public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoDesc(boolean isOrdinePerPrezzoDesc,
+            String tipoContratto) {
 
         return (root, query, cb) -> {
 
-            if(!isOrdinePerPrezzoDesc){
+            if (!isOrdinePerPrezzoDesc || query == null) {
 
                 return null;
             }
 
             Join<AnnuncioImmobiliare, Contratto> contrattoJoin = root.join(FIELD_CONTRATTO);
 
-            if(tipoContratto.equals("AFFITTO")){
+            if (tipoContratto.equals("AFFITTO")) {
 
                 // downcast: specificare che vogliamo solo ContrattoAffitto
                 query.orderBy(cb.desc(
-                        cb.treat(contrattoJoin, ContrattoAffitto.class).get(FIELD_PREZZO_AFFITTO)
-                ));
+                        cb.treat(contrattoJoin, ContrattoAffitto.class).get(FIELD_PREZZO_AFFITTO)));
 
             } else {
 
                 // downcast: specificare che vogliamo solo ContrattoVendita
                 query.orderBy(cb.desc(
-                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_VENDITA)
-                ));
+                        cb.treat(contrattoJoin, ContrattoVendita.class).get(FIELD_PREZZO_VENDITA)));
             }
 
             return cb.conjunction();
@@ -263,7 +256,7 @@ public class AnnuncioImmobiliareSpecification {
 
         return (root, query, cb) -> {
 
-            if(!isOrdinePerDataDesc){
+            if (!isOrdinePerDataDesc || query == null) {
 
                 return null;
             }
@@ -278,7 +271,7 @@ public class AnnuncioImmobiliareSpecification {
 
         return (root, query, cb) -> {
 
-            if(!isOrdinePerDataAsc){
+            if (!isOrdinePerDataAsc || query == null) {
 
                 return null;
             }

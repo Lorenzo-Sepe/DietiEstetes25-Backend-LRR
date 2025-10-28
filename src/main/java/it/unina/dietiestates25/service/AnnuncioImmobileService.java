@@ -15,7 +15,6 @@ import it.unina.dietiestates25.utils.UserContex;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,9 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +41,8 @@ public class AnnuncioImmobileService {
     private final UserRepository userRepository;
     private final DatiImpiegatoRepository datiImpiegatoRepository;
 
-
-    //-------------------------------------------------------CREA ANNUNCIO-------------------------------------------------------
+    // -------------------------------------------------------CREA
+    // ANNUNCIO-------------------------------------------------------
 
     @Transactional
     public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList) {

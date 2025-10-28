@@ -2,9 +2,14 @@ package it.unina.dietiestates25.utils;
 
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.security.SecureRandom;
 
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class GeneratorePassword {
 
     private static final int LUNGHEZZA_PASSWORD = 12;
@@ -46,6 +51,6 @@ public class GeneratorePassword {
     public static void main(String[] args) {
         GeneratorePassword generatore = new GeneratorePassword();
         String password = generatore.generaPasswordDipendente();
-        System.out.println("Password generata: " + password);
+        log.info("Password generata: " + password);
     }
 }
