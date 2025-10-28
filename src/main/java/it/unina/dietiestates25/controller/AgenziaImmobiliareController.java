@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AgenziaImmobiliareRequest;
 import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
+import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
+import it.unina.dietiestates25.dto.response.impiegato.CredenzialiDefaultResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
 import it.unina.dietiestates25.service.AgenziaImmobiliareService;
 import jakarta.validation.Valid;
@@ -39,7 +41,7 @@ public class AgenziaImmobiliareController {
             summary = "AGGIUNGI UN NUOVO AGENTE",
             description = "Metodo per aggiungere un nuovo agente immobiliare nel database",
             tags = {"Agenzia"})
-    public ResponseEntity<String> createAgente(@RequestBody @Valid DipendenteRequest request) {
+    public ResponseEntity<CredenzialiDefaultResponse> createAgente(@RequestBody @Valid DipendenteRequest request) {
         return new ResponseEntity<>(agenziaImmobiliareService.aggiungiDipendete(request), HttpStatus.CREATED);
     }
 

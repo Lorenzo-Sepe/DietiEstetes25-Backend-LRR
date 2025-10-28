@@ -4,7 +4,9 @@ import it.unina.dietiestates25.dto.request.agenzia_immobiliare.AgenziaImmobiliar
 import it.unina.dietiestates25.dto.request.agenzia_immobiliare.DipendenteRequest;
 import it.unina.dietiestates25.dto.response.AgenziaImmobiliareResponse;
 import it.unina.dietiestates25.dto.response.NewDipendeteResponse;
+import it.unina.dietiestates25.dto.response.impiegato.CredenzialiDefaultResponse;
 import it.unina.dietiestates25.dto.response.impiegato.DatiAgenziaImmobiliareResponse;
+import it.unina.dietiestates25.dto.response.impiegato.DatiImpiegatoResponse;
 import it.unina.dietiestates25.entity.AgenziaImmobiliare;
 import it.unina.dietiestates25.entity.User;
 import it.unina.dietiestates25.exception.InternalServerErrorException;
@@ -81,7 +83,7 @@ public class AgenziaImmobiliareService {
 
 
     @Transactional
-    public String aggiungiDipendete(DipendenteRequest request) {
+    public CredenzialiDefaultResponse aggiungiDipendete(DipendenteRequest request) {
         User user = UserContex.getUserCurrent();
         AgenziaImmobiliare agenziaImmobiliare =agenziaImmobiliareRepository.findAgenziaImmobiliareByDipendentiContains(user)
                 .orElseThrow(() -> new IllegalArgumentException("L'utente non è un dipendente di nessuna agenzia immobiliare"));
@@ -89,11 +91,12 @@ public class AgenziaImmobiliareService {
         NewDipendeteResponse newDipendeteResponse = userService.addDipendete(request, agenziaImmobiliare.getDominio());
         agenziaImmobiliare.addDipendente(newDipendeteResponse.getUser());
 
-        String email = newDipendeteResponse.getUser().getEmail();
-        String password = newDipendeteResponse.getPassword();
-        String response = String.format("Dipendente aggiunto con successo. Le credenziali del dipendete sono:%n%s%n%s", email, password);
-        log.info(response);
-        return response;
+        CredenzialiDefaultResponse credenzialiDefaultResponse = CredenzialiDefaultResponse.builder()
+                .email(newDipendeteResponse.getUser().getEmail())
+                .password(newDipendeteResponse.getPassword())
+                .build();
+
+        return credenzialiDefaultResponse;
     }
 
     public DatiAgenziaImmobiliareResponse getAgenziaByEmailImpiegato(String email) {
