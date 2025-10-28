@@ -2,6 +2,7 @@ package it.unina.dietiestates25.utils;
 
 import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import it.unina.dietiestates25.entity.utilities.Point;
+import it.unina.dietiestates25.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.file.Files;
@@ -60,7 +62,8 @@ public class NearbyPlacesChecker {
                     double provinceLat = point.getDouble(1);
 
                     // Calcola la distanza usando la formula di Haversine
-                    double distance = haversineDistance(centro.getLatitudine(), centro.getLongitudine(), provinceLat, provinceLon);
+                    double distance = haversineDistance(centro.getLatitudine(), centro.getLongitudine(), provinceLat,
+                            provinceLon);
                     if (distance <= raggio) {
                         isInside = true;
                     }
@@ -86,23 +89,22 @@ public class NearbyPlacesChecker {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
 
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                   Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                   Math.sin(dLon/2) * Math.sin(dLon/2);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return earthRadius * c;
     }
 
-    public Set<VicinoA> getPuntiInteresseVicini( double latitudine,  double longitudine) {
+    public Set<VicinoA> getPuntiInteresseVicini(double latitudine, double longitudine) {
         Set<VicinoA> indicatori = new HashSet<>();
 
         // Mappa delle categorie con corrispondente valore enum
         Map<VicinoA, String> categorie = Map.of(
                 VicinoA.SCUOLE, "education.school",
                 VicinoA.PARCHEGGI, "leisure.park",
-                VicinoA.TRASPORTO_PUBBLICO, "public_transport"
-        );
+                VicinoA.TRASPORTO_PUBBLICO, "public_transport");
 
         WebClient webClient = webClientBuilder.build();
 
@@ -115,14 +117,14 @@ public class NearbyPlacesChecker {
             Map<String, Object> risposta = webClient.get()
                     .uri(url)
                     .retrieve()
-                    .onStatus(HttpStatusCode::isError, clientResponse ->
-                            clientResponse.createException().flatMap(error -> {
-                                throw new RuntimeException("Errore nella richiesta a Geoapify: " + error.getMessage());
-                            })
-                    )
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .onStatus(HttpStatusCode::isError,
+                            clientResponse -> clientResponse.createException().flatMap(error -> {
+                                throw new BadRequestException(
+                                        "Errore nella richiesta a Geoapify: " + error.getMessage());
+                            }))
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                    })
                     .block(); // Chiamata sincrona
-
 
             if (risposta != null && risposta.containsKey(FEATURES_KEY) &&
                     !((List<?>) risposta.get(FEATURES_KEY)).isEmpty()) {
