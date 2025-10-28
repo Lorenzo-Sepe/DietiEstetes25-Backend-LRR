@@ -15,15 +15,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class TestCriteriDiRicerca {
+class TestCriteriDiRicerca {
 
     RicercaAnnunciEffettuataService ricercaAnnunciEffettuataService;
     @Mock
@@ -35,7 +35,8 @@ public class TestCriteriDiRicerca {
 
     @BeforeEach
     void setup() {
-        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository, mockUserRepository);
+        ricercaAnnunciEffettuataService = new RicercaAnnunciEffettuataService(mockRicercaAnnunciEffettuataRepository,
+                mockUserRepository);
         request = CriteriDiRicercaUtenti.builder()
                 .intervalloGiorniStoricoRicerca(10)
                 .tipoDiContrattoDiInteresse(TipoContratto.AFFITTO)
@@ -46,7 +47,6 @@ public class TestCriteriDiRicerca {
                 .build();
     }
 
-
     @AfterEach
     void verifyRepositorySave() {
         verify(mockRicercaAnnunciEffettuataRepository).trovaUtentiPerCriteri(
@@ -55,12 +55,10 @@ public class TestCriteriDiRicerca {
                 eq(request.getAreaDiInteresse()),
                 eq(request.getTipoDiContrattoDiInteresse()),
                 eq(request.getTipologiaDiImmobileDiInteresse()),
-                any(LocalDateTime.class)  // qualsiasi valore va bene
+                any(LocalDateTime.class) // qualsiasi valore va bene
         );
 
-
     }
-
 
     /**
      * Test di tutte le classi valide
@@ -70,16 +68,17 @@ public class TestCriteriDiRicerca {
     @Test
     void validRequestShouldNotChangeAnything() {
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getAreaDiInteresse().equals("Napoli"));
-        assertTrue(request.getBudgetMin().equals(BigDecimal.valueOf(100)));
-        assertTrue(request.getBudgetMax().equals(BigDecimal.valueOf(600)));
-        assertTrue(request.getTipologiaDiImmobileDiInteresse().equals(TipologiaImmobile.APPARTAMENTO));
-        assertTrue(request.getTipoDiContrattoDiInteresse().equals(TipoContratto.AFFITTO));
+        assertEquals("Napoli", request.getAreaDiInteresse());
+        assertEquals(BigDecimal.valueOf(100), request.getBudgetMin());
+        assertEquals(BigDecimal.valueOf(600), request.getBudgetMax());
+        assertEquals(TipologiaImmobile.APPARTAMENTO, request.getTipologiaDiImmobileDiInteresse());
+        assertEquals(TipoContratto.AFFITTO, request.getTipoDiContrattoDiInteresse());
 
     }
 
     /**
-     * test con tutti i parametri null non deve modificare nulla tranne i giorni che deve settarli a 7
+     * test con tutti i parametri null non deve modificare nulla tranne i giorni che
+     * deve settarli a 7
      */
 
     @Test
@@ -91,55 +90,57 @@ public class TestCriteriDiRicerca {
         request.setTipoDiContrattoDiInteresse(null);
         request.setIntervalloGiorniStoricoRicerca(0);
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getAreaDiInteresse()==null);
-        assertTrue(request.getBudgetMin()==null);
-        assertTrue(request.getBudgetMax()==null);
-        assertTrue(request.getTipologiaDiImmobileDiInteresse()==null);
-        assertTrue(request.getTipoDiContrattoDiInteresse()==null);
-        assertTrue(request.getIntervalloGiorniStoricoRicerca()==7);
+        assertNull(request.getAreaDiInteresse());
+        assertNull(request.getBudgetMin());
+        assertNull(request.getBudgetMax());
+        assertNull(request.getTipologiaDiImmobileDiInteresse());
+        assertNull(request.getTipoDiContrattoDiInteresse());
+        assertEquals(7, request.getIntervalloGiorniStoricoRicerca());
 
     }
 
     /**
-     * test con area di intersse Italia non deve modificare nulla tranne l'area di interesse che deve settarla a null
+     * test con area di intersse Italia non deve modificare nulla tranne l'area di
+     * interesse che deve settarla a null
      */
     @Test
     void areaDiInteresseItaliaShouldSetNullAreaDiInteresse() {
         request.setAreaDiInteresse("Italia");
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getAreaDiInteresse()==null);
+        assertNull(request.getAreaDiInteresse());
     }
 
     /**
-     * test che controlla che se inserisco un budget max minore del budget min me li scambia
+     * test che controlla che se inserisco un budget max minore del budget min me li
+     * scambia
      */
     @Test
     void budgetMaxLessThanBudgetMinShouldSwapThem() {
         request.setBudgetMin(BigDecimal.valueOf(600));
         request.setBudgetMax(BigDecimal.valueOf(100));
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getBudgetMin().equals(BigDecimal.valueOf(100)));
-        assertTrue(request.getBudgetMax().equals(BigDecimal.valueOf(600)));
+        assertEquals(BigDecimal.valueOf(100), request.getBudgetMin());
+        assertEquals(BigDecimal.valueOf(600), request.getBudgetMax());
     }
 
-
     /**
-     * BATTERIA di test che controlls che la request da in input a utentiInteressati modifica i dati dei criteri di ricerca qualora non sono validi o incompleti
+     * BATTERIA di test che controlls che la request da in input a utentiInteressati
+     * modifica i dati dei criteri di ricerca qualora non sono validi o incompleti
      *
      */
     /**
      * Primo test per vedere se con la request tutta corretta non mi modifica nulla
      */
 
-
     /**
-     * Test che controlla che se inerisco una citta che non esiste mi setti a null il campo area di interesse della request
+     * Test che controlla che se inerisco una citta che non esiste mi setti a null
+     * il campo area di interesse della request
      */
     @Test
     void invalidCityShouldSetNullAreaDiInteresse() {
         request.setAreaDiInteresse("Città Inesistente");
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getAreaDiInteresse()==null);
+        assertNull(request.getAreaDiInteresse());
     }
 
     /**
@@ -150,8 +151,9 @@ public class TestCriteriDiRicerca {
         request.setBudgetMin(BigDecimal.valueOf(-100));
         ricercaAnnunciEffettuataService.utentiInteressati(request);
 
-        assertTrue(request.getBudgetMin()==null);
+        assertNull(request.getBudgetMin());
     }
+
     /**
      * test che controlla che se inserisco un budget max negativo me lo setta a null
      */
@@ -159,19 +161,19 @@ public class TestCriteriDiRicerca {
     void negativeBudgetMaxShouldSetNullBudgetMax() {
         request.setBudgetMax(BigDecimal.valueOf(-100));
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getBudgetMax()==null);
+        assertNull(request.getBudgetMax());
     }
 
     /**
-     * test che controlla se inserisco un intervallo di giorni negativo me lo setta a 7
+     * test che controlla se inserisco un intervallo di giorni negativo me lo setta
+     * a 7
      */
     @Test
     void deltaDaysLessThanZeroShouldSet7() {
         request.setIntervalloGiorniStoricoRicerca(0);
         ricercaAnnunciEffettuataService.utentiInteressati(request);
-        assertTrue(request.getIntervalloGiorniStoricoRicerca()==7);
+        assertEquals(7, request.getIntervalloGiorniStoricoRicerca());
 
     }
-
 
 }
