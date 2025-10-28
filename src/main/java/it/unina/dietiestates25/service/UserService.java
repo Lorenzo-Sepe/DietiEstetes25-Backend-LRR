@@ -61,7 +61,7 @@ public class UserService {
         // Agente Nome C.
         String nomeVisualizzato = ruolo + " " + request.getNome() + " "
                 + request.getCognome().substring(0, 1).toUpperCase() + ".";
-        String fotoProfilo = imageUploaderService.getDefaultAvatar(nomeVisualizzato);
+        String fotoProfilo = imageUploaderService.getDefaultAvatar(request.getCognome());
         User user = User.builder()
                 .email(email)
                 .urlFotoProfilo(fotoProfilo)
