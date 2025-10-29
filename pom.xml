@@ -33,9 +33,6 @@
 
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>DietiEstates25</sonar.projectKey>
-		<!-- key rai: sqp_f1e98802f11ac2ab96847a54851075a7fc9006f4 -->
-		<!-- key rob; sqp_f1611ececacfbef94aabe45a26a539ed34e94b2a -->
-		<!-- key lore: sqp_cc907c99ceef1ade8d83b4b0cfeb8e61cd53daa0 -->
         <sonar.login>sqp_cc907c99ceef1ade8d83b4b0cfeb8e61cd53daa0</sonar.login>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>

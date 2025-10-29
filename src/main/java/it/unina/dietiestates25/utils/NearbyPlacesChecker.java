@@ -4,6 +4,7 @@ import it.unina.dietiestates25.entity.enumeration.VicinoA;
 import it.unina.dietiestates25.entity.utilities.Point;
 import it.unina.dietiestates25.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.util.*;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class NearbyPlacesChecker {
 
     private static final String FEATURES_KEY = "features";
@@ -75,7 +77,7 @@ public class NearbyPlacesChecker {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Errore durante la lettura del file GeoJSON o l'elaborazione dei dati: {}", e.getMessage());
         }
 
         return provinceVicine;
