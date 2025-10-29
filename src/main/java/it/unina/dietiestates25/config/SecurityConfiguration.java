@@ -28,8 +28,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // <-- Add this line to enable global CorsConfig
-                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)  // NOSONAR: CSRF disabilitato perché l'applicazione usa JWT e non cookie di sessione
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(
                                 "/v0/auth/**",
