@@ -19,7 +19,6 @@ public class PropostaResponse {
     private String stato;
     private DatiUserPropostaResponse datiProponente;
 
-    //TODO durante la creazione della tabella ho scoperto che mi serveno insieme agli annunci quindi lo lascerei
     public static List<PropostaResponse> fromListEntityToDto(List<Proposta> proposte){
 
         List<PropostaResponse> proposteResponse = new ArrayList<>();

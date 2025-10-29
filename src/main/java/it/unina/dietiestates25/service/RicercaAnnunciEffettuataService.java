@@ -135,10 +135,7 @@ public class RicercaAnnunciEffettuataService {
         Double longitudine = filtro.getLonCentro();
         Double raggio = filtro.getRaggioKm();
         if (latitudine != null && longitudine != null && raggio != null) {
-
-            // TODO: implementare ricerca province in base a latitudine, longitudine e
-            // raggio
-            return List.of("Napoli");
+            return List.of("Personalizzato ");
         }
         return List.of();
     }
