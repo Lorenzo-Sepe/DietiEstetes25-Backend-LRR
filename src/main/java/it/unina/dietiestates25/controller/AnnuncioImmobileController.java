@@ -31,7 +31,7 @@ public class AnnuncioImmobileController {
             description = "Metodo per aggiungere un nuovo annuncio immobiliare nel database",
             tags = {"Annuncio Immobiliare"})
     @PreAuthorize("hasAnyAuthority('AGENT')")
-    ResponseEntity<String> creaAnnuncioImmobiliare(@RequestPart("dati") AnnuncioImmobiliareRequest request,
+    ResponseEntity<Integer> creaAnnuncioImmobiliare(@RequestPart("dati") AnnuncioImmobiliareRequest request,
                                                    @RequestPart(value = "immagini", required = false) List<MultipartFile> immaginiList) {
         return ResponseEntity.ok(annuncioImmobileService.creaAnnuncioImmobiliare(request,immaginiList));
     }

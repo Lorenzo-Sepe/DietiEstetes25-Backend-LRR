@@ -45,7 +45,7 @@ public class AnnuncioImmobileService {
     // ANNUNCIO-------------------------------------------------------
 
     @Transactional
-    public String creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList) {
+    public int creaAnnuncioImmobiliare(AnnuncioImmobiliareRequest request, List<MultipartFile> immaginiList) {
 
         User agenteImmobiliare = UserContex.getUserCurrent();
         Immobile immobile = immobileService.createImmobileByRequest(request.getImmobile(), immaginiList);
@@ -74,7 +74,7 @@ public class AnnuncioImmobileService {
             log.error("Errore nell'invio della notifica per il nuovo annuncio immobiliare");
         }
 
-        return "Annuncio creato con successo";
+        return annuncioSalvato.getId();
     }
 
     // -------------------------------------------------------GET
