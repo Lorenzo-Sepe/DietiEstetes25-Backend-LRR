@@ -2,7 +2,9 @@ package it.unina.dietiestates25.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SerializzazioneUtils {
     private SerializzazioneUtils(){
         throw new IllegalStateException("Utility class");
@@ -14,7 +16,7 @@ public class SerializzazioneUtils {
         try {
             return mapper.writeValueAsString(filtro);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Errore durante la serializzazione del filtro annuncio: {}", e.getMessage());
             return null;
         }
     }
@@ -23,7 +25,7 @@ public class SerializzazioneUtils {
         try {
             return mapper.readValue(json, FiltroAnnuncioDTO.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Errore durante la deserializzazione del filtro annuncio: {}", e.getMessage());
             return null;
         }
     }
