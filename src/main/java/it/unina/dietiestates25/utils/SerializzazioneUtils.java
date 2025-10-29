@@ -2,10 +2,12 @@ package it.unina.dietiestates25.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class SerializzazioneUtils {
+    private SerializzazioneUtils(){
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static String serializzaFiltroAnnuncio(FiltroAnnuncioDTO filtro) {
