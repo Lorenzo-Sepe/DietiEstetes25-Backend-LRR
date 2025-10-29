@@ -3,9 +3,7 @@ package it.unina.dietiestates25.service.specification;
 import it.unina.dietiestates25.dto.request.FiltroAnnuncioDTO;
 import it.unina.dietiestates25.entity.*;
 import it.unina.dietiestates25.entity.enumeration.TipologiaImmobile;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AnnuncioImmobiliareSpecification {
@@ -163,45 +161,35 @@ public class AnnuncioImmobiliareSpecification {
             Join<Immobile, CaratteristicheAggiuntive> caratteristiche = immobile.join("caratteristicheAggiuntive");
 
             Predicate predicate = cb.conjunction();
-            if (filtro.getBalconi() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("balconi"), filtro.getBalconi()));
-            }
-            if (filtro.getGarage() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("garage"), filtro.getGarage()));
-            }
-            if (filtro.getPostiAuto() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("postiAuto"), filtro.getPostiAuto()));
-            }
-            if (filtro.getGiardino() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("giardino"), filtro.getGiardino()));
-            }
-            if (filtro.getAscensore() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("ascensore"), filtro.getAscensore()));
-            }
-            if (filtro.getPortiere() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("portiere"), filtro.getPannelliSolari()));
-            }
-            if (filtro.getRiscaldamentoCentralizzato() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("riscaldamentoCentralizzato"),
-                        filtro.getRiscaldamentoCentralizzato()));
-            }
-            if (filtro.getClimatizzatori() != null) {
-                predicate = cb.and(predicate,
-                        cb.equal(caratteristiche.get("climatizzatori"), filtro.getClimatizzatori()));
-            }
-            if (filtro.getPannelliSolari() != null) {
-                predicate = cb.and(predicate,
-                        cb.equal(caratteristiche.get("pannelliSolari"), filtro.getPannelliSolari()));
-            }
-            if (filtro.getCantina() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("cantina"), filtro.getCantina()));
-            }
-            if (filtro.getSoffitta() != null) {
-                predicate = cb.and(predicate, cb.equal(caratteristiche.get("soffitta"), filtro.getSoffitta()));
-            }
+
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("balconi"), filtro.getBalconi());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("garage"), filtro.getGarage());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("postiAuto"), filtro.getPostiAuto());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("giardino"), filtro.getGiardino());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("ascensore"), filtro.getAscensore());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("portiere"), filtro.getPortiere());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("riscaldamentoCentralizzato"), filtro.getRiscaldamentoCentralizzato());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("climatizzatori"), filtro.getClimatizzatori());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("pannelliSolari"), filtro.getPannelliSolari());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("cantina"), filtro.getCantina());
+            predicate = addPredicateIfNotNull(cb, predicate, caratteristiche.get("soffitta"), filtro.getSoffitta());
+
             return predicate;
         };
     }
+
+    private static Predicate addPredicateIfNotNull(
+            CriteriaBuilder cb,
+            Predicate basePredicate,
+            Path<?> path,
+            Object value
+    ) {
+        if (value != null) {
+            return cb.and(basePredicate, cb.equal(path, value));
+        }
+        return basePredicate;
+    }
+
 
     public static Specification<AnnuncioImmobiliare> ordinaPerPrezzoAsc(boolean ordinePerPrezzoAsc,
             String tipoContratto) {
