@@ -9,8 +9,10 @@ import java.util.Map;
 
 public class GeneratoreContenutoFactory {
 
-    private GeneratoreContenutoFactory() {}
-
+    private GeneratoreContenutoFactory() {
+    throw new IllegalStateException("Questa è una classe factory e non può essere istanziata.");
+    }
+    
     private static final Map<CategoriaNotificaName, GeneratoreContenutoNotifica<? extends DatiContenutoNotifica>> generatori = new EnumMap<>(CategoriaNotificaName.class);
 
     static {
