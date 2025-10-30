@@ -13,6 +13,7 @@ import it.unina.dietiestates25.utils.CittaItaliana;
 import it.unina.dietiestates25.utils.SerializzazioneUtils;
 import it.unina.dietiestates25.utils.UserContex;
 import jakarta.validation.constraints.NotBlank;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class RicercaAnnunciEffettuataService {
 
     private final RicercaAnnunciEffettuataRepository ricercaAnnunciEffettuataRepository;
@@ -46,7 +48,7 @@ public class RicercaAnnunciEffettuataService {
                     .collect(Collectors.toSet());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Errore nel caricamento delle città italiane: {}", e.getMessage());
         }
 
     }
@@ -165,7 +167,7 @@ public class RicercaAnnunciEffettuataService {
         // controllo se area di interesse sia italia o una città valida
         if (request.getAreaDiInteresse() != null && !request.getAreaDiInteresse().isBlank() &&
                 (request.getAreaDiInteresse().equalsIgnoreCase("italia")
-                        || !isItalianCitty(request.getAreaDiInteresse()))) {
+                        || !isItalianCity(request.getAreaDiInteresse()))) {
 
             request.setAreaDiInteresse(null);
         }
@@ -178,7 +180,7 @@ public class RicercaAnnunciEffettuataService {
                 LocalDateTime.now().minusDays(request.getIntervalloGiorniStoricoRicerca()));
     }
 
-    public boolean isItalianCitty(@NotBlank String input) {
+    public boolean isItalianCity(@NotBlank String input) {
 
         return cittaItaliane.contains(input.toLowerCase());
     }
