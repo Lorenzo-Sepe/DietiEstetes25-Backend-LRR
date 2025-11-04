@@ -13,7 +13,7 @@ public class AzureBlobConfig {
     public BlobContainerClient blobContainerClient() {
         //recuperalo dallo enviromet di intelij
         String connectionString = System.getenv("stringBlobContainer");
-        String containerName = "upload"; // Sostituisci con il nome del tuo contenitore
+        String containerName = "upload"; 
 
         BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
                 .connectionString(connectionString)
