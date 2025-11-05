@@ -62,7 +62,6 @@ public class AnnuncioImmobileService {
 
         AnnuncioImmobiliare annuncioSalvato = annuncioImmobiliareRepository.save(annuncioImmobiliare);
 
-        //Update annuncio per l'inserimento delle immagini
         imageUploaderService.updateImmaginiAnnuncio(request.getImmobile().getImmagini(), annuncioSalvato);
         annuncioImmobiliareRepository.save(annuncioSalvato);
 
@@ -70,7 +69,6 @@ public class AnnuncioImmobileService {
             notificaService.inviaNotificaPerNuovoAnnuncioImmobiliare(annuncioImmobiliare);
 
         } catch (Exception e) {
-            // do Nothing
             log.error("Errore nell'invio della notifica per il nuovo annuncio immobiliare");
         }
 

@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class Comuni {
 
-    // Private constructor to prevent instantiation
     private Comuni() {
         throw new UnsupportedOperationException("Utility class");
     }

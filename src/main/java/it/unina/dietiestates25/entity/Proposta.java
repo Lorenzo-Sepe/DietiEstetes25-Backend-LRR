@@ -42,7 +42,7 @@ public class Proposta {
     private Contatto contatto;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private AnnuncioImmobiliare annuncio; // Molte proposte possono appartenere a un solo annuncio
+    private AnnuncioImmobiliare annuncio;
 
     private LocalDateTime dataDellaProposta;
 }

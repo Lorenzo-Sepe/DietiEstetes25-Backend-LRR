@@ -52,7 +52,7 @@ public class NotificaService {
                     if(inviato)count++;
 
                 }catch(Exception e){
-                    //stop the method
+
                 }
         }
         return "Notifica inviata con successo, inviate: " + count;
@@ -66,7 +66,6 @@ public class NotificaService {
             try {
                 inviaNotifica(CategoriaNotificaName.OPPORTUNITA_IMMOBILE,destinatario,"DietiEstate",dati);
             }catch (Exception e){
-                   //non fare nulla
             }
         }
 
@@ -192,7 +191,6 @@ public class NotificaService {
         // Genera il contenuto HTML
         String contenutoHtml = generatore.generaContenuto(dati);
 
-        // Creazione della notifica utilizzando il builder
         Notifica notifica = Notifica.builder()
                 .oggetto(generatore.generaOggetto(dati))
                 .contenuto(contenutoHtml)
@@ -202,7 +200,6 @@ public class NotificaService {
                 .destinatario(destinatario)
                 .build();
 
-        // Salva la notifica nel database
         notificaRepository.save(notifica);
         return true;
     }

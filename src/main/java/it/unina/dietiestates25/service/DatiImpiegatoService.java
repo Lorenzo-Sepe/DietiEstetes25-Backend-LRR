@@ -34,7 +34,6 @@ public class DatiImpiegatoService {
 
             int indexContattoEsistente = getIndexContattiFromTipo(contattiEsistenti,request.getTipo());
 
-            //Aggiungi nuovo contatto
             if(indexContattoEsistente == -1){
 
                 Contatto nuovoContatto = Contatto.builder()

@@ -87,34 +87,27 @@ public class RicercaAnnunciEffettuataService {
         try {
             ricercaAnnunciEffettuataRepository.save(ricerca);
         } catch (Exception e) {
-            // non fare nulla non serve che blocchi la ricerca
         }
     }
 
     private boolean checkIsSameRicerca(FiltroAnnuncioDTO filtro) {
-        // Ottiene l'utente corrente
         User user = UserContex.getUserCurrent();
 
-        // Recupera l'ultima ricerca effettuata dall'utente
         RicercaAnnunciEffettuata ricerca = ricercaAnnunciEffettuataRepository
                 .findFirstByUtenteOrderByUpdatedAtDesc(user).orElse(null);
 
-        // Se non esiste alcuna ricerca precedente, restituisce false
         if (ricerca == null) {
             return false;
         }
 
-        // Confronta la tipologia di immobile
         if (ricerca.getTipologiaImmobile() != filtro.getTipologiaImmobile()) {
             return false;
         }
 
-        // Confronta il tipo di contratto
         if (ricerca.getTipologiaContratto() != filtro.getTipologiaContratto()) {
             return false;
         }
 
-        // Confronta le località
         List<String> localita = getLocality(filtro);
         if (localita.size() != ricerca.getLocality().size()) {
             return false;
@@ -124,7 +117,6 @@ public class RicercaAnnunciEffettuataService {
                 return false;
             }
         }
-        // Se tutte le condizioni sono soddisfatte, restituisce true
         return true;
     }
 

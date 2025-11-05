@@ -28,24 +28,20 @@ public class ImageUploaderService {
             throw new IllegalArgumentException("Input string cannot be null or empty");
         }
 
-        //if the string starts with Agente or Manager, remove it
         if (inputString.startsWith("agente") || inputString.startsWith("manager")) {
             inputString = inputString.substring(inputString.indexOf(" ") + 1);
         }
 
-        // Get the initial letter, uppercase
         char initial = Character.toUpperCase(inputString.trim().charAt(0));
 
-        // Simple hash function
         int hash = 0;
         for (char c : inputString.toCharArray()) {
             hash = (hash << 5) - hash + c;
         }
 
-        // Convert hash to HSL values
-        float hue = (Math.abs(hash) % 360); // Hue: 0 - 359
-        float saturation = 0.6f;            // Saturation: 60%
-        float lightness = 0.6f;             // Lightness: 60%
+        float hue = (Math.abs(hash) % 360);
+        float saturation = 0.6f;
+        float lightness = 0.6f;
 
         // Convert HSL to RGB
         int[] rgb = hslToRgb(hue, saturation, lightness);

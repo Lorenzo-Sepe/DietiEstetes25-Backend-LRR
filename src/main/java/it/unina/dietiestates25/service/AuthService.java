@@ -65,7 +65,6 @@ public class AuthService {
 
 
     public String modifyUserAuthority(int id, String auth) {
-        // trovare l'utente
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
         try{
@@ -77,7 +76,6 @@ public class AuthService {
         } catch (IllegalArgumentException ex){
             return Msg.INVALID_AUTHORITY;
         }
-        // salvare
         userRepository.save(user);
         return Msg.AUTHORITY_CHANGED;
     }

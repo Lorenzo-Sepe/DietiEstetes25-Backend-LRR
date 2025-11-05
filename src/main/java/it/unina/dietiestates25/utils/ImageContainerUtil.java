@@ -25,7 +25,7 @@ public class ImageContainerUtil {
 
             String currentDate = LocalDate.now().toString();
             nomePath += "-" + currentDate + estensione;
-            // Get a BlobClient to upload the image file
+
             BlobClient blobClient = blobContainerClient.getBlobClient(nomePath);
             blobClient.upload(file.getInputStream(), file.getSize(), true);
             return blobClient.getBlobUrl();

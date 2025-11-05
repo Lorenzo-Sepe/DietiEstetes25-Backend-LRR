@@ -40,7 +40,6 @@ public class GeneratorePassword {
         char[] caratteri = input.toCharArray();
         for (int i = caratteri.length - 1; i > 0; i--) {
             int j = casuale.nextInt(i + 1);
-            // Scambia caratteri[i] con caratteri[j]
             char temp = caratteri[i];
             caratteri[i] = caratteri[j];
             caratteri[j] = temp;

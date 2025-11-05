@@ -58,7 +58,7 @@ public class UserService {
 
         String ruolo = authorityName.name().equals(RUOLO_MANAGER) ? "Manager" : "Agente";
 
-        // Agente Nome C.
+
         String nomeVisualizzato = ruolo + " " + request.getNome() + " "
                 + request.getCognome().substring(0, 1).toUpperCase() + ".";
         String fotoProfilo = imageUploaderService.getDefaultAvatar(request.getCognome());

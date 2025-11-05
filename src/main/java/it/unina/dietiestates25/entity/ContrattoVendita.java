@@ -13,7 +13,6 @@ public class ContrattoVendita extends Contratto {
     private Double prezzoVendita;
     private boolean mutuoEstinto;
 
-    // Constructor matching superclass
     @Builder
     public ContrattoVendita(Double prezzoVendita, boolean mutuoEstinto) {
         super(TipoContratto.VENDITA.toString());

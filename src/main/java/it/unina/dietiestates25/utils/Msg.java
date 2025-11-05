@@ -21,9 +21,7 @@ public class Msg {
 
     public static final String MAIL_SIGNUP_SUBJECT = "DietiEstates25: email di verifica Creazione Agenzia";
 
-    // l'endpoint presente nell'email va copiato e messo su postman con metodo PATCH.
-    // Se lanciato direttamente dall'email, ovvero da browser,
-    // la chiamata fallisce in quando il browser permette solo chiamate GET
+
     public static final String MAIL_SIGNUP_BODY = """
         Le credenziali per accedere sono:
         Email: %s

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ExceptionManagement {
+    public class ExceptionManagement {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionManagement.class);
 

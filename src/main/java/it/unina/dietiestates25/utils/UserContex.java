@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserContex {
 
     private UserContex() {
-        // Prevent instantiation
+        throw new UnsupportedOperationException("Questa classe non può essere istanziata.");
     }
 
     public static User getUserCurrent() {
@@ -19,7 +19,7 @@ public class UserContex {
                 && dettagliUtente instanceof User user) {
             return user;
         }
-        return null; // Se non c'è alcun utente autenticato
+        return null;
     }
 
     public static AuthorityName getRoleCurrent() {
