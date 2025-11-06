@@ -67,10 +67,9 @@ public class GeneratoreContenutoControproposta implements GeneratoreContenutoNot
 
                 // Sezione contatti agente
                 + "<div class='contatto'>"
-                + "<p><strong>" + dati.getNomeDestinatario() + ", l'agente <span style='color:#bf360c;'>" + dati.getNomeAgente() + "</span> ti ha inviato una controproposta!</strong></p>"
-                + "<p>Contattalo per discutere i dettagli e valutare la migliore soluzione per te:</p>"
+                + "<p><strong>Congratulazioni " + dati.getNomeDestinatario() + "! 🎉</strong></p>"
+                + "<p>Contatta ora l'agente <strong>" + dati.getNomeAgente() + "</strong> per finalizzare l'acquisto:</p>"
                 + contattiHtml.toString()
-                + "<a href='" + dati.getUrlProfiloAgente() + "' class='pulsante'>💼 Visita il Profilo dell'Agente</a>"
                 + "</div>"
 
                 + "</div>"
