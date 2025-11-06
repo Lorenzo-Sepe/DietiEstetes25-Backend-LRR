@@ -40,6 +40,6 @@ public class AnnuncioImmobiliare {
     private List<Proposta> proposte;
 
     public String getUrl() {
-        return "/annunci/" + id;
+        return "/annuncio/" + id;
     }
 }

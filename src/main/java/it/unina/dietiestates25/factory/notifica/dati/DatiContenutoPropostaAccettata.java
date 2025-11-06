@@ -1,9 +1,6 @@
 package it.unina.dietiestates25.factory.notifica.dati;
 
-import it.unina.dietiestates25.entity.ContrattoAffitto;
-import it.unina.dietiestates25.entity.ContrattoVendita;
-import it.unina.dietiestates25.entity.DatiImpiegato;
-import it.unina.dietiestates25.entity.Proposta;
+import it.unina.dietiestates25.entity.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,15 +14,14 @@ public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica {
     private String indirizzoImmobile;
     private String prezzo;
     private String descrizione;
-    private String urlProfiloAgente;
     private String nomeAgente;
+    private java.util.List<Contatto> contattiAgente;
 
     public static DatiContenutoPropostaAccettata fromProposta(Proposta proposta, DatiImpiegato datiImpiegato) {
-        String urlProfiloAgente = "/agenti/" + proposta.getAnnuncio().getAgente().getId();
         String indirizzoImmobile = costruisciIndirizzoImmobile(proposta);
         Double prezzoImmobile = ottieniPrezzoImmobile(proposta);
 
-        return DatiContenutoPropostaAccettata.builder()
+        DatiContenutoPropostaAccettata dati = DatiContenutoPropostaAccettata.builder()
                 .nomeDestinatario(proposta.getNome())
                 .titoloAnnuncio(proposta.getAnnuncio().getTitolo())
                 .prezzoProposto(proposta.getPrezzoProposta())
@@ -33,15 +29,18 @@ public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica {
                 .prezzo(prezzoImmobile.toString())
                 .descrizione(proposta.getAnnuncio().getDescrizione())
                 .nomeAgente(datiImpiegato.getNome())
-                .urlProfiloAgente(urlProfiloAgente)
+                .contattiAgente(datiImpiegato.getContatti() != null ?
+                        new java.util.ArrayList<>(datiImpiegato.getContatti()) :
+                        java.util.Collections.emptyList())
                 .indirizzoImmobile(indirizzoImmobile)
                 .build();
+        return dati;
     }
 
     private static String costruisciIndirizzoImmobile(Proposta proposta) {
-        return proposta.getAnnuncio().getImmobile().getIndirizzo().getCitta()
-                + " " + proposta.getAnnuncio().getImmobile().getIndirizzo().getVia()
-                + " " + proposta.getAnnuncio().getImmobile().getIndirizzo().getNumeroCivico();
+        return proposta.getAnnuncio().getImmobile().getIndirizzo().getCitta() + ", " +
+                proposta.getAnnuncio().getImmobile().getIndirizzo().getVia() + " " +
+                proposta.getAnnuncio().getImmobile().getIndirizzo().getNumeroCivico();
     }
 
     private static Double ottieniPrezzoImmobile(Proposta proposta) {

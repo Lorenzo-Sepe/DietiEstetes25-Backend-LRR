@@ -1,9 +1,6 @@
 package it.unina.dietiestates25.factory.notifica.dati;
 
-import it.unina.dietiestates25.entity.ContrattoAffitto;
-import it.unina.dietiestates25.entity.ContrattoVendita;
-import it.unina.dietiestates25.entity.DatiImpiegato;
-import it.unina.dietiestates25.entity.Proposta;
+import it.unina.dietiestates25.entity.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +15,7 @@ public class DatiContenutoControproposta implements DatiContenutoNotifica {
     private String indirizzoImmobile;
     private String prezzo;
     private String descrizione;
-    private String urlProfiloAgente;
+    private java.util.List<Contatto> contattiAgente;
     private String nomeAgente;
 
     public static DatiContenutoControproposta fromProposta(Proposta proposta, DatiImpiegato datiImpiegato) {
@@ -35,7 +32,9 @@ public class DatiContenutoControproposta implements DatiContenutoNotifica {
                 .prezzo(prezzoImmobile.toString())
                 .descrizione(proposta.getAnnuncio().getDescrizione())
                 .nomeAgente(datiImpiegato.getNome())
-                .urlProfiloAgente(urlProfiloAgente)
+                .contattiAgente(datiImpiegato.getContatti() != null ?
+                        new java.util.ArrayList<>(datiImpiegato.getContatti()) :
+                        java.util.Collections.emptyList())
                 .indirizzoImmobile(indirizzoImmobile)
                 .build();
     }
