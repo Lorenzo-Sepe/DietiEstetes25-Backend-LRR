@@ -32,7 +32,7 @@ public class GeneratoreContenutoImmobile implements GeneratoreContenutoNotifica<
                 + "<div class='contenitore'>"
                 + "<h1>🏡 Opportunità Immobiliare Eccezionale!</h1>"
                 + "<p>Ciao <strong>" + dati.getNomeDestinatario() + "</strong>,</p>"
-                + "<p class='attrazione'>🌟 Abbiamo individuato un immobile perfettamente in linea con le tue preferenze!</p>"
+                + "<p class='attrazione'>🌟 Abbiamo individuato un immobile perfettamente in linea con le tue ricerche!</p>"
 
                 // Sezione dettagli immobile
                 + "<div class='dettagli'>"
@@ -59,7 +59,7 @@ public class GeneratoreContenutoImmobile implements GeneratoreContenutoNotifica<
                 + "<p><span style='font-size: 20px;'>⏳</span><br><strong>Questa offerta potrebbe non durare a lungo!</strong></p>"
                 + "<p>Non perdere l'occasione di acquisire questo immobile<br>"
                 + "Clicca qui sotto per inviare immediatamente una proposta</p>"
-                + "<a href='" + dati.getUrlAnnuncioImmobile() + "' class='pulsante'>"
+                + "<a href='" + dati.getUrlAnnuncioImmobile() + "' target='_blank' class='pulsante'>"
                 + "📩 Invia Proposta Ora"
                 + "</a>"
                 + "</div>"
