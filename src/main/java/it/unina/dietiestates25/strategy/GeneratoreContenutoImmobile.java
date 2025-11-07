@@ -39,7 +39,7 @@ public class GeneratoreContenutoImmobile implements GeneratoreContenutoNotifica<
                 + "<p><span class='icona'>📍</span><strong>Indirizzo:</strong> " + dati.getIndirizzoImmobile() + "</p>"
                 + "<p><span class='icona'>💼</span><strong>Contratto:</strong> " + dati.getTipoContratto() + "</p>"
                 + "<p><span class='icona'>🏢</span><strong>Tipologia:</strong> " + dati.getTipoImmobile() + "</p>"
-                + "<p><span class='icona'>💶</span><strong>Prezzo:</strong> €" + String.format("%,d", dati.getPrezzo()) + "</p>"
+                + "<p><span class='icona'>💶</span><strong>Prezzo:</strong> €" + dati.getPrezzo() + "</p>"
                 + "</div>"
 
                 // Card dell'immobile
@@ -76,7 +76,7 @@ public class GeneratoreContenutoImmobile implements GeneratoreContenutoNotifica<
 
     @Override
     public String generaOggetto(DatiContenutoImmobile dati) {
-        return "🔥 " + dati.getTipoImmobile() + " da €" + String.format("%,d", dati.getPrezzo())
+        return "🔥 " + dati.getTipoImmobile() + " da €" + dati.getPrezzo()
                 + " a " + dati.getIndirizzoImmobile().split(",")[0];
     }
 }
