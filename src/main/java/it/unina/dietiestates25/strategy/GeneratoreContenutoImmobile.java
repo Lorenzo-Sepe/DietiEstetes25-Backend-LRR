@@ -49,7 +49,7 @@ public class GeneratoreContenutoImmobile implements GeneratoreContenutoNotifica<
                 + "<p><span class='icona'>📝</span><strong>Descrizione:</strong> <span class='descrizione'>"
                 + dati.getDescrizione() + "</span></p>"
                 + "<p style='margin-top: 15px; text-align: center;'>"
-                + "<a href='" + dati.getUrlAnnuncioImmobile() + "' style='color: #2ecc71; font-weight: bold; text-decoration: none;'>Vedi tutti i dettagli ›</a>"
+                + "<a href='" + dati.getUrlAnnuncioImmobile() + "' target='_blank' style='color: #2ecc71; font-weight: bold; text-decoration: none;'>Vedi tutti i dettagli ›</a>"
                 + "</p>"
                 + "</div>"
                 + "</div>"
