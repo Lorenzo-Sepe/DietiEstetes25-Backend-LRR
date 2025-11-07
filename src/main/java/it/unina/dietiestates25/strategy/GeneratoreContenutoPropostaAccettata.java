@@ -64,7 +64,7 @@ public class GeneratoreContenutoPropostaAccettata implements GeneratoreContenuto
                 + "<p><span class='icona'>🏠</span><strong>Indirizzo:</strong> " + dati.getIndirizzoImmobile() + "</p>"
                 + "<p><span class='icona'>📋</span><strong>Descrizione:</strong> <span class='descrizione'>"
                 + dati.getDescrizione()
-                + "</span> <a href='" + dati.getUrlAnnuncioImmobile() + "' target='_blank' style='color: #3498db; text-decoration: none; font-weight: bold;'>Leggi tutto</a></p>"
+                + "</span> <a href='" + dati.getUrlAnnuncioImmobile() + "' target='_blank' style='color: #2ecc71; text-decoration: none; font-weight: bold;'>Vedi tutti i dettagli ›</a></p>"
                 + "</div>"
                 + "</div>"
 

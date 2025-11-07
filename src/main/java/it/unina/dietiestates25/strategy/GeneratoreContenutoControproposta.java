@@ -61,7 +61,9 @@ public class GeneratoreContenutoControproposta implements GeneratoreContenutoNot
                 + "<img src='" + dati.getUrlImmagineImmobile() + "' alt='Immobile'>"
                 + "<div class='info'>"
                 + "<p><span class='icona'>🏠</span><strong>Indirizzo:</strong> " + dati.getIndirizzoImmobile() + "</p>"
-                + "<p><span class='icona'>📋</span><strong>Descrizione:</strong> <span class='descrizione'>" + dati.getDescrizione() + "</span></p>"
+                + "<p><span class='icona'>📋</span><strong>Descrizione:</strong> <span class='descrizione'>"
+                + dati.getDescrizione()
+                + "</span> <a href='" + dati.getUrlAnnuncioImmobile() + "' target='_blank' style='color: #2ecc71; text-decoration: none; font-weight: bold;'>Vedi tutti i dettagli ›</a></p>"
                 + "</div>"
                 + "</div>"
 

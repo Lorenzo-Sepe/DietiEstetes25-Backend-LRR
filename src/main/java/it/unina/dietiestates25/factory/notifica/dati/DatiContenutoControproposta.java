@@ -17,6 +17,8 @@ public class DatiContenutoControproposta implements DatiContenutoNotifica {
     private String descrizione;
     private java.util.List<Contatto> contattiAgente;
     private String nomeAgente;
+    private String urlAnnuncioImmobile;
+
 
     public static DatiContenutoControproposta fromProposta(Proposta proposta, DatiImpiegato datiImpiegato) {
         Double prezzoImmobile = ottieniPrezzoImmobile(proposta);
@@ -36,6 +38,7 @@ public class DatiContenutoControproposta implements DatiContenutoNotifica {
                         new java.util.ArrayList<>(datiImpiegato.getContatti()) :
                         java.util.Collections.emptyList())
                 .indirizzoImmobile(indirizzoImmobile)
+                .urlAnnuncioImmobile(proposta.getAnnuncio().getUrl())
                 .build();
     }
 
