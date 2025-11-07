@@ -4,6 +4,9 @@ import it.unina.dietiestates25.entity.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 @Getter
 @Builder
 public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica {
@@ -16,11 +19,12 @@ public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica {
     private String descrizione;
     private String nomeAgente;
     private java.util.List<Contatto> contattiAgente;
+    private String urlAnnuncioImmobile;
+
 
     public static DatiContenutoPropostaAccettata fromProposta(Proposta proposta, DatiImpiegato datiImpiegato) {
         String indirizzoImmobile = costruisciIndirizzoImmobile(proposta);
         Double prezzoImmobile = ottieniPrezzoImmobile(proposta);
-
         DatiContenutoPropostaAccettata dati = DatiContenutoPropostaAccettata.builder()
                 .nomeDestinatario(proposta.getNome())
                 .titoloAnnuncio(proposta.getAnnuncio().getTitolo())
@@ -30,9 +34,10 @@ public class DatiContenutoPropostaAccettata implements DatiContenutoNotifica {
                 .descrizione(proposta.getAnnuncio().getDescrizione())
                 .nomeAgente(datiImpiegato.getNome())
                 .contattiAgente(datiImpiegato.getContatti() != null ?
-                        new java.util.ArrayList<>(datiImpiegato.getContatti()) :
-                        java.util.Collections.emptyList())
+                        new ArrayList<>(datiImpiegato.getContatti()) :
+                        Collections.emptyList())
                 .indirizzoImmobile(indirizzoImmobile)
+                .urlAnnuncioImmobile(proposta.getAnnuncio().getUrl())
                 .build();
         return dati;
     }

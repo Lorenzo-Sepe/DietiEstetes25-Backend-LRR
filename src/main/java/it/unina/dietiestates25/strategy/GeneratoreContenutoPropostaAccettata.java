@@ -40,6 +40,8 @@ public class GeneratoreContenutoPropostaAccettata implements GeneratoreContenuto
                 + ".contatto { background: #e8f5e9; padding: 20px; border-radius: 10px; margin-top: 25px; }"
                 + ".contatto strong { color: #1b5e20; font-size: 16px; }"
                 + ".icona { margin-right: 8px; color: #3498db; }"
+                + ".link-annuncio { display: inline-block; background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 0; }"
+                + ".link-annuncio:hover { background: #2980b9; }"
                 + "</style>"
                 + "</head>"
                 + "<body>"
@@ -47,6 +49,7 @@ public class GeneratoreContenutoPropostaAccettata implements GeneratoreContenuto
                 + "<h1>🎉 Offerta Accettata!</h1>"
                 + "<p>Ciao <strong>" + dati.getNomeDestinatario() + "</strong>,</p>"
                 + "<p>La tua offerta per l'immobile <strong>" + dati.getTitoloAnnuncio() + "</strong> è stata accettata!</p>"
+
 
                 // Sezione dettagli offerta
                 + "<div class='dettagli'>"
@@ -59,9 +62,13 @@ public class GeneratoreContenutoPropostaAccettata implements GeneratoreContenuto
                 + "<img src='" + dati.getUrlImmagineImmobile() + "' alt='Immobile'>"
                 + "<div class='info'>"
                 + "<p><span class='icona'>🏠</span><strong>Indirizzo:</strong> " + dati.getIndirizzoImmobile() + "</p>"
-                + "<p><span class='icona'>📋</span><strong>Descrizione:</strong> <span class='descrizione'>" + dati.getDescrizione() + "</span></p>"
+                + "<p><span class='icona'>📋</span><strong>Descrizione:</strong> <span class='descrizione'>"
+                + dati.getDescrizione()
+                + "</span> <a href='" + dati.getUrlAnnuncioImmobile() + "' target='_blank' style='color: #3498db; text-decoration: none; font-weight: bold;'>Leggi tutto</a></p>"
                 + "</div>"
                 + "</div>"
+
+
 
                 // Sezione contatti agente
                 + "<div class='contatto'>"

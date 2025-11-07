@@ -18,6 +18,7 @@ public class DatiContenutoPropostaRifiutata implements DatiContenutoNotifica {
     private String descrizione;
     private String urlAnnuncioImmobile;
 
+
     public static DatiContenutoPropostaRifiutata fromProposta(Proposta proposta) {
         return DatiContenutoPropostaRifiutata.builder()
                 .nomeDestinatario(proposta.getNome())
