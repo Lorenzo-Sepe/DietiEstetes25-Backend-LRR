@@ -119,3 +119,20 @@ application:
       height: 200
       extensions: image/jpg,image/jpeg,image/webp
       imagePath: /Users/Public/dietiestates25/annuncio/images/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, env
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Dieti Estetes API
+    version: 1.4.0
+    build-date: 2025-11-06
+

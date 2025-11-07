@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)  // NOSONAR: CSRF disabilitato perché l'applicazione usa JWT e non cookie di sessione
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(
+                                "/actuator/**",
                                 "/v0/auth/**",
                                 "/v0/**",
                                 "/{pathvariable:[0-9A-Za-z]+}/v0/**",
